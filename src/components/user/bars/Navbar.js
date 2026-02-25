@@ -5,37 +5,27 @@ import {
   Avatar,
   Box,
   Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
   Divider,
   Drawer,
   IconButton,
-  InputAdornment,
   ListItemIcon,
   ListItemText,
   Menu,
   MenuItem,
-  Paper,
-  Popper,
-  TextField,
   Typography,
 } from "@mui/material";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   FiBarChart2,
   FiBell,
   FiChevronDown,
-  FiCreditCard,
   FiFileText,
   FiGrid,
   FiLogOut,
   FiMenu,
   FiRefreshCw,
-  FiSearch,
   FiUploadCloud,
 } from "react-icons/fi";
 import Swal from "sweetalert2";
@@ -52,21 +42,14 @@ const menuItems = [
   { label: "Uploads", href: "/user/uploads", Icon: FiFileText },
   { label: "Analytics", href: "/user/analytics", Icon: FiBarChart2 },
   { label: "Mappings", href: "/user/mappings", Icon: FiRefreshCw },
-  { label: "Billing", href: "/user/billing", Icon: FiCreditCard },
 ];
 
 function Navbar() {
   const pathname = usePathname();
   const router = useRouter();
-  const searchRef = useRef(null);
-  const [search, setSearch] = useState("");
-  const [searchFocused, setSearchFocused] = useState(false);
-  const [teams, setTeams] = useState([]);
   const [menuAnchor, setMenuAnchor] = useState(null);
   const [me, setMe] = useState(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const [teamDialogOpen, setTeamDialogOpen] = useState(false);
-  const [selectedTeam, setSelectedTeam] = useState(null);
 
   const { user: authUser, email: authEmail, token } = getAuth();
   const displayName =
@@ -74,36 +57,6 @@ function Navbar() {
       ? `${authUser.firstName} ${authUser.lastName}`.trim()
       : authUser?.email || authEmail || "User";
   const displayEmail = authUser?.email || authEmail || "";
-
-  const fetchTeams = useCallback(() => {
-    if (!token) return;
-    fetch("/api/teams", { headers: { Authorization: `Bearer ${token}` } })
-      .then((r) => r.json())
-      .then((data) => (data.success && Array.isArray(data.teams) ? setTeams(data.teams) : setTeams([])))
-      .catch(() => setTeams([]));
-  }, [token]);
-
-  useEffect(() => {
-    fetchTeams();
-  }, [fetchTeams]);
-
-  const filteredTeams = useMemo(() => {
-    const q = search.trim().toLowerCase();
-    if (!q) return teams;
-    return teams.filter(
-      (t) =>
-        (t.teamName || "").toLowerCase().includes(q) ||
-        (t.season || "").toLowerCase().includes(q) ||
-        (t.session || "").toLowerCase().includes(q)
-    );
-  }, [teams, search]);
-
-  const openTeamDialog = (team) => {
-    setSelectedTeam(team);
-    setTeamDialogOpen(true);
-    setSearch("");
-    setSearchFocused(false);
-  };
 
   const fetchMe = useCallback(() => {
     if (!token) return;
@@ -162,7 +115,7 @@ function Navbar() {
         borderBottom: "1px solid rgba(0, 0, 0, 0.08)",
       }}
     >
-      {/* Left: Mobile menu + Search (search hidden on mobile) */}
+      {/* Left: Mobile menu */}
       <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, flex: 1, minWidth: 0 }}>
         <IconButton
           aria-label="Open menu"
@@ -175,89 +128,6 @@ function Navbar() {
         >
           <FiMenu size={24} />
         </IconButton>
-        <Box ref={searchRef} sx={{ display: { xs: "none", md: "block" }, maxWidth: 360, width: "100%" }}>
-          <TextField
-            placeholder="Search teams..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            onFocus={() => {
-              setSearchFocused(true);
-              fetchTeams();
-            }}
-            onBlur={() => setTimeout(() => setSearchFocused(false), 180)}
-            variant="outlined"
-            size="small"
-            fullWidth
-            sx={{
-              "& .MuiOutlinedInput-root": {
-                backgroundColor: "#f5f5f5",
-                borderRadius: 2,
-                "& fieldset": { borderColor: "rgba(0, 0, 0, 0.08)" },
-                "&:hover fieldset": { borderColor: "rgba(0, 0, 0, 0.12)" },
-                "&.Mui-focused fieldset": { borderWidth: 1, borderColor: "rgba(0, 0, 0, 0.2)" },
-              },
-            }}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start" sx={{ color: "#000" }}>
-                  <FiSearch size={20} />
-                </InputAdornment>
-              ),
-            }}
-          />
-          <Popper
-            open={searchFocused && (search.trim() !== "" || teams.length > 0)}
-            anchorEl={searchRef.current}
-            placement="bottom-start"
-            style={{ zIndex: 1300 }}
-            modifiers={[{ name: "offset", options: { offset: [0, 4] } }]}
-          >
-            <Paper
-              elevation={8}
-              sx={{
-                minWidth: searchRef.current?.offsetWidth || 320,
-                maxHeight: "min(400px, 60vh)",
-                overflowY: "auto",
-                overflowX: "hidden",
-                borderRadius: 2,
-                py: 0.5,
-                WebkitOverflowScrolling: "touch",
-              }}
-            >
-              {filteredTeams.length === 0 ? (
-                <Box sx={{ px: 2, py: 2, color: "rgba(0,0,0,0.6)", fontSize: 14 }}>
-                  {search.trim() ? "No teams found." : "Type to search teams."}
-                </Box>
-              ) : (
-                filteredTeams.map((team) => (
-                  <Box
-                    key={team._id}
-                    component="button"
-                    type="button"
-                    onClick={() => openTeamDialog(team)}
-                    sx={{
-                      width: "100%",
-                      display: "block",
-                      textAlign: "left",
-                      border: "none",
-                      background: "none",
-                      fontFamily: "inherit",
-                      cursor: "pointer",
-                      px: 2,
-                      py: 1.25,
-                      "&:hover": { bgcolor: "rgba(0,0,0,0.06)" },
-                    }}
-                  >
-                    <Typography sx={{ fontWeight: 600, fontSize: 14, color: "#000" }}>{team.teamName}</Typography>
-                    <Typography sx={{ fontSize: 13, color: "rgba(0,0,0,0.6)" }}>
-                      {team.season} · Session {team.session} · {team.games} games, {team.plays} plays
-                    </Typography>
-                  </Box>
-                ))
-              )}
-            </Paper>
-          </Popper>
-        </Box>
       </Box>
 
       {/* Right: Notifications + Profile */}
@@ -378,39 +248,6 @@ function Navbar() {
             primaryTypographyProps={{ fontWeight: 700, fontSize: 15, color: "#000" }}
             secondaryTypographyProps={{ fontSize: 13, color: "#000" }}
           />
-        </MenuItem>
-        <Divider sx={{ my: 0.5 }} />
-        <MenuItem disabled sx={{ py: 0.75, cursor: "default", minHeight: "auto", color: "#000" }}>
-          <ListItemText
-            primary="Payment status"
-            secondary={me ? (me.paymentStatus === "active" ? "Active" : "Inactive") : "—"}
-            primaryTypographyProps={{ fontSize: 13, fontWeight: 600, color: "#000" }}
-            secondaryTypographyProps={{ fontSize: 13, color: "#000" }}
-          />
-        </MenuItem>
-        <MenuItem disabled sx={{ py: 0.75, cursor: "default", minHeight: "auto", color: "#000" }}>
-          <ListItemText
-            primary="Current amount"
-            secondary={
-              me?.payment?.amount != null
-                ? `$${(me.payment.amount / 100).toFixed(2)} ${(me.payment.currency || "usd").toUpperCase()}`
-                : "—"
-            }
-            primaryTypographyProps={{ fontSize: 13, fontWeight: 600, color: "#000" }}
-            secondaryTypographyProps={{ fontSize: 13, color: "#000" }}
-          />
-        </MenuItem>
-        <Divider sx={{ my: 0.5 }} />
-        <MenuItem
-          component={Link}
-          href="/user/billing"
-          onClick={closeMenu}
-          sx={{ py: 1, color: "#000" }}
-        >
-          <ListItemIcon sx={{ minWidth: 36, color: "#000" }}>
-            <FiCreditCard size={18} />
-          </ListItemIcon>
-          <ListItemText primary="Billing & all payments" primaryTypographyProps={{ fontSize: 14, color: "#000" }} />
         </MenuItem>
       </Menu>
 
@@ -540,81 +377,6 @@ function Navbar() {
         </Box>
       </Drawer>
 
-      {/* Team info dialog - centered, top z-index, blur behind, smooth same-time open */}
-      <Dialog
-        open={teamDialogOpen}
-        onClose={() => { setTeamDialogOpen(false); setSelectedTeam(null); }}
-        slotProps={{
-          root: { sx: { zIndex: 9999 } },
-          backdrop: {
-            sx: {
-              zIndex: 9998,
-              backdropFilter: "blur(6px)",
-              backgroundColor: "rgba(0,0,0,0.35)",
-              transition: "opacity 0.2s ease-out, backdrop-filter 0.2s ease-out",
-              transitionDelay: 0,
-            },
-          },
-          transition: { timeout: 200 },
-        }}
-        PaperProps={{
-          sx: {
-            borderRadius: 2,
-            boxShadow: "0 8px 32px rgba(0,0,0,0.12)",
-            minWidth: 320,
-            maxWidth: "90vw",
-            position: "relative",
-            zIndex: 10000,
-            transition: "opacity 0.2s ease-out, transform 0.2s ease-out",
-            transitionDelay: 0,
-          },
-        }}
-      >
-        <DialogTitle sx={{ fontWeight: 700, fontSize: 18, color: "#000", pb: 0 }}>
-          Team details
-        </DialogTitle>
-        <DialogContent sx={{ pt: 2 }}>
-          {selectedTeam && (
-            <Box sx={{ display: "flex", flexDirection: "column", gap: 1.5 }}>
-              <Box>
-                <Typography sx={{ fontSize: 12, color: "rgba(0,0,0,0.6)", fontWeight: 600 }}>Team name</Typography>
-                <Typography sx={{ fontSize: 15, color: "#000" }}>{selectedTeam.teamName}</Typography>
-              </Box>
-              <Box>
-                <Typography sx={{ fontSize: 12, color: "rgba(0,0,0,0.6)", fontWeight: 600 }}>Season</Typography>
-                <Typography sx={{ fontSize: 15, color: "#000" }}>{selectedTeam.season}</Typography>
-              </Box>
-              <Box>
-                <Typography sx={{ fontSize: 12, color: "rgba(0,0,0,0.6)", fontWeight: 600 }}>Session (year)</Typography>
-                <Typography sx={{ fontSize: 15, color: "#000" }}>{selectedTeam.session}</Typography>
-              </Box>
-              <Box>
-                <Typography sx={{ fontSize: 12, color: "rgba(0,0,0,0.6)", fontWeight: 600 }}>Games</Typography>
-                <Typography sx={{ fontSize: 15, color: "#000" }}>{selectedTeam.games ?? "—"}</Typography>
-              </Box>
-              <Box>
-                <Typography sx={{ fontSize: 12, color: "rgba(0,0,0,0.6)", fontWeight: 600 }}>Plays</Typography>
-                <Typography sx={{ fontSize: 15, color: "#000" }}>{selectedTeam.plays ?? "—"}</Typography>
-              </Box>
-            </Box>
-          )}
-        </DialogContent>
-        <DialogActions sx={{ px: 3, pb: 2, pt: 0 }}>
-          <Button
-            variant="contained"
-            onClick={() => { setTeamDialogOpen(false); setSelectedTeam(null); }}
-            sx={{
-              bgcolor: "#000",
-              color: "#fff",
-              fontWeight: 600,
-              textTransform: "none",
-              "&:hover": { bgcolor: "#333" },
-            }}
-          >
-            Close
-          </Button>
-        </DialogActions>
-      </Dialog>
     </Box>
   );
 }

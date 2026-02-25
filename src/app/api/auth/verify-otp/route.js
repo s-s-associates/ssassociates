@@ -1,6 +1,5 @@
 import { connectDB } from "@/lib/db";
 import { signToken } from "@/lib/jwt";
-import { hasActivePayment } from "@/lib/payment-helpers";
 import User from "@/models/User";
 import Otp from "@/models/Otp";
 import { NextResponse } from "next/server";
@@ -42,13 +41,11 @@ export async function POST(req) {
       await Otp.deleteOne({ _id: record._id });
       const user = await User.findOne({ email: record.email }).select("-password");
       const token = signToken({ userId: user._id.toString(), email: user.email });
-      const paymentActive = await hasActivePayment(user._id);
       return NextResponse.json({
         success: true,
         message: "Email verified",
         token,
         user: { _id: user._id, email: user.email, firstName: user.firstName, lastName: user.lastName },
-        paymentStatus: paymentActive ? "active" : "inactive",
       });
     }
     if (type === "reset") {

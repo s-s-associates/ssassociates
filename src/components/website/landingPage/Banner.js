@@ -1,8 +1,8 @@
 "use client";
 
 import { primaryColor, grayColor } from "@/components/utils/Colors";
-import ArrowForwardRoundedIcon from "@mui/icons-material/ArrowForwardRounded";
-import PlayArrowRoundedIcon from "@mui/icons-material/PlayArrowRounded";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import { Box } from "@mui/material";
 import { motion } from "framer-motion";
 import Image from "next/image";
@@ -135,7 +135,7 @@ function Banner() {
             transition={{ duration: 0.25, ease: [0.32, 0.72, 0, 1] }}
             style={{ display: "inline-flex", alignItems: "center" }}
           >
-            <ArrowForwardRoundedIcon sx={{ fontSize: 20 }} />
+            <ArrowForwardIcon sx={{ fontSize: 20 }} />
           </motion.span>
         </Box>
         <Box
@@ -183,7 +183,7 @@ function Banner() {
             transition={{ duration: 0.25, ease: [0.32, 0.72, 0, 1] }}
             style={{ display: "inline-flex", alignItems: "center" }}
           >
-            <PlayArrowRoundedIcon sx={{ fontSize: 20 }} />
+            <PlayArrowIcon sx={{ fontSize: 20 }} />
           </motion.span>
         </Box>
       </Box>

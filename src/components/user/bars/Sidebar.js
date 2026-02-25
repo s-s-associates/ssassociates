@@ -3,7 +3,6 @@
 import {
   FiBarChart2,
   FiChevronDown,
-  FiCreditCard,
   FiFileText,
   FiGrid,
   FiLogOut,
@@ -24,11 +23,8 @@ const LOGOUT_BG = "rgba(255, 255, 255, 0.08)";
 
 const menuItems = [
   { label: "Dashboard", href: "/user/dashboard", Icon: FiGrid },
-  { label: "Upload Data", href: "/user/upload-data", Icon: FiUploadCloud },
-  { label: "Uploads", href: "/user/uploads", Icon: FiFileText },
   { label: "Analytics", href: "/user/analytics", Icon: FiBarChart2, hasSubmenu: true },
   { label: "Mappings", href: "/user/mappings", Icon: FiRefreshCw },
-  { label: "Billing", href: "/user/billing", Icon: FiCreditCard },
 ];
 
 const analyticsChildren = [

@@ -77,11 +77,7 @@ function Login() {
       }
       setAuth(data.user, data.token);
       await Swal.fire({ icon: "success", title: "Welcome back!", text: "Redirecting..." });
-      if (data.paymentStatus === "active") {
-        router.push("/user/dashboard");
-      } else {
-        router.push("/payment");
-      }
+      router.push("/user/dashboard");
     } catch (err) {
       await Swal.fire({ icon: "error", title: "Error", text: err.message || "Something went wrong" });
       setLoading(false);

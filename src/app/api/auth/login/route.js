@@ -1,6 +1,5 @@
 import { connectDB } from "@/lib/db";
 import { signToken } from "@/lib/jwt";
-import { hasActivePayment } from "@/lib/payment-helpers";
 import User from "@/models/User";
 import bcrypt from "bcryptjs";
 import { NextResponse } from "next/server";
@@ -37,7 +36,6 @@ export async function POST(req) {
       );
     }
     const token = signToken({ userId: user._id.toString(), email: user.email });
-    const paymentActive = await hasActivePayment(user._id);
     const userObj = {
       _id: user._id,
       email: user.email,
@@ -49,7 +47,6 @@ export async function POST(req) {
       success: true,
       token,
       user: userObj,
-      paymentStatus: paymentActive ? "active" : "inactive",
     });
   } catch (err) {
     console.error("Login error:", err);

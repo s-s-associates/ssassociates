@@ -2,20 +2,20 @@
 
 import { getAuth } from "@/lib/auth-storage";
 import { Box } from "@mui/material";
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
-import Swal from "sweetalert2";
 import { BeatLoader } from "react-spinners";
+
+// TEMPORARY: Set to true to skip login for /user. Set false when you want auth again.
+const SKIP_USER_GUARD = true;
 
 export default function UserGuard({ children }) {
   const router = useRouter();
-  const pathname = usePathname();
-  const [allowed, setAllowed] = useState(false);
-  const [checking, setChecking] = useState(true);
-
-  const isPaymentPage = pathname === "/payment";
+  const [allowed, setAllowed] = useState(SKIP_USER_GUARD);
+  const [checking, setChecking] = useState(!SKIP_USER_GUARD);
 
   useEffect(() => {
+    if (SKIP_USER_GUARD) return;
     let cancelled = false;
     async function check() {
       const { token } = getAuth();
@@ -37,27 +37,8 @@ export default function UserGuard({ children }) {
           router.replace("/login");
           return;
         }
-        if (data.paymentStatus === "active") {
-          setAllowed(true);
-          setChecking(false);
-          return;
-        }
-        if (isPaymentPage) {
-          setAllowed(true);
-          setChecking(false);
-          return;
-        }
-        if (!cancelled) {
-          setChecking(false);
-          await Swal.fire({
-            icon: "warning",
-            title: "Payment required",
-            text: "Please complete your payment to access the dashboard.",
-            confirmButtonColor: "#8A38F5",
-            confirmButtonText: "Go to payment",
-          });
-          if (!cancelled) router.replace("/payment");
-        }
+        setAllowed(true);
+        setChecking(false);
       } catch {
         if (!cancelled) {
           setChecking(false);
@@ -67,7 +48,7 @@ export default function UserGuard({ children }) {
     }
     check();
     return () => { cancelled = true; };
-  }, [router, isPaymentPage]);
+  }, [router]);
 
   if (checking) {
     return (
