@@ -16,8 +16,8 @@ const plusJakartaSans = Plus_Jakarta_Sans({
 });
 
 export const metadata = {
-  title: "CoachScout",
-  description: "CoachScout is a platform for coaches to find the best players for their team.",
+  title: "SsAssociates",
+  description: "SsAssociates is a platform for coaches to find the best players for their team.",
 };
 
 export default function RootLayout({ children }) {

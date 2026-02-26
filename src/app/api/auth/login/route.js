@@ -1,6 +1,6 @@
 import { connectDB } from "@/lib/db";
 import { signToken } from "@/lib/jwt";
-import User from "@/models/User";
+import Admin from "@/models/Admin";
 import bcrypt from "bcryptjs";
 import { NextResponse } from "next/server";
 
@@ -15,33 +15,25 @@ export async function POST(req) {
       );
     }
     await connectDB();
-    const user = await User.findOne({ email: email.toLowerCase().trim() });
-    if (!user) {
+    const admin = await Admin.findOne({ email: email.toLowerCase().trim() });
+    if (!admin) {
       return NextResponse.json(
         { success: false, message: "Invalid email or password" },
         { status: 401 }
       );
     }
-    if (!user.isEmailVerified) {
-      return NextResponse.json(
-        { success: false, message: "Please verify your email first" },
-        { status: 401 }
-      );
-    }
-    const match = await bcrypt.compare(password, user.password);
+    const match = await bcrypt.compare(password, admin.password);
     if (!match) {
       return NextResponse.json(
         { success: false, message: "Invalid email or password" },
         { status: 401 }
       );
     }
-    const token = signToken({ userId: user._id.toString(), email: user.email });
+    const token = signToken({ userId: admin._id.toString(), email: admin.email });
     const userObj = {
-      _id: user._id,
-      email: user.email,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      teamSchoolName: user.teamSchoolName,
+      _id: admin._id,
+      email: admin.email,
+      name: admin.name,
     };
     return NextResponse.json({
       success: true,

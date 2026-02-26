@@ -11,7 +11,7 @@ const transporter = nodemailer.createTransport({
 });
 
 export async function sendOtpEmail({ to, otp, type }) {
-  const subject = type === "signup" ? "Verify your CoachScout account" : "Reset your CoachScout password";
+  const subject = type === "signup" ? "Verify your SsAssociates account" : "Reset your SsAssociates password";
   const text =
     type === "signup"
       ? `Your verification code is: ${otp}. It expires in 10 minutes.`

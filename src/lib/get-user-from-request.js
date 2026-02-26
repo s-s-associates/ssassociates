@@ -1,6 +1,6 @@
 import { connectDB } from "@/lib/db";
 import { verifyToken } from "@/lib/jwt";
-import User from "@/models/User";
+import Admin from "@/models/Admin";
 
 export async function getUserFromRequest(req) {
   const authHeader = req.headers.get("authorization");
@@ -9,6 +9,6 @@ export async function getUserFromRequest(req) {
   const decoded = verifyToken(token);
   if (!decoded?.userId) return null;
   await connectDB();
-  const user = await User.findById(decoded.userId).select("-password");
-  return user;
+  const admin = await Admin.findById(decoded.userId).select("-password");
+  return admin;
 }

@@ -1,14 +1,14 @@
 "use client";
 
 import {
-  FiBarChart2,
   FiChevronDown,
-  FiFileText,
+  FiFolder,
   FiGrid,
   FiLogOut,
-  FiRefreshCw,
-  FiUploadCloud,
+  FiMail,
+  FiUsers,
 } from "react-icons/fi";
+import { MdPeopleOutline } from "react-icons/md";
 import { clearAuth } from "@/lib/auth-storage";
 import { Box } from "@mui/material";
 import Link from "next/link";
@@ -23,18 +23,21 @@ const LOGOUT_BG = "rgba(255, 255, 255, 0.08)";
 
 const menuItems = [
   { label: "Dashboard", href: "/user/dashboard", Icon: FiGrid },
-  { label: "Analytics", href: "/user/analytics", Icon: FiBarChart2, hasSubmenu: true },
-  { label: "Mappings", href: "/user/mappings", Icon: FiRefreshCw },
+  { label: "Admins", href: "/user/admins", Icon: FiUsers },
+  { label: "Clients", href: "/user/clients", Icon: MdPeopleOutline },
+  { label: "Contact submission", href: "/user/contact-submissions", Icon: FiMail },
+  { label: "Project pages", href: "/user/category", Icon: FiFolder, hasSubmenu: true },
 ];
 
-const analyticsChildren = [
-  { label: "Analytics", href: "/user/analytics" },
+const projectPagesChildren = [
+  { label: "Category", href: "/user/category" },
+  { label: "Projects", href: "/user/projects" },
 ];
 
 function Sidebar() {
   const pathname = usePathname();
   const router = useRouter();
-  const [analyticsOpen, setAnalyticsOpen] = useState(false);
+  const [projectPagesOpen, setProjectPagesOpen] = useState(false);
 
   const handleLogout = () => {
     Swal.fire({
@@ -94,7 +97,7 @@ function Sidebar() {
           px: 1.5,
         }}
       >
-        COACHSCOUT
+        SsAssociates
       </Box>
 
       {/* MENU label */}
@@ -116,13 +119,13 @@ function Sidebar() {
         {menuItems.map(({ label, href, Icon, hasSubmenu }) => {
           const isActive = !hasSubmenu && pathname === href;
 
-          if (hasSubmenu && label === "Analytics") {
+          if (hasSubmenu && label === "Project pages") {
             return (
               <Box key={label}>
                 <Box
                   component="button"
                   type="button"
-                  onClick={() => setAnalyticsOpen((o) => !o)}
+                  onClick={() => setProjectPagesOpen((o) => !o)}
                   sx={{
                     width: "100%",
                     display: "flex",
@@ -154,7 +157,7 @@ function Sidebar() {
                     sx={{
                       display: "flex",
                       color: "inherit",
-                      transform: analyticsOpen ? "rotate(180deg)" : "rotate(0deg)",
+                      transform: projectPagesOpen ? "rotate(180deg)" : "rotate(0deg)",
                       transition: "transform 0.2s ease",
                     }}
                   >
@@ -164,8 +167,8 @@ function Sidebar() {
                 <Box
                   sx={{
                     overflow: "hidden",
-                    maxHeight: analyticsOpen ? 200 : 0,
-                    opacity: analyticsOpen ? 1 : 0,
+                    maxHeight: projectPagesOpen ? 200 : 0,
+                    opacity: projectPagesOpen ? 1 : 0,
                     transition: "max-height 0.3s ease, opacity 0.25s ease",
                   }}
                 >
@@ -179,7 +182,7 @@ function Sidebar() {
                       gap: 0.25,
                     }}
                   >
-                    {analyticsChildren.map(({ label: childLabel, href: childHref }) => {
+                    {projectPagesChildren.map(({ label: childLabel, href: childHref }) => {
                       const isChildActive = pathname === childHref;
                       return (
                         <Box

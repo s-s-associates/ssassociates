@@ -18,14 +18,13 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import React, { useCallback, useEffect, useState } from "react";
 import {
-  FiBarChart2,
   FiBell,
   FiChevronDown,
   FiFileText,
+  FiFolder,
   FiGrid,
   FiLogOut,
   FiMenu,
-  FiRefreshCw,
   FiUploadCloud,
 } from "react-icons/fi";
 import Swal from "sweetalert2";
@@ -40,8 +39,8 @@ const menuItems = [
   { label: "Dashboard", href: "/user/dashboard", Icon: FiGrid },
   { label: "Upload Data", href: "/user/upload-data", Icon: FiUploadCloud },
   { label: "Uploads", href: "/user/uploads", Icon: FiFileText },
-  { label: "Analytics", href: "/user/analytics", Icon: FiBarChart2 },
-  { label: "Mappings", href: "/user/mappings", Icon: FiRefreshCw },
+  { label: "Category", href: "/user/category", Icon: FiFolder },
+  { label: "Projects", href: "/user/projects", Icon: FiFolder },
 ];
 
 function Navbar() {
@@ -53,9 +52,13 @@ function Navbar() {
 
   const { user: authUser, email: authEmail, token } = getAuth();
   const displayName =
-    authUser?.firstName && authUser?.lastName
+    authUser?.name?.trim() ||
+    (authUser?.firstName && authUser?.lastName
       ? `${authUser.firstName} ${authUser.lastName}`.trim()
-      : authUser?.email || authEmail || "User";
+      : null) ||
+    authUser?.email ||
+    authEmail ||
+    "User";
   const displayEmail = authUser?.email || authEmail || "";
 
   const fetchMe = useCallback(() => {
@@ -293,7 +296,7 @@ function Navbar() {
               px: 1.5,
             }}
           >
-            COACHSCOUT
+            SsAssociates
           </Box>
           <Box
             sx={{

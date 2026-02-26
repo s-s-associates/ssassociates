@@ -74,7 +74,7 @@ function Navbar() {
             minHeight: 56,
           }}
         >
-          {/* Logo - CoachScout */}
+          {/* Logo - SsAssociates */}
           <Box
             component={motion.div}
             variants={container}
@@ -99,7 +99,7 @@ function Navbar() {
               }}
             >
               <Link href="/" style={{ color: "inherit", textDecoration: "none" }}>
-                CoachScout
+                SsAssociates
               </Link>
             </Box>
           </Box>

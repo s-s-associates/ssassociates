@@ -13,7 +13,6 @@ import {
 import { Formik } from "formik";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import Image from "next/image";
 import React, { useState } from "react";
 import * as Yup from "yup";
 import { useRouter } from "next/navigation";
@@ -204,10 +203,7 @@ function Login() {
           sx={{
             display: "flex",
             alignItems: "center",
-            justifyContent: "space-between",
             mb: 3,
-            flexWrap: "wrap",
-            gap: 1,
           }}
         >
           <FormControlLabel
@@ -227,19 +223,6 @@ function Login() {
               </Box>
             }
           />
-          <Box
-            component={Link}
-            href="/forgot-password"
-            sx={{
-              fontSize: 14,
-              color: "#000",
-              textDecoration: "none",
-              fontWeight: 500,
-              "&:hover": { color: primaryColor },
-            }}
-          >
-            Forgot password?
-          </Box>
         </Box>
 
         <Box component={motion.div} variants={authItemVariants}>
@@ -260,33 +243,6 @@ function Login() {
             }}
           >
             {loading ? <BeatLoader color="#fff" size={10} /> : "Sign In"}
-          </Button>
-        </Box>
-
-        <Box component={motion.div} variants={authItemVariants}>
-          <Button
-            fullWidth
-            variant="outlined"
-            startIcon={
-            <Image src="/images/google.png" alt="Google" width={20} height={20} />
-          }
-          sx={{
-            mt: 2,
-            borderColor: INPUT_BG,
-            bgcolor: "#fff",
-            color: "#000",
-            fontWeight: 600,
-            fontSize: 16,
-            py: 1.5,
-            borderRadius: 2,
-            textTransform: "none",
-            "&:hover": {
-              borderColor: "rgba(0,0,0,0.2)",
-              bgcolor: "rgba(236, 236, 237, 0.5)",
-            },
-          }}
-          >
-            Continue with Google
           </Button>
         </Box>
 

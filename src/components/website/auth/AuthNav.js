@@ -36,7 +36,7 @@ function AuthNav() {
           textDecoration: "none",
         }}
       >
-        CoachScout
+        SsAssociates
       </Box>
       <IconButton
         component={Link}

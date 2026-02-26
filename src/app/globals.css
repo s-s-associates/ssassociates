@@ -25,3 +25,11 @@ a {
   text-decoration: none;
 }
 
+/* SweetAlert2 above MUI Dialog and other modals */
+.swal2-container {
+  z-index: 9999 !important;
+}
+.swal2-popup {
+  z-index: 10000 !important;
+}
+

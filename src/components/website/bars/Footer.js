@@ -93,7 +93,7 @@ function Footer() {
               "&:hover": { color: primaryColor },
             }}
           >
-            CoachScout
+            SsAssociates
           </Box>
         
         </Box>
@@ -175,7 +175,7 @@ function Footer() {
               color: grayColor,
             }}
           >
-            © 2026 CoachScout. All rights reserved.
+            © 2026 SsAssociates. All rights reserved.
           </Box>
     </Box>
   );

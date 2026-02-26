@@ -1,6 +1,6 @@
 import { connectDB } from "@/lib/db";
 import { verifyToken } from "@/lib/jwt";
-import User from "@/models/User";
+import Admin from "@/models/Admin";
 import { NextResponse } from "next/server";
 
 export async function GET(req) {
@@ -15,16 +15,14 @@ export async function GET(req) {
       return NextResponse.json({ success: false, message: "Invalid token" }, { status: 401 });
     }
     await connectDB();
-    const user = await User.findById(decoded.userId).select("-password");
-    if (!user) {
-      return NextResponse.json({ success: false, message: "User not found" }, { status: 401 });
+    const admin = await Admin.findById(decoded.userId).select("-password");
+    if (!admin) {
+      return NextResponse.json({ success: false, message: "Admin not found" }, { status: 401 });
     }
     const userObj = {
-      _id: user._id,
-      email: user.email,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      teamSchoolName: user.teamSchoolName,
+      _id: admin._id,
+      email: admin.email,
+      name: admin.name,
     };
     return NextResponse.json({
       success: true,
