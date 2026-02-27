@@ -5,6 +5,7 @@ import {
   Box,
   Button,
   FormControl,
+  FormHelperText,
   InputLabel,
   MenuItem,
   Select,
@@ -14,6 +15,7 @@ import {
 import { getAuth } from "@/lib/auth-storage";
 import { Formik } from "formik";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import React, { useCallback, useEffect, useState } from "react";
 import { FiArrowLeft } from "react-icons/fi";
 import { BeatLoader } from "react-spinners";
@@ -117,6 +119,8 @@ const cardSx = {
   border: "1px solid rgba(0,0,0,0.06)",
 };
 
+const ERROR_COLOR = "#d32f2f";
+
 const inputSx = {
   "& .MuiOutlinedInput-root": {
     borderRadius: 2.5,
@@ -124,18 +128,23 @@ const inputSx = {
     "& fieldset": { borderColor: "rgba(0,0,0,0.08)" },
     "&:hover fieldset": { borderColor: "rgba(0,0,0,0.15)" },
     "&.Mui-focused fieldset": { borderWidth: 2, borderColor: `${primaryColor} !important` },
+    "&.Mui-error fieldset": { borderColor: `${ERROR_COLOR} !important`, borderWidth: 1.5 },
   },
   "& .MuiInputLabel-shrink": { fontWeight: 600 },
+  "& .MuiFormHelperText-root.Mui-error": { color: ERROR_COLOR, fontWeight: 500 },
 };
 
 export default function ProjectForm({ projectId, initialData, onSuccess }) {
+  const router = useRouter();
   const { token } = getAuth();
   const [coverFile, setCoverFile] = useState(null);
-  const [coverPreview, setCoverPreview] = useState(initialData?.bannerUrl || "");
+  const [coverPreview, setCoverPreview] = useState(() => initialData?.bannerUrl || "");
   const [coverError, setCoverError] = useState(false);
   const [categoryOptions, setCategoryOptions] = useState([]);
   const [galleryFiles, setGalleryFiles] = useState([]);
-  const [existingGalleryUrls, setExistingGalleryUrls] = useState(initialData?.imageGallery || []);
+  const [existingGalleryUrls, setExistingGalleryUrls] = useState(() =>
+    Array.isArray(initialData?.imageGallery) ? initialData.imageGallery : []
+  );
 
   const fetchCategories = useCallback(async () => {
     if (!token) {
@@ -258,6 +267,7 @@ export default function ProjectForm({ projectId, initialData, onSuccess }) {
           confirmButtonColor: primaryColor,
         });
         onSuccess?.();
+        router.push("/user/projects");
       } else {
         const res = await fetch("/api/projects", {
           method: "POST",
@@ -276,6 +286,7 @@ export default function ProjectForm({ projectId, initialData, onSuccess }) {
           confirmButtonColor: primaryColor,
         });
         onSuccess?.();
+        router.push("/user/projects");
       }
     } catch (err) {
       await Swal.fire({
@@ -329,10 +340,58 @@ export default function ProjectForm({ projectId, initialData, onSuccess }) {
           handleSubmit,
           isSubmitting,
           setFieldValue,
-        }) => (
-          <form onSubmit={handleSubmit} noValidate>
+          validateForm,
+          setTouched,
+          submitForm,
+        }) => {
+          const FIELD_ORDER = ["title", "status", "category", "ctaLink", "durationEnd", "videoUrl"];
+          const handleSubmitClick = async () => {
+            if (isSubmitting) return;
+            const hasCover = coverFile || (coverPreview && (coverPreview.startsWith("http:") || coverPreview.startsWith("https:")));
+            if (!hasCover) {
+              setCoverError(true);
+              requestAnimationFrame(() => {
+                document.getElementById("project-cover")?.scrollIntoView({ behavior: "auto", block: "center" });
+              });
+              return;
+            }
+            setCoverError(false);
+            const errs = await validateForm();
+            const allTouched = {};
+            Object.keys(values).forEach((k) => { allTouched[k] = true; });
+            setTouched(allTouched);
+            if (Object.keys(errs).length > 0) {
+              const first = FIELD_ORDER.find((k) => errs[k]);
+              if (first) {
+                requestAnimationFrame(() => {
+                  document.getElementById(`field-${first}`)?.scrollIntoView({ behavior: "auto", block: "center" });
+                });
+              }
+              return;
+            }
+            submitForm();
+          };
+          const hasFormErrors = Object.keys(errors).length > 0;
+          const showAllErrors = (coverError || hasFormErrors) && (coverError || Object.keys(touched).length > 0);
+          return (
+          <form onSubmit={(e) => { e.preventDefault(); handleSubmitClick(); }} noValidate>
+            {showAllErrors && (
+              <Box
+                sx={{
+                  bgcolor: "#ffebee",
+                  border: `1px solid ${ERROR_COLOR}`,
+                  borderRadius: 2,
+                  p: 1.5,
+                  mb: 2,
+                }}
+              >
+                <Typography sx={{ fontSize: 14, fontWeight: 600, color: ERROR_COLOR }}>
+                  Please fix the errors below before saving.
+                </Typography>
+              </Box>
+            )}
             {/* 0. Cover image — separate field at top */}
-            <Box sx={cardSx}>
+            <Box id="project-cover" sx={cardSx}>
               <Typography sx={{ fontWeight: 700, fontSize: 16, color: "#000", mb: 2, letterSpacing: "0.02em", textTransform: "uppercase" }}>
                 Cover image <Typography component="span" sx={{ color: "#d32f2f", fontWeight: 700 }}>*</Typography>
               </Typography>
@@ -340,7 +399,7 @@ export default function ProjectForm({ projectId, initialData, onSuccess }) {
                 Main banner / hero image for this project (required)
               </Typography>
               {coverError && (
-                <Typography sx={{ fontSize: 13, color: "#d32f2f", mb: 1.5 }}>
+                <Typography sx={{ fontSize: 13, color: ERROR_COLOR, fontWeight: 500, mb: 1.5 }}>
                   Please upload a cover image.
                 </Typography>
               )}
@@ -414,17 +473,20 @@ export default function ProjectForm({ projectId, initialData, onSuccess }) {
                 Project basics
               </Typography>
               <Box sx={{ display: "flex", flexDirection: "column", gap: 2.5 }}>
-                <TextField
-                  fullWidth
-                  label="Project Title"
-                  name="title"
-                  value={values.title}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  error={touched.title && !!errors.title}
-                  helperText={touched.title && errors.title}
-                  sx={inputSx}
-                />
+                <Box id="field-title">
+                  <TextField
+                    fullWidth
+                    label="Project Title"
+                    name="title"
+                    value={values.title}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    error={touched.title && !!errors.title}
+                    helperText={touched.title && errors.title}
+                    FormHelperTextProps={{ sx: { color: ERROR_COLOR, fontWeight: 500 } }}
+                    sx={inputSx}
+                  />
+                </Box>
                 <TextField
                   fullWidth
                   label="Short Tagline"
@@ -443,20 +505,27 @@ export default function ProjectForm({ projectId, initialData, onSuccess }) {
                   onBlur={handleBlur}
                   sx={inputSx}
                 />
-                <FormControl fullWidth sx={inputSx}>
-                  <InputLabel>Status</InputLabel>
-                  <Select
-                    name="status"
-                    value={values.status}
-                    label="Status"
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                  >
-                    {STATUS_OPTIONS.map((o) => (
-                      <MenuItem key={o} value={o}>{o}</MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
+                <Box id="field-status">
+                  <FormControl fullWidth sx={inputSx} error={touched.status && !!errors.status}>
+                    <InputLabel>Status</InputLabel>
+                    <Select
+                      name="status"
+                      value={values.status}
+                      label="Status"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                    >
+                      {STATUS_OPTIONS.map((o) => (
+                        <MenuItem key={o} value={o}>{o}</MenuItem>
+                      ))}
+                    </Select>
+                    {touched.status && errors.status && (
+                      <FormHelperText error sx={{ color: ERROR_COLOR, fontWeight: 500, ml: 1.75 }}>
+                        {errors.status}
+                      </FormHelperText>
+                    )}
+                  </FormControl>
+                </Box>
                 <TextField
                   fullWidth
                   label="Year"
@@ -481,18 +550,21 @@ export default function ProjectForm({ projectId, initialData, onSuccess }) {
                     ))}
                   </Select>
                 </FormControl>
-                <TextField
-                  fullWidth
-                  label="CTA Link (URL)"
-                  name="ctaLink"
-                  value={values.ctaLink}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  error={touched.ctaLink && !!errors.ctaLink}
-                  helperText={touched.ctaLink && errors.ctaLink}
-                  placeholder="https://..."
-                  sx={inputSx}
-                />
+                <Box id="field-ctaLink">
+                  <TextField
+                    fullWidth
+                    label="CTA Link (URL)"
+                    name="ctaLink"
+                    value={values.ctaLink}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    error={touched.ctaLink && !!errors.ctaLink}
+                    helperText={touched.ctaLink && errors.ctaLink}
+                    FormHelperTextProps={{ sx: { color: ERROR_COLOR, fontWeight: 500 } }}
+                    placeholder="https://..."
+                    sx={inputSx}
+                  />
+                </Box>
               </Box>
             </Box>
 
@@ -522,10 +594,11 @@ export default function ProjectForm({ projectId, initialData, onSuccess }) {
                   onBlur={handleBlur}
                   sx={inputSx}
                 />
-                <FormControl fullWidth sx={inputSx}>
-                  {/* <InputLabel>Category</InputLabel> */}
-                  <Select
-                    name="category"
+                <Box id="field-category">
+                  <FormControl fullWidth sx={inputSx} error={touched.category && !!errors.category}>
+                    {/* <InputLabel>Category</InputLabel> */}
+                    <Select
+                      name="category"
                     value={values.category}
                     // label="Category"
                     onChange={handleChange}
@@ -542,7 +615,13 @@ export default function ProjectForm({ projectId, initialData, onSuccess }) {
                       <MenuItem key={c._id} value={c.name}>{c.name}</MenuItem>
                     ))}
                   </Select>
-                </FormControl>
+                    {touched.category && errors.category && (
+                      <FormHelperText error sx={{ color: ERROR_COLOR, fontWeight: 500, ml: 1.75 }}>
+                        {errors.category}
+                      </FormHelperText>
+                    )}
+                  </FormControl>
+                </Box>
                 <Box sx={{ display: "flex", gap: 2, flexWrap: "wrap" }}>
                   <TextField
                     label="Project Area"
@@ -589,19 +668,22 @@ export default function ProjectForm({ projectId, initialData, onSuccess }) {
                     InputLabelProps={{ shrink: true }}
                     sx={inputSx}
                   />
-                  <TextField
-                    fullWidth
-                    type="date"
-                    label="Duration End"
-                    name="durationEnd"
-                    value={values.durationEnd}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    error={touched.durationEnd && !!errors.durationEnd}
-                    helperText={touched.durationEnd && errors.durationEnd}
-                    InputLabelProps={{ shrink: true }}
-                    sx={inputSx}
-                  />
+                  <Box id="field-durationEnd">
+                    <TextField
+                      fullWidth
+                      type="date"
+                      label="Duration End"
+                      name="durationEnd"
+                      value={values.durationEnd}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      error={touched.durationEnd && !!errors.durationEnd}
+                      helperText={touched.durationEnd && errors.durationEnd}
+                      FormHelperTextProps={{ sx: { color: ERROR_COLOR, fontWeight: 500 } }}
+                      InputLabelProps={{ shrink: true }}
+                      sx={inputSx}
+                    />
+                  </Box>
                 </Box>
               </Box>
             </Box>
@@ -816,18 +898,21 @@ export default function ProjectForm({ projectId, initialData, onSuccess }) {
               <Typography sx={{ fontWeight: 700, fontSize: 16, color: "#000", mb: 2, letterSpacing: "0.02em", textTransform: "uppercase" }}>
                 Video
               </Typography>
-              <TextField
-                fullWidth
-                label="Video URL"
-                name="videoUrl"
-                value={values.videoUrl}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                error={touched.videoUrl && !!errors.videoUrl}
-                helperText={touched.videoUrl && errors.videoUrl}
-                placeholder="https://youtube.com/... or video link"
-                sx={inputSx}
-              />
+              <Box id="field-videoUrl">
+                <TextField
+                  fullWidth
+                  label="Video URL"
+                  name="videoUrl"
+                  value={values.videoUrl}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  error={touched.videoUrl && !!errors.videoUrl}
+                  helperText={touched.videoUrl && errors.videoUrl}
+                  FormHelperTextProps={{ sx: { color: ERROR_COLOR, fontWeight: 500 } }}
+                  placeholder="https://youtube.com/... or video link"
+                  sx={inputSx}
+                />
+              </Box>
             </Box>
 
             {/* 6. Challenges & Solutions */}
@@ -893,7 +978,8 @@ export default function ProjectForm({ projectId, initialData, onSuccess }) {
               </Button>
             </Box>
           </form>
-        )}
+          );
+        }}
       </Formik>
     </Box>
   );

@@ -57,6 +57,7 @@ export default function ClientsPage() {
   const [editingClient, setEditingClient] = useState(null);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [url, setUrl] = useState("");
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState("");
   const [imageError, setImageError] = useState(false);
@@ -88,6 +89,7 @@ export default function ClientsPage() {
     setEditingClient(null);
     setTitle("");
     setDescription("");
+    setUrl("");
     setImageFile(null);
     setImagePreview("");
     setDialogOpen(true);
@@ -97,6 +99,7 @@ export default function ClientsPage() {
     setEditingClient(client);
     setTitle(client.title || "");
     setDescription(client.description || "");
+    setUrl(client.url || "");
     setImageFile(null);
     setImagePreview(client.imageUrl || "");
     setDialogOpen(true);
@@ -107,6 +110,7 @@ export default function ClientsPage() {
     setEditingClient(null);
     setTitle("");
     setDescription("");
+    setUrl("");
     setImageFile(null);
     setImagePreview("");
   };
@@ -169,7 +173,7 @@ export default function ClientsPage() {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify({ title: trimmedTitle, description: (description || "").trim(), imageUrl }),
+          body: JSON.stringify({ title: trimmedTitle, description: (description || "").trim(), url: (url || "").trim(), imageUrl }),
         });
         const data = await res.json();
         if (data.success) {
@@ -196,7 +200,7 @@ export default function ClientsPage() {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify({ title: trimmedTitle, description: (description || "").trim(), imageUrl }),
+          body: JSON.stringify({ title: trimmedTitle, description: (description || "").trim(), url: (url || "").trim(), imageUrl }),
         });
         const data = await res.json();
         if (data.success) {
@@ -484,6 +488,15 @@ export default function ClientsPage() {
               onChange={(e) => setDescription(e.target.value)}
               multiline
               rows={3}
+              sx={{ mb: 2 }}
+            />
+            <TextField
+              fullWidth
+              label="URL (optional)"
+              value={url}
+              onChange={(e) => setUrl(e.target.value)}
+              placeholder="https://..."
+              type="url"
             />
           </Box>
         </DialogContent>
@@ -553,6 +566,22 @@ export default function ClientsPage() {
               <Typography sx={{ fontSize: 15, color: "rgba(0,0,0,0.8)", lineHeight: 1.6, whiteSpace: "pre-wrap" }}>
                 {viewingClient.description || "—"}
               </Typography>
+              {viewingClient.url ? (
+                <>
+                  <Typography sx={{ fontSize: 12, fontWeight: 600, color: "rgba(0,0,0,0.5)", textTransform: "uppercase", letterSpacing: "0.06em", mb: 0.5, mt: 2 }}>
+                    URL
+                  </Typography>
+                  <Box
+                    component="a"
+                    href={viewingClient.url.startsWith("http") ? viewingClient.url : `https://${viewingClient.url}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    sx={{ fontSize: 15, color: primaryColor, textDecoration: "underline", "&:hover": { color: "#7A2FE5" } }}
+                  >
+                    {viewingClient.url}
+                  </Box>
+                </>
+              ) : null}
             </Box>
           )}
         </DialogContent>

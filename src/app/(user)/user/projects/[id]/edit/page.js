@@ -17,12 +17,19 @@ export default function EditProjectPage({ params }) {
 
   useEffect(() => {
     if (params && typeof params.then === "function") {
-      params.then((p) => setId(p?.id ?? null));
+      params.then((p) => {
+        const resolvedId = p?.id ?? null;
+        setId(resolvedId);
+        if (resolvedId) setLoading(true);
+      });
     }
   }, [params]);
 
   const fetchProject = useCallback(async () => {
-    if (!token || !id) return;
+    if (!token || !id) {
+      setLoading(false);
+      return;
+    }
     setLoading(true);
     try {
       const res = await fetch(`/api/projects/${id}`, {
@@ -46,7 +53,7 @@ export default function EditProjectPage({ params }) {
     router.push("/user/projects");
   };
 
-  if (params && typeof params.then === "function") {
+  if (!id && params && typeof params.then === "function") {
     return (
       <Box sx={{ p: 3, display: "flex", justifyContent: "center", alignItems: "center", minHeight: 200 }}>
         <BeatLoader color="#8A38F5" size={14} />

@@ -1,14 +1,15 @@
 import mongoose from "mongoose";
 
-const clientSchema = new mongoose.Schema(
+const serviceSchema = new mongoose.Schema(
   {
-    imageUrl: { type: String, trim: true, default: "" },
     title: { type: String, required: true, trim: true },
     description: { type: String, trim: true, default: "" },
-    url: { type: String, trim: true, default: "" },
+    icon: { type: String, trim: true, default: "" },
+    order: { type: Number, default: 0 },
     userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
   },
   { timestamps: true }
 );
 
-export default mongoose.models.Client || mongoose.model("Client", clientSchema);
+serviceSchema.index({ userId: 1, order: 1 });
+export default mongoose.models.Service || mongoose.model("Service", serviceSchema);

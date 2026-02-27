@@ -47,6 +47,7 @@ export async function PATCH(req, { params }) {
     if (body.imageUrl !== undefined) client.imageUrl = body.imageUrl;
     if (body.title !== undefined) client.title = (body.title || "").trim();
     if (body.description !== undefined) client.description = (body.description || "").trim();
+    if (body.url !== undefined) client.url = (body.url || "").trim();
     await client.save();
     return NextResponse.json({ success: true, client });
   } catch (err) {

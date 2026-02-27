@@ -14,6 +14,10 @@ import {
 import {
   Box,
   Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
   IconButton,
   Skeleton,
   Table,
@@ -26,10 +30,10 @@ import {
 import { getAuth } from "@/lib/auth-storage";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { BeatLoader } from "react-spinners";
 import Swal from "sweetalert2";
-import { FiEdit2, FiPlus, FiTrash2 } from "react-icons/fi";
+import { FiEdit2, FiEye, FiPlus, FiTrash2 } from "react-icons/fi";
 
 function getStatusStyle(status) {
   switch (status) {
@@ -50,6 +54,9 @@ export default function ProjectPages() {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [deletingId, setDeletingId] = useState(null);
+  const [viewingProject, setViewingProject] = useState(null);
+  const [viewLoadingId, setViewLoadingId] = useState(null);
+  const viewClosedRef = useRef(false);
 
   const fetchProjects = useCallback(async () => {
     if (!token) return;
@@ -71,6 +78,30 @@ export default function ProjectPages() {
   useEffect(() => {
     fetchProjects();
   }, [fetchProjects]);
+
+  const handleView = async (project) => {
+    if (!token || !project?._id) return;
+    viewClosedRef.current = false;
+    setViewLoadingId(project._id);
+    setViewingProject(null);
+    try {
+      const res = await fetch(`/api/projects/${project._id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const data = await res.json();
+      if (!viewClosedRef.current && data.success) setViewingProject(data.project);
+    } catch {
+      if (!viewClosedRef.current) setViewingProject(null);
+    } finally {
+      setViewLoadingId(null);
+    }
+  };
+
+  const closeViewDialog = () => {
+    viewClosedRef.current = true;
+    setViewingProject(null);
+    setViewLoadingId(null);
+  };
 
   const handleDelete = (project) => {
     Swal.fire({
@@ -240,6 +271,19 @@ export default function ProjectPages() {
                     <TableCell sx={{ color: "rgba(0,0,0,0.7)" }}>{row.year || "—"}</TableCell>
                     <TableCell align="right">
                       <IconButton
+                        size="small"
+                        onClick={() => handleView(row)}
+                        disabled={!!viewLoadingId}
+                        sx={{ color: "#64748b", "&:hover": { bgcolor: "rgba(0,0,0,0.06)" } }}
+                        aria-label="View"
+                      >
+                        {viewLoadingId === row._id ? (
+                          <BeatLoader color="#64748b" size={10} />
+                        ) : (
+                          <FiEye size={18} />
+                        )}
+                      </IconButton>
+                      <IconButton
                         component={Link}
                         href={`/user/projects/${row._id}/edit`}
                         size="small"
@@ -269,6 +313,111 @@ export default function ProjectPages() {
           </Table>
         )}
       </Box>
+
+      <Dialog
+        open={!!viewingProject || !!viewLoadingId}
+        onClose={closeViewDialog}
+        maxWidth="sm"
+        fullWidth
+        PaperProps={{ sx: { borderRadius: 2.5 } }}
+      >
+        <DialogTitle sx={{ fontWeight: 700, fontSize: 18, pb: 0 }}>
+          Project details
+        </DialogTitle>
+        <DialogContent sx={{ pt: 2 }}>
+          {viewLoadingId ? (
+            <Box sx={{ py: 4, display: "flex", justifyContent: "center" }}>
+              <BeatLoader color={primaryColor} size={14} />
+            </Box>
+          ) : viewingProject ? (
+            <Box>
+              {viewingProject.bannerUrl ? (
+                <Box
+                  component="img"
+                  src={viewingProject.bannerUrl}
+                  alt={viewingProject.title}
+                  sx={{
+                    width: "100%",
+                    maxHeight: 280,
+                    objectFit: "cover",
+                    borderRadius: 2,
+                    mb: 2,
+                    display: "block",
+                    boxShadow: "0 2px 12px rgba(0,0,0,0.08)",
+                  }}
+                />
+              ) : (
+                <Box sx={{ width: "100%", height: 160, bgcolor: bordergrayColor, borderRadius: 2, mb: 2 }} />
+              )}
+              <Typography sx={{ fontSize: 12, fontWeight: 600, color: "rgba(0,0,0,0.5)", textTransform: "uppercase", letterSpacing: "0.06em", mb: 0.5 }}>
+                Title
+              </Typography>
+              <Typography sx={{ fontSize: 18, fontWeight: 700, color: "#000", mb: 1.5 }}>
+                {viewingProject.title || "—"}
+              </Typography>
+              <Box sx={{ display: "flex", gap: 1.5, flexWrap: "wrap", mb: 1.5 }}>
+                <Box component="span" sx={{ px: 1.25, py: 0.5, borderRadius: 1, fontSize: 12, fontWeight: 600, ...getStatusStyle(viewingProject.status) }}>
+                  {viewingProject.status || "—"}
+                </Box>
+                {viewingProject.category && (
+                  <Typography component="span" sx={{ fontSize: 13, color: "rgba(0,0,0,0.7)" }}>
+                    {viewingProject.category}
+                  </Typography>
+                )}
+                {viewingProject.year && (
+                  <Typography component="span" sx={{ fontSize: 13, color: "rgba(0,0,0,0.6)" }}>
+                    {viewingProject.year}
+                  </Typography>
+                )}
+              </Box>
+              {viewingProject.description ? (
+                <>
+                  <Typography sx={{ fontSize: 12, fontWeight: 600, color: "rgba(0,0,0,0.5)", textTransform: "uppercase", letterSpacing: "0.06em", mb: 0.5 }}>
+                    Description
+                  </Typography>
+                  <Typography sx={{ fontSize: 14, color: "rgba(0,0,0,0.8)", lineHeight: 1.6, whiteSpace: "pre-wrap", mb: 2 }}>
+                    {viewingProject.description}
+                  </Typography>
+                </>
+              ) : null}
+              {viewingProject.imageGallery?.length > 0 ? (
+                <>
+                  <Typography sx={{ fontSize: 12, fontWeight: 600, color: "rgba(0,0,0,0.5)", textTransform: "uppercase", letterSpacing: "0.06em", mb: 1 }}>
+                    Gallery
+                  </Typography>
+                  <Box sx={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 1 }}>
+                    {viewingProject.imageGallery.slice(0, 8).map((url, i) => (
+                      <Box
+                        key={i}
+                        component="img"
+                        src={url}
+                        alt=""
+                        sx={{ width: "100%", aspectRatio: 1, borderRadius: 1, objectFit: "cover", boxShadow: "0 1px 4px rgba(0,0,0,0.08)" }}
+                      />
+                    ))}
+                    {viewingProject.imageGallery.length > 8 && (
+                      <Box sx={{ aspectRatio: 1, borderRadius: 1, bgcolor: bggrayColor, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                        <Typography sx={{ fontSize: 12, color: "rgba(0,0,0,0.5)" }}>
+                          +{viewingProject.imageGallery.length - 8}
+                        </Typography>
+                      </Box>
+                    )}
+                  </Box>
+                </>
+              ) : null}
+            </Box>
+          ) : null}
+        </DialogContent>
+        <DialogActions sx={{ px: 3, pb: 2, pt: 1 }}>
+          <Button
+            variant="contained"
+            onClick={closeViewDialog}
+            sx={{ bgcolor: primaryColor, "&:hover": { bgcolor: "#7A2FE5" } }}
+          >
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 }
