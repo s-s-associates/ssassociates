@@ -171,7 +171,7 @@ function Banner() {
             },
           }}
         >
-          <span>Watch Demo</span>
+          <span>Demo</span>
           <motion.span
             initial={false}
             animate={{
