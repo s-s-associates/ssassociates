@@ -18,13 +18,19 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  FormControl,
   IconButton,
+  InputAdornment,
+  MenuItem,
+  Select,
   Skeleton,
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableRow,
+  TablePagination,
+  TextField,
   Typography,
 } from "@mui/material";
 import { getAuth } from "@/lib/auth-storage";
@@ -33,7 +39,7 @@ import { useRouter } from "next/navigation";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { BeatLoader } from "react-spinners";
 import Swal from "sweetalert2";
-import { FiEdit2, FiEye, FiPlus, FiTrash2 } from "react-icons/fi";
+import { FiEdit2, FiEye, FiPlus, FiRefreshCw, FiSearch, FiTrash2 } from "react-icons/fi";
 
 function getStatusStyle(status) {
   switch (status) {
@@ -57,6 +63,54 @@ export default function ProjectPages() {
   const [viewingProject, setViewingProject] = useState(null);
   const [viewLoadingId, setViewLoadingId] = useState(null);
   const viewClosedRef = useRef(false);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [dateFilter, setDateFilter] = useState("all");
+  const [statusFilter, setStatusFilter] = useState("all");
+
+  const handleChangePage = (_, newPage) => setPage(newPage);
+  const handleChangeRowsPerPage = (e) => {
+    setRowsPerPage(parseInt(e.target.value, 10));
+    setPage(0);
+  };
+
+  const filteredProjects = projects.filter((row) => {
+    const q = (searchQuery || "").trim().toLowerCase();
+    if (q) {
+      const title = (row.title || "").toLowerCase();
+      const category = (row.category || "").toLowerCase();
+      const status = (row.status || "").toLowerCase();
+      const year = String(row.year || "").toLowerCase();
+      const desc = (row.description || "").toLowerCase();
+      if (!title.includes(q) && !category.includes(q) && !status.includes(q) && !year.includes(q) && !desc.includes(q)) return false;
+    }
+    if (dateFilter !== "all" && row.createdAt) {
+      const d = new Date(row.createdAt);
+      const now = new Date();
+      const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      const todayEnd = new Date(todayStart);
+      todayEnd.setHours(23, 59, 59, 999);
+      if (dateFilter === "today") {
+        if (d < todayStart || d > todayEnd) return false;
+      } else if (dateFilter === "7") {
+        const weekAgo = new Date(todayStart);
+        weekAgo.setDate(weekAgo.getDate() - 7);
+        if (d < weekAgo || d > now) return false;
+      } else if (dateFilter === "30") {
+        const monthAgo = new Date(todayStart);
+        monthAgo.setDate(monthAgo.getDate() - 30);
+        if (d < monthAgo || d > now) return false;
+      }
+    }
+    if (statusFilter !== "all" && (row.status || "") !== statusFilter) return false;
+    return true;
+  });
+
+  const paginatedProjects = filteredProjects.slice(
+    page * rowsPerPage,
+    page * rowsPerPage + rowsPerPage
+  );
 
   const fetchProjects = useCallback(async () => {
     if (!token) return;
@@ -151,39 +205,143 @@ export default function ProjectPages() {
   };
 
   return (
-    <Box sx={{ p: 3, mx: "auto", bgcolor: bggrayColor, minHeight: "100vh" }}>
+    <Box sx={{ p: { xs: 2, sm: 3 }, mx: "auto", bgcolor: bggrayColor, minHeight: "100vh" }}>
       <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 2, mb: 3 }}>
-        <Typography
-          component="h1"
-          sx={{
-            fontSize: 24,
-            fontWeight: 700,
-            color: "#000",
-            m: 0,
-          }}
-        >
+        <Typography component="h1" sx={{ fontSize: 24, fontWeight: 700, color: "#000", m: 0 }}>
           Projects
         </Typography>
-        <Button
-          component={Link}
-          href="/user/projects/new"
-          variant="contained"
-          startIcon={<FiPlus size={18} />}
-          sx={{
-            bgcolor: primaryColor,
-            color: "#fff",
-            fontWeight: 600,
-            fontSize: 14,
-            py: 1,
-            px: 2,
-            borderRadius: 2,
-            textTransform: "none",
-            boxShadow: "none",
-            "&:hover": { bgcolor: "#7A2FE5", boxShadow: "none" },
+        <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
+          <Button
+            startIcon={<FiRefreshCw size={18} />}
+            onClick={() => fetchProjects()}
+            disabled={loading}
+            variant="outlined"
+            size="small"
+            sx={{
+              borderColor: bordergrayColor,
+              color: "#000",
+              textTransform: "none",
+              fontWeight: 600,
+              "&:hover": {
+                borderColor: primaryColor,
+                color: primaryColor,
+                bgcolor: "rgba(138,56,245,0.06)",
+              },
+            }}
+          >
+            Refresh
+          </Button>
+          <Button
+            component={Link}
+            href="/user/projects/new"
+            variant="contained"
+            startIcon={<FiPlus size={18} />}
+            sx={{
+              bgcolor: primaryColor,
+              color: "#fff",
+              fontWeight: 600,
+              fontSize: 14,
+              py: 1,
+              px: 2,
+              borderRadius: 2,
+              textTransform: "none",
+              boxShadow: "none",
+              "&:hover": { bgcolor: "#7A2FE5", boxShadow: "none" },
+            }}
+          >
+            Add Project
+          </Button>
+        </Box>
+      </Box>
+
+      <Box
+        sx={{
+          display: "flex",
+          flexWrap: { xs: "wrap", sm: "nowrap" },
+          gap: 1,
+          mb: 2,
+          alignItems: "center",
+          overflow: "hidden",
+        }}
+      >
+        <TextField
+          placeholder="Search..."
+          value={searchQuery}
+          onChange={(e) => {
+            setSearchQuery(e.target.value);
+            setPage(0);
           }}
-        >
-          Add Project
-        </Button>
+          size="small"
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <FiSearch size={18} style={{ color: "rgba(0,0,0,0.5)" }} />
+              </InputAdornment>
+            ),
+          }}
+          sx={{
+            width: { xs: "100%", sm: "auto" },
+            flex: { xs: "1 1 100%", sm: "none" },
+            minWidth: 0,
+            "& .MuiOutlinedInput-input": { minWidth: 0 },
+            "& .MuiOutlinedInput-root": {
+              borderRadius: 2,
+              bgcolor: "#fff",
+              "& fieldset": { borderColor: bordergrayColor },
+              "&:hover fieldset": { borderColor: primaryColor },
+              "&.Mui-focused fieldset": { borderColor: primaryColor, borderWidth: 2 },
+            },
+          }}
+        />
+        <FormControl size="small" sx={{ flex: { xs: "1 1 0", sm: "none" }, minWidth: { xs: 0, sm: 160 }, flexShrink: 0 }}>
+          <Select
+            value={dateFilter}
+            displayEmpty
+            onChange={(e) => {
+              setDateFilter(e.target.value);
+              setPage(0);
+            }}
+            sx={{
+              borderRadius: 2,
+              bgcolor: "#fff",
+              "& .MuiOutlinedInput-notchedOutline": { borderColor: bordergrayColor },
+              "&:hover .MuiOutlinedInput-notchedOutline": { borderColor: primaryColor },
+              "&.Mui-focused .MuiOutlinedInput-notchedOutline": { borderColor: primaryColor },
+            }}
+          >
+            <MenuItem value="all">All time</MenuItem>
+            <MenuItem value="today">Today</MenuItem>
+            <MenuItem value="7">Last 7 days</MenuItem>
+            <MenuItem value="30">Last 30 days</MenuItem>
+          </Select>
+        </FormControl>
+        <FormControl size="small" sx={{ flex: { xs: "1 1 0", sm: "none" }, minWidth: { xs: 0, sm: 140 }, flexShrink: 0 }}>
+          <Select
+            value={statusFilter}
+            displayEmpty
+            onChange={(e) => {
+              setStatusFilter(e.target.value);
+              setPage(0);
+            }}
+            sx={{
+              borderRadius: 2,
+              bgcolor: "#fff",
+              "& .MuiOutlinedInput-notchedOutline": { borderColor: bordergrayColor },
+              "&:hover .MuiOutlinedInput-notchedOutline": { borderColor: primaryColor },
+              "&.Mui-focused .MuiOutlinedInput-notchedOutline": { borderColor: primaryColor },
+            }}
+          >
+            <MenuItem value="all">All status</MenuItem>
+            <MenuItem value="Completed">Completed</MenuItem>
+            <MenuItem value="Ongoing">Ongoing</MenuItem>
+            <MenuItem value="Upcoming">Upcoming</MenuItem>
+          </Select>
+        </FormControl>
+        {(searchQuery.trim() || dateFilter !== "all" || statusFilter !== "all") && (
+          <Typography sx={{ fontSize: 13, color: "rgba(0,0,0,0.6)", flexShrink: 0, whiteSpace: "nowrap", flexBasis: { xs: "100%", sm: "auto" } }}>
+            {filteredProjects.length} result{filteredProjects.length !== 1 ? "s" : ""}
+          </Typography>
+        )}
       </Box>
 
       <Box
@@ -223,21 +381,29 @@ export default function ProjectPages() {
               Add your first project
             </Button>
           </Box>
+        ) : filteredProjects.length === 0 ? (
+          <Box sx={{ py: 6, textAlign: "center" }}>
+            <Typography sx={{ color: "rgba(0,0,0,0.5)", fontSize: 15 }}>
+              No results match your search or filter.
+            </Typography>
+          </Box>
         ) : (
-          <Table size="medium">
-            <TableHead>
-              <TableRow sx={{ bgcolor: bggrayColor }}>
-                <TableCell sx={{ fontWeight: 700, color: "#000" }}>Title</TableCell>
-                <TableCell sx={{ fontWeight: 700, color: "#000" }}>Category</TableCell>
-                <TableCell sx={{ fontWeight: 700, color: "#000" }}>Status</TableCell>
-                <TableCell sx={{ fontWeight: 700, color: "#000" }}>Year</TableCell>
-                <TableCell align="right" sx={{ fontWeight: 700, color: "#000" }}>
-                  Actions
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {projects.map((row) => {
+          <>
+            <Box sx={{ overflowX: "auto", width: "100%" }}>
+              <Table size="medium" sx={{ minWidth: 720 }}>
+              <TableHead>
+                <TableRow sx={{ bgcolor: bggrayColor }}>
+                  <TableCell sx={{ fontWeight: 700, color: "#000", whiteSpace: "nowrap", minWidth: 140 }}>Title</TableCell>
+                  <TableCell sx={{ fontWeight: 700, color: "#000", whiteSpace: "nowrap", minWidth: 120 }}>Category</TableCell>
+                  <TableCell sx={{ fontWeight: 700, color: "#000", whiteSpace: "nowrap", minWidth: 100 }}>Status</TableCell>
+                  <TableCell sx={{ fontWeight: 700, color: "#000", whiteSpace: "nowrap", minWidth: 80 }}>Year</TableCell>
+                  <TableCell align="right" sx={{ fontWeight: 700, color: "#000", whiteSpace: "nowrap", minWidth: 120 }}>
+                    Actions
+                  </TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {paginatedProjects.map((row) => {
                 const statusStyle = getStatusStyle(row.status);
                 const isDeleting = deletingId === row._id;
                 return (
@@ -309,8 +475,31 @@ export default function ProjectPages() {
                   </TableRow>
                 );
               })}
-            </TableBody>
-          </Table>
+              </TableBody>
+            </Table>
+            </Box>
+            <TablePagination
+              component="div"
+              count={filteredProjects.length}
+              page={page}
+              onPageChange={handleChangePage}
+              rowsPerPage={rowsPerPage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+              rowsPerPageOptions={[5, 10, 25, 50]}
+              sx={{
+                borderTop: `1px solid ${bordergrayColor}`,
+                bgcolor: bggrayColor,
+                "& .MuiTablePagination-selectLabel": { fontSize: 14, color: "rgba(0,0,0,0.7)" },
+                "& .MuiTablePagination-displayedRows": { fontSize: 14, color: "#000", fontWeight: 500 },
+                "& .MuiTablePagination-select": { fontSize: 14 },
+                "& .MuiIconButton-root": {
+                  color: "rgba(0,0,0,0.7)",
+                  "&:hover": { bgcolor: "rgba(138,56,245,0.08)", color: primaryColor },
+                  "&.Mui-disabled": { color: "rgba(0,0,0,0.26)" },
+                },
+              }}
+            />
+          </>
         )}
       </Box>
 

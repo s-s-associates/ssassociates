@@ -15,6 +15,7 @@ import {
   TableCell,
   TableHead,
   TableRow,
+  TablePagination,
   TextField,
   Typography,
 } from "@mui/material";
@@ -22,7 +23,7 @@ import { getAuth } from "@/lib/auth-storage";
 import React, { useCallback, useEffect, useState } from "react";
 import { BeatLoader } from "react-spinners";
 import Swal from "sweetalert2";
-import { FiEdit2, FiPlus, FiTrash2 } from "react-icons/fi";
+import { FiEdit2, FiPlus, FiRefreshCw, FiTrash2 } from "react-icons/fi";
 
 export default function ServicesPage() {
   const { token } = getAuth();
@@ -36,6 +37,19 @@ export default function ServicesPage() {
   const [icon, setIcon] = useState("");
   const [order, setOrder] = useState(0);
   const [saving, setSaving] = useState(false);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+
+  const handleChangePage = (_, newPage) => setPage(newPage);
+  const handleChangeRowsPerPage = (e) => {
+    setRowsPerPage(parseInt(e.target.value, 10));
+    setPage(0);
+  };
+
+  const paginatedServices = services.slice(
+    page * rowsPerPage,
+    page * rowsPerPage + rowsPerPage
+  );
 
   const fetchServices = useCallback(async () => {
     if (!token) return;
@@ -219,30 +233,52 @@ export default function ServicesPage() {
   };
 
   return (
-    <Box sx={{ p: 3, mx: "auto", bgcolor: bggrayColor, minHeight: "100vh" }}>
+    <Box sx={{ p: { xs: 2, sm: 3 }, mx: "auto", bgcolor: bggrayColor, minHeight: "100vh" }}>
       <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 2, mb: 3 }}>
         <Typography component="h1" sx={{ fontSize: 24, fontWeight: 700, color: "#000", m: 0 }}>
           Services
         </Typography>
-        <Button
-          variant="contained"
-          startIcon={<FiPlus size={18} />}
-          onClick={openAddDialog}
-          sx={{
-            bgcolor: primaryColor,
-            color: "#fff",
-            fontWeight: 600,
-            fontSize: 14,
-            py: 1,
-            px: 2,
-            borderRadius: 2,
-            textTransform: "none",
-            boxShadow: "none",
-            "&:hover": { bgcolor: "#7A2FE5", boxShadow: "none" },
-          }}
-        >
-          Add Service
-        </Button>
+        <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
+          <Button
+            startIcon={<FiRefreshCw size={18} />}
+            onClick={() => fetchServices()}
+            disabled={loading}
+            variant="outlined"
+            size="small"
+            sx={{
+              borderColor: bordergrayColor,
+              color: "#000",
+              textTransform: "none",
+              fontWeight: 600,
+              "&:hover": {
+                borderColor: primaryColor,
+                color: primaryColor,
+                bgcolor: "rgba(138,56,245,0.06)",
+              },
+            }}
+          >
+            Refresh
+          </Button>
+          <Button
+            variant="contained"
+            startIcon={<FiPlus size={18} />}
+            onClick={openAddDialog}
+            sx={{
+              bgcolor: primaryColor,
+              color: "#fff",
+              fontWeight: 600,
+              fontSize: 14,
+              py: 1,
+              px: 2,
+              borderRadius: 2,
+              textTransform: "none",
+              boxShadow: "none",
+              "&:hover": { bgcolor: "#7A2FE5", boxShadow: "none" },
+            }}
+          >
+            Add Service
+          </Button>
+        </Box>
       </Box>
 
       <Box
@@ -282,55 +318,78 @@ export default function ServicesPage() {
             </Button>
           </Box>
         ) : (
-          <Table size="medium">
-            <TableHead>
-              <TableRow sx={{ bgcolor: bggrayColor }}>
-                <TableCell sx={{ fontWeight: 700, color: "#000" }}>Order</TableCell>
-                <TableCell sx={{ fontWeight: 700, color: "#000" }}>Title</TableCell>
-                <TableCell sx={{ fontWeight: 700, color: "#000" }}>Description</TableCell>
-                <TableCell align="right" sx={{ fontWeight: 700, color: "#000" }}>
-                  Actions
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {services.map((row) => {
-                const isDeleting = deletingId === row._id;
-                return (
-                  <TableRow key={row._id} sx={{ "&:hover": { bgcolor: "rgba(0,0,0,0.02)" } }}>
-                    <TableCell sx={{ color: "rgba(0,0,0,0.7)" }}>{row.order ?? "—"}</TableCell>
-                    <TableCell>
-                      <Typography sx={{ fontWeight: 600, fontSize: 14, color: "#000" }}>
-                        {row.title || "—"}
-                      </Typography>
-                    </TableCell>
-                    <TableCell sx={{ color: "rgba(0,0,0,0.7)", maxWidth: 320 }}>
-                      {row.description ? (row.description.length > 60 ? row.description.slice(0, 60) + "…" : row.description) : "—"}
-                    </TableCell>
-                    <TableCell align="right">
-                      <IconButton
-                        size="small"
-                        onClick={() => openEditDialog(row)}
-                        sx={{ color: primaryColor, "&:hover": { bgcolor: "rgba(138,56,245,0.08)" } }}
-                        aria-label="Edit"
-                      >
-                        <FiEdit2 size={18} />
-                      </IconButton>
-                      <IconButton
-                        size="small"
-                        disabled={isDeleting}
-                        onClick={() => handleDelete(row)}
-                        sx={{ color: "#dc2626", "&:hover": { bgcolor: "rgba(220,38,38,0.08)" } }}
-                        aria-label="Delete"
-                      >
-                        {isDeleting ? <BeatLoader color="#dc2626" size={10} /> : <FiTrash2 size={18} />}
-                      </IconButton>
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
-            </TableBody>
-          </Table>
+          <>
+            <Table size="medium">
+              <TableHead>
+                <TableRow sx={{ bgcolor: bggrayColor }}>
+                  <TableCell sx={{ fontWeight: 700, color: "#000" }}>Order</TableCell>
+                  <TableCell sx={{ fontWeight: 700, color: "#000" }}>Title</TableCell>
+                  <TableCell sx={{ fontWeight: 700, color: "#000" }}>Description</TableCell>
+                  <TableCell align="right" sx={{ fontWeight: 700, color: "#000" }}>
+                    Actions
+                  </TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {paginatedServices.map((row) => {
+                  const isDeleting = deletingId === row._id;
+                  return (
+                    <TableRow key={row._id} sx={{ "&:hover": { bgcolor: "rgba(0,0,0,0.02)" } }}>
+                      <TableCell sx={{ color: "rgba(0,0,0,0.7)" }}>{row.order ?? "—"}</TableCell>
+                      <TableCell>
+                        <Typography sx={{ fontWeight: 600, fontSize: 14, color: "#000" }}>
+                          {row.title || "—"}
+                        </Typography>
+                      </TableCell>
+                      <TableCell sx={{ color: "rgba(0,0,0,0.7)", maxWidth: 320 }}>
+                        {row.description ? (row.description.length > 60 ? row.description.slice(0, 60) + "…" : row.description) : "—"}
+                      </TableCell>
+                      <TableCell align="right">
+                        <IconButton
+                          size="small"
+                          onClick={() => openEditDialog(row)}
+                          sx={{ color: primaryColor, "&:hover": { bgcolor: "rgba(138,56,245,0.08)" } }}
+                          aria-label="Edit"
+                        >
+                          <FiEdit2 size={18} />
+                        </IconButton>
+                        <IconButton
+                          size="small"
+                          disabled={isDeleting}
+                          onClick={() => handleDelete(row)}
+                          sx={{ color: "#dc2626", "&:hover": { bgcolor: "rgba(220,38,38,0.08)" } }}
+                          aria-label="Delete"
+                        >
+                          {isDeleting ? <BeatLoader color="#dc2626" size={10} /> : <FiTrash2 size={18} />}
+                        </IconButton>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
+              </TableBody>
+            </Table>
+            <TablePagination
+              component="div"
+              count={services.length}
+              page={page}
+              onPageChange={handleChangePage}
+              rowsPerPage={rowsPerPage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+              rowsPerPageOptions={[5, 10, 25, 50]}
+              sx={{
+                borderTop: `1px solid ${bordergrayColor}`,
+                bgcolor: bggrayColor,
+                "& .MuiTablePagination-selectLabel": { fontSize: 14, color: "rgba(0,0,0,0.7)" },
+                "& .MuiTablePagination-displayedRows": { fontSize: 14, color: "#000", fontWeight: 500 },
+                "& .MuiTablePagination-select": { fontSize: 14 },
+                "& .MuiIconButton-root": {
+                  color: "rgba(0,0,0,0.7)",
+                  "&:hover": { bgcolor: "rgba(138,56,245,0.08)", color: primaryColor },
+                  "&.Mui-disabled": { color: "rgba(0,0,0,0.26)" },
+                },
+              }}
+            />
+          </>
         )}
       </Box>
 

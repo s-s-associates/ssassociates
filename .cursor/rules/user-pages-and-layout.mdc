@@ -1,0 +1,30 @@
+---
+description: User dashboard pages layout, padding, and list/table conventions
+globs: src/components/user/**/*.js src/app/(user)/**/*
+alwaysApply: false
+---
+
+# User area: layout & list pages
+
+## Page container padding (small screens)
+
+- Main content wrapper on user pages must use **responsive padding** so small screens have less padding.
+- Use: `p: { xs: 2, sm: 3 }` (not fixed `p: 3`).
+- Applies to: any full-page Box with `bgcolor: bggrayColor`, `minHeight: "100vh"` (e.g. ContactSubmissionPage, DashboardView, ServicesPage, ClientsPage, FaqsPage, AdminsPage, CategoryPage, ProjectPages, TestimonialsPage, DashboardSkeleton).
+
+## Contact submissions & similar list pages (search + filters + table)
+
+### Filter row (search + date)
+
+- **Same line on small screens:** Filter row must keep search input and date dropdown on one line. Use `flexWrap: "nowrap"`, search field `flex: { xs: "1 1 0", sm: "none" }` and `minWidth: 0`, date control `flexShrink: 0` and `minWidth: { xs: 120, sm: 160 }`. No separate "Date" label above the dropdown (no `InputLabel`; use `Select` with `displayEmpty` only).
+- **Date filter logic:** "Today" = submissions from start of today to end of today (exclude future). "Last 7 days" / "Last 30 days" = from that many days ago up to now (exclude future). Use `todayStart`, `todayEnd` (23:59:59), and cap at `now` for 7/30.
+- **Search:** Filter by fullName, email, phone, message, companyName, address (case-insensitive). Show "X result(s)" when search or date filter is active.
+
+### Table on small screens
+
+- Wrap table in a Box with `overflowX: "auto"` and `width: "100%"`. Table: `minWidth: 720` so it scrolls horizontally on narrow viewports.
+- Header cells: use `whiteSpace: "nowrap"` and sensible `minWidth` (e.g. Name 120, Email 160, Phone 100, Message 140, Date 100) so "Message" and "Date" headings are always visible when scrolling.
+
+## Styling
+
+- Use project tokens: `bggrayColor`, `bordergrayColor`, `primaryColor`. Table pagination and buttons: same style as other user pages (border gray, purple hover).

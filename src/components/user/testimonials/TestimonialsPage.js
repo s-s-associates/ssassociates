@@ -165,7 +165,7 @@ export default function TestimonialsPage() {
   };
 
   return (
-    <Box sx={{ p: 3, mx: "auto", bgcolor: bggrayColor, minHeight: "100vh" }}>
+    <Box sx={{ p: { xs: 2, sm: 3 }, mx: "auto", bgcolor: bggrayColor, minHeight: "100vh" }}>
       <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 2, mb: 3 }}>
         <Typography component="h1" sx={{ fontSize: 24, fontWeight: 700, color: "#000", m: 0 }}>Testimonials</Typography>
         <Button variant="contained" startIcon={<FiPlus size={18} />} onClick={openAddDialog} sx={{ bgcolor: primaryColor, color: "#fff", fontWeight: 600, fontSize: 14, py: 1, px: 2, borderRadius: 2, textTransform: "none", boxShadow: "none", "&:hover": { bgcolor: "#7A2FE5", boxShadow: "none" } }}>

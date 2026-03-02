@@ -32,7 +32,7 @@ export default function DashboardView() {
   return (
     <Box
       sx={{
-        p: 3,
+        p: { xs: 2, sm: 3 },
         maxWidth: 1400,
         mx: "auto",
         bgcolor: bggrayColor,

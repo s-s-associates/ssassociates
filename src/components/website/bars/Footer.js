@@ -1,10 +1,11 @@
 "use client";
 
 import { grayColor, primaryColor } from "@/components/utils/Colors";
-import { Box } from "@mui/material";
+import { Box, Button, TextField } from "@mui/material";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import React from "react";
+import React, { useState } from "react";
+import Swal from "sweetalert2";
 
 const container = {
   hidden: { opacity: 0 },
@@ -47,6 +48,39 @@ const columns = [
 ];
 
 function Footer() {
+  const [subscribeEmail, setSubscribeEmail] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+
+  const handleSubscribe = async (e) => {
+    e.preventDefault();
+    const email = (subscribeEmail || "").trim();
+    if (!email) {
+      Swal.fire({ icon: "warning", title: "Email required", text: "Please enter your email.", confirmButtonColor: primaryColor });
+      return;
+    }
+    setSubmitting(true);
+    try {
+      const res = await fetch("/api/subscribe", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setSubscribeEmail("");
+        Swal.fire({ icon: "success", title: "Subscribed!", text: "You're on our list. We'll keep you updated.", confirmButtonColor: primaryColor });
+      } else if (data.alreadySubscribed) {
+        Swal.fire({ icon: "info", title: "Already subscribed", text: "This email is already on our list.", confirmButtonColor: primaryColor });
+      } else {
+        Swal.fire({ icon: "error", title: "Error", text: data.message || "Something went wrong.", confirmButtonColor: primaryColor });
+      }
+    } catch (err) {
+      Swal.fire({ icon: "error", title: "Error", text: "Could not subscribe. Please try again.", confirmButtonColor: primaryColor });
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
   return (
     <Box
       component="footer"
@@ -98,7 +132,7 @@ function Footer() {
         
         </Box>
 
-        {/* Right: Three columns */}
+        {/* Right: Three columns + Subscribe */}
         <Box
           component={motion.div}
           variants={container}
@@ -163,6 +197,55 @@ function Footer() {
               </Box>
             </Box>
           ))}
+          {/* Subscribe - no subscriber emails shown */}
+          <Box component={motion.div} variants={item}>
+            <Box
+              sx={{
+                fontFamily: "var(--font-plus-jakarta), 'Plus Jakarta Sans', sans-serif",
+                fontWeight: 600,
+                fontSize: 18,
+                lineHeight: "24px",
+                color: grayColor,
+                mb: 1.5,
+              }}
+            >
+              Subscribe
+            </Box>
+            <Box component="form" onSubmit={handleSubscribe} sx={{ display: "flex", flexDirection: "column", gap: 1, maxWidth: 280 }}>
+              <TextField
+                type="email"
+                placeholder="Your email"
+                value={subscribeEmail}
+                onChange={(e) => setSubscribeEmail(e.target.value)}
+                size="small"
+                disabled={submitting}
+                sx={{
+                  "& .MuiOutlinedInput-root": {
+                    borderRadius: 2,
+                    bgcolor: "#fff",
+                    "& fieldset": { borderColor: "rgba(21, 21, 29, 0.15)" },
+                    "&:hover fieldset": { borderColor: primaryColor },
+                    "&.Mui-focused fieldset": { borderColor: primaryColor },
+                  },
+                }}
+              />
+              <Button
+                type="submit"
+                variant="contained"
+                disabled={submitting}
+                sx={{
+                  bgcolor: primaryColor,
+                  color: "#fff",
+                  fontWeight: 600,
+                  textTransform: "none",
+                  borderRadius: 2,
+                  "&:hover": { bgcolor: "#7A2FE5" },
+                }}
+              >
+                {submitting ? "..." : "Subscribe"}
+              </Button>
+            </Box>
+          </Box>
         </Box>
       </Box>
       <Box

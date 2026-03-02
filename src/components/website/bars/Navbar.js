@@ -197,17 +197,15 @@ function Navbar() {
             </Box>
             <Box component={motion.div} variants={item}>
               <Link
-                href="/signup"
+                href="/contact"
                 style={{
                   fontFamily: "var(--font-plus-jakarta), 'Plus Jakarta Sans', sans-serif",
                   fontWeight: 700,
                   fontSize: 16,
-                //   borderRadius
                   lineHeight: "24px",
                   color: "#fff",
                   background: primaryColor,
                   textDecoration: "none",
-                  
                   padding: "8px 20px",
                   borderRadius: "8px",
                   display: "inline-flex",
@@ -215,7 +213,7 @@ function Navbar() {
                   justifyContent: "center",
                 }}
               >
-                Sign Up
+                Contact
               </Link>
             </Box>
           </Box>
@@ -356,13 +354,13 @@ function Navbar() {
                 </Box>
                 <Box component={motion.div} variants={item}>
                   <Link
-                    href="/signup"
+                    href="/contact"
                     onClick={() => setDrawerOpen(false)}
                     style={{
                       fontFamily: "var(--font-plus-jakarta), 'Plus Jakarta Sans', sans-serif",
                       fontSize: 16,
                       color: "#fff",
-                      fontWeight:700,
+                      fontWeight: 700,
                       background: primaryColor,
                       textDecoration: "none",
                       display: "block",
@@ -372,7 +370,7 @@ function Navbar() {
                       margin: "0 16px",
                     }}
                   >
-                    Sign Up
+                    Contact
                   </Link>
                 </Box>
               </Box>
