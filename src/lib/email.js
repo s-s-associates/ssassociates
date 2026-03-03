@@ -33,3 +33,14 @@ export async function sendOtpEmail({ to, otp, type }) {
     html,
   });
 }
+
+/** Send a single HTML email (e.g. bulk campaign). */
+export async function sendHtmlEmail({ to, subject, html, text }) {
+  await transporter.sendMail({
+    from: process.env.SMTP_USER,
+    to,
+    subject: subject || "Message from SsAssociates",
+    text: text || (typeof html === "string" ? html.replace(/<[^>]*>/g, "").trim() : ""),
+    html: html || undefined,
+  });
+}

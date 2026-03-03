@@ -2,6 +2,7 @@ import { connectDB } from "@/lib/db";
 import { getUserFromRequest } from "@/lib/get-user-from-request";
 import Service from "@/models/Service";
 import { NextResponse } from "next/server";
+import { normalizeServiceBody, validateServiceBody } from "./helpers";
 
 export async function GET(req) {
   try {
@@ -31,16 +32,16 @@ export async function POST(req) {
     }
     await connectDB();
     const body = await req.json();
-    const title = (body.title || "").trim();
-    if (!title) {
-      return NextResponse.json({ success: false, message: "Title is required" }, { status: 400 });
+    const normalized = normalizeServiceBody(body);
+    const validationError = validateServiceBody(normalized);
+    if (validationError) {
+      return NextResponse.json({ success: false, message: validationError }, { status: 400 });
     }
+    const count = await Service.countDocuments({ userId: user._id });
     const service = await Service.create({
       userId: user._id,
-      title,
-      description: (body.description || "").trim(),
-      icon: (body.icon || "").trim(),
-      order: typeof body.order === "number" ? body.order : 0,
+      ...normalized,
+      order: count,
     });
     return NextResponse.json({ success: true, service });
   } catch (err) {

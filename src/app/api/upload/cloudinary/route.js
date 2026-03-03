@@ -15,15 +15,19 @@ export async function POST(req) {
       );
     }
     const body = await req.json();
-    const { image } = body;
+    const { image, folder } = body;
     if (!image || typeof image !== "string") {
       return NextResponse.json(
         { success: false, message: "image (base64 data URI) is required" },
         { status: 400 }
       );
     }
+    const uploadFolder =
+      typeof folder === "string" && folder.trim()
+        ? folder.trim()
+        : "ssassociates/projects";
     const result = await cloudinary.uploader.upload(image, {
-      folder: "ssassociates/projects",
+      folder: uploadFolder,
       resource_type: "auto",
     });
     return NextResponse.json({

@@ -5,10 +5,10 @@ import {
   Box,
   Button,
   Dialog,
-  DialogActions,
   DialogContent,
   DialogTitle,
   IconButton,
+  InputAdornment,
   Skeleton,
   Table,
   TableBody,
@@ -20,23 +20,20 @@ import {
   Typography,
 } from "@mui/material";
 import { getAuth } from "@/lib/auth-storage";
+import Link from "next/link";
 import React, { useCallback, useEffect, useState } from "react";
 import { BeatLoader } from "react-spinners";
 import Swal from "sweetalert2";
-import { FiEdit2, FiPlus, FiRefreshCw, FiTrash2 } from "react-icons/fi";
+import { FiChevronDown, FiChevronUp, FiEdit2, FiEye, FiPlus, FiRefreshCw, FiSearch, FiTrash2, FiX } from "react-icons/fi";
 
 export default function ServicesPage() {
   const { token } = getAuth();
   const [services, setServices] = useState([]);
   const [loading, setLoading] = useState(true);
   const [deletingId, setDeletingId] = useState(null);
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const [editingService, setEditingService] = useState(null);
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [icon, setIcon] = useState("");
-  const [order, setOrder] = useState(0);
-  const [saving, setSaving] = useState(false);
+  const [reorderingId, setReorderingId] = useState(null);
+  const [viewService, setViewService] = useState(null);
+  const [searchQuery, setSearchQuery] = useState("");
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
@@ -46,7 +43,21 @@ export default function ServicesPage() {
     setPage(0);
   };
 
-  const paginatedServices = services.slice(
+  const filteredServices = React.useMemo(() => {
+    const q = (searchQuery || "").trim().toLowerCase();
+    if (!q) return services;
+    return services.filter(
+      (s) =>
+        (s.title || "").toLowerCase().includes(q) ||
+        (s.description || "").toLowerCase().includes(q)
+    );
+  }, [services, searchQuery]);
+
+  React.useEffect(() => {
+    setPage(0);
+  }, [searchQuery]);
+
+  const paginatedServices = filteredServices.slice(
     page * rowsPerPage,
     page * rowsPerPage + rowsPerPage
   );
@@ -72,116 +83,38 @@ export default function ServicesPage() {
     fetchServices();
   }, [fetchServices]);
 
-  const openAddDialog = () => {
-    setEditingService(null);
-    setTitle("");
-    setDescription("");
-    setIcon("");
-    setOrder(services.length);
-    setDialogOpen(true);
-  };
-
-  const openEditDialog = (item) => {
-    setEditingService(item);
-    setTitle(item.title || "");
-    setDescription(item.description || "");
-    setIcon(item.icon || "");
-    setOrder(typeof item.order === "number" ? item.order : 0);
-    setDialogOpen(true);
-  };
-
-  const closeDialog = () => {
-    setDialogOpen(false);
-    setEditingService(null);
-    setTitle("");
-    setDescription("");
-    setIcon("");
-    setOrder(0);
-  };
-
-  const handleSave = async () => {
-    const trimmedTitle = (title || "").trim();
-    if (!trimmedTitle) {
-      await Swal.fire({
-        icon: "warning",
-        title: "Title required",
-        text: "Please enter a service title.",
-        confirmButtonColor: primaryColor,
-      });
-      return;
-    }
-    setSaving(true);
+  const handleReorder = async (serviceId, direction) => {
+    if (!token || !serviceId) return;
+    setReorderingId(serviceId);
     try {
-      const payload = {
-        title: trimmedTitle,
-        description: (description || "").trim(),
-        icon: (icon || "").trim(),
-        order: Number(order) || 0,
-      };
-      if (editingService) {
-        const res = await fetch(`/api/services/${editingService._id}`, {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify(payload),
-        });
-        const data = await res.json();
-        if (data.success) {
-          await Swal.fire({
-            icon: "success",
-            title: "Updated",
-            text: "Service has been updated.",
-            confirmButtonColor: primaryColor,
-          });
-          closeDialog();
-          fetchServices();
-        } else {
-          await Swal.fire({
-            icon: "error",
-            title: "Error",
-            text: data.message || "Update failed.",
-            confirmButtonColor: primaryColor,
-          });
-        }
+      const res = await fetch("/api/services/reorder", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ serviceId, direction }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        await fetchServices();
       } else {
-        const res = await fetch("/api/services", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify(payload),
+        await Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: data.message || "Could not change sequence.",
+          confirmButtonColor: primaryColor,
         });
-        const data = await res.json();
-        if (data.success) {
-          await Swal.fire({
-            icon: "success",
-            title: "Added",
-            text: "Service has been added.",
-            confirmButtonColor: primaryColor,
-          });
-          closeDialog();
-          fetchServices();
-        } else {
-          await Swal.fire({
-            icon: "error",
-            title: "Error",
-            text: data.message || "Create failed.",
-            confirmButtonColor: primaryColor,
-          });
-        }
       }
     } catch (err) {
       await Swal.fire({
         icon: "error",
         title: "Error",
-        text: err.message || "Something went wrong.",
+        text: err?.message || "Something went wrong.",
         confirmButtonColor: primaryColor,
       });
     } finally {
-      setSaving(false);
+      setReorderingId(null);
     }
   };
 
@@ -260,9 +193,10 @@ export default function ServicesPage() {
             Refresh
           </Button>
           <Button
+            component={Link}
+            href="/user/services/new"
             variant="contained"
             startIcon={<FiPlus size={18} />}
-            onClick={openAddDialog}
             sx={{
               bgcolor: primaryColor,
               color: "#fff",
@@ -280,6 +214,34 @@ export default function ServicesPage() {
           </Button>
         </Box>
       </Box>
+
+      {!loading && services.length > 0 && (
+        <TextField
+          fullWidth
+          size="small"
+          placeholder="Search by title or description…"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <FiSearch size={18} style={{ color: "rgba(0,0,0,0.5)" }} />
+              </InputAdornment>
+            ),
+          }}
+          sx={{
+            mb: 2,
+            maxWidth: 360,
+            "& .MuiOutlinedInput-root": {
+              bgcolor: "#fff",
+              borderRadius: 2,
+              "& fieldset": { borderColor: bordergrayColor },
+              "&:hover fieldset": { borderColor: primaryColor },
+              "&.Mui-focused fieldset": { borderColor: primaryColor },
+            },
+          }}
+        />
+      )}
 
       <Box
         bgcolor="white"
@@ -303,9 +265,10 @@ export default function ServicesPage() {
               No services yet.
             </Typography>
             <Button
+              component={Link}
+              href="/user/services/new"
               variant="contained"
               startIcon={<FiPlus size={18} />}
-              onClick={openAddDialog}
               sx={{
                 bgcolor: primaryColor,
                 color: "#fff",
@@ -322,7 +285,7 @@ export default function ServicesPage() {
             <Table size="medium">
               <TableHead>
                 <TableRow sx={{ bgcolor: bggrayColor }}>
-                  <TableCell sx={{ fontWeight: 700, color: "#000" }}>Order</TableCell>
+                  <TableCell sx={{ fontWeight: 700, color: "#000", width: 100 }}>Sequence</TableCell>
                   <TableCell sx={{ fontWeight: 700, color: "#000" }}>Title</TableCell>
                   <TableCell sx={{ fontWeight: 700, color: "#000" }}>Description</TableCell>
                   <TableCell align="right" sx={{ fontWeight: 700, color: "#000" }}>
@@ -331,15 +294,88 @@ export default function ServicesPage() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {paginatedServices.map((row) => {
+                {filteredServices.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={4} sx={{ py: 4, textAlign: "center", color: "rgba(0,0,0,0.5)" }}>
+                      No services match your search. Try a different keyword.
+                    </TableCell>
+                  </TableRow>
+                ) : (
+                paginatedServices.map((row, index) => {
                   const isDeleting = deletingId === row._id;
+                  const isReordering = reorderingId === row._id;
+                  const globalIndex = page * rowsPerPage + index;
+                  const canMoveUp = globalIndex > 0;
+                  const canMoveDown = globalIndex < filteredServices.length - 1;
                   return (
                     <TableRow key={row._id} sx={{ "&:hover": { bgcolor: "rgba(0,0,0,0.02)" } }}>
-                      <TableCell sx={{ color: "rgba(0,0,0,0.7)" }}>{row.order ?? "—"}</TableCell>
-                      <TableCell>
-                        <Typography sx={{ fontWeight: 600, fontSize: 14, color: "#000" }}>
-                          {row.title || "—"}
-                        </Typography>
+                      <TableCell sx={{ color: "rgba(0,0,0,0.7)", verticalAlign: "middle" }}>
+                        <Box sx={{ display: "flex", alignItems: "center", gap: 0.25 }}>
+                          <IconButton
+                            size="small"
+                            disabled={!canMoveUp || isReordering}
+                            onClick={() => handleReorder(row._id, "up")}
+                            sx={{
+                              color: canMoveUp ? primaryColor : "rgba(0,0,0,0.26)",
+                              "&:hover": canMoveUp ? { bgcolor: "rgba(239,71,0,0.08)" } : {},
+                            }}
+                            aria-label="Move up"
+                          >
+                            <FiChevronUp size={20} />
+                          </IconButton>
+                          <IconButton
+                            size="small"
+                            disabled={!canMoveDown || isReordering}
+                            onClick={() => handleReorder(row._id, "down")}
+                            sx={{
+                              color: canMoveDown ? primaryColor : "rgba(0,0,0,0.26)",
+                              "&:hover": canMoveDown ? { bgcolor: "rgba(239,71,0,0.08)" } : {},
+                            }}
+                            aria-label="Move down"
+                          >
+                            <FiChevronDown size={20} />
+                          </IconButton>
+                        </Box>
+                      </TableCell>
+                      <TableCell sx={{ verticalAlign: "middle" }}>
+                        <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
+                          {row.imageUrl ? (
+                            <Box
+                              component="img"
+                              src={row.imageUrl}
+                              alt=""
+                              sx={{
+                                width: 48,
+                                height: 48,
+                                borderRadius: 1,
+                                objectFit: "cover",
+                                border: `1px solid ${bordergrayColor}`,
+                                flexShrink: 0,
+                              }}
+                            />
+                          ) : (
+                            <Box
+                              sx={{
+                                width: 48,
+                                height: 48,
+                                borderRadius: 1,
+                                bgcolor: bggrayColor,
+                                border: `1px dashed ${bordergrayColor}`,
+                                flexShrink: 0,
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                              }}
+                            >
+                              <Typography variant="caption" sx={{ color: "rgba(0,0,0,0.35)", fontSize: 10 }}>
+                                No img
+                              </Typography>
+                            </Box>
+                          )}
+                          <Typography sx={{ fontWeight: 600, fontSize: 14, color: "#000" }}>
+                            {row.title || "—"}
+                          </Typography>
+                        </Box>
                       </TableCell>
                       <TableCell sx={{ color: "rgba(0,0,0,0.7)", maxWidth: 320 }}>
                         {row.description ? (row.description.length > 60 ? row.description.slice(0, 60) + "…" : row.description) : "—"}
@@ -347,7 +383,16 @@ export default function ServicesPage() {
                       <TableCell align="right">
                         <IconButton
                           size="small"
-                          onClick={() => openEditDialog(row)}
+                          onClick={() => setViewService(row)}
+                          sx={{ color: "rgba(0,0,0,0.6)", "&:hover": { bgcolor: "rgba(0,0,0,0.06)" } }}
+                          aria-label="View"
+                        >
+                          <FiEye size={18} />
+                        </IconButton>
+                        <IconButton
+                          component={Link}
+                          href={`/user/services/${row._id}/edit`}
+                          size="small"
                           sx={{ color: primaryColor, "&:hover": { bgcolor: "rgba(138,56,245,0.08)" } }}
                           aria-label="Edit"
                         >
@@ -365,12 +410,13 @@ export default function ServicesPage() {
                       </TableCell>
                     </TableRow>
                   );
-                })}
+                })
+                )}
               </TableBody>
             </Table>
             <TablePagination
               component="div"
-              count={services.length}
+              count={filteredServices.length}
               page={page}
               onPageChange={handleChangePage}
               rowsPerPage={rowsPerPage}
@@ -393,60 +439,161 @@ export default function ServicesPage() {
         )}
       </Box>
 
-      <Dialog open={dialogOpen} onClose={closeDialog} maxWidth="sm" fullWidth>
-        <DialogTitle>{editingService ? "Edit Service" : "Add Service"}</DialogTitle>
-        <DialogContent>
-          <TextField
-            autoFocus
-            fullWidth
-            label="Title"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            placeholder="Service title"
-            required
-            sx={{ mt: 1, mb: 2 }}
-          />
-          <TextField
-            fullWidth
-            label="Description"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            placeholder="Short description"
-            multiline
-            rows={3}
-            sx={{ mb: 2 }}
-          />
-          <TextField
-            fullWidth
-            label="Icon (optional)"
-            value={icon}
-            onChange={(e) => setIcon(e.target.value)}
-            placeholder="Icon name or emoji"
-            sx={{ mb: 2 }}
-          />
-          <TextField
-            fullWidth
-            type="number"
-            label="Order"
-            value={order}
-            onChange={(e) => setOrder(Number(e.target.value) || 0)}
-            inputProps={{ min: 0 }}
-            sx={{ mb: 1 }}
-          />
-        </DialogContent>
-        <DialogActions sx={{ px: 3, pb: 2 }}>
-          <Button onClick={closeDialog} color="inherit">
-            Cancel
-          </Button>
-          <Button
-            variant="contained"
-            onClick={handleSave}
-            disabled={saving}
-            sx={{ bgcolor: primaryColor, "&:hover": { bgcolor: "#7A2FE5" } }}
+      <Dialog
+        open={Boolean(viewService)}
+        onClose={() => setViewService(null)}
+        maxWidth="sm"
+        fullWidth
+        PaperProps={{
+          sx: {
+            borderRadius: 2,
+            maxHeight: "90vh",
+            border: `1px solid ${bordergrayColor}`,
+          },
+        }}
+      >
+        <DialogTitle
+          sx={{
+            fontWeight: 700,
+            fontSize: 18,
+            borderBottom: `1px solid ${bordergrayColor}`,
+            py: 2,
+            pr: 6,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
+          <span>{viewService?.title || "Service details"}</span>
+          <IconButton
+            size="small"
+            onClick={() => setViewService(null)}
+            sx={{
+              position: "absolute",
+              right: 8,
+              top: 12,
+              color: "rgba(0,0,0,0.6)",
+              "&:hover": { bgcolor: "rgba(0,0,0,0.06)", color: "#000" },
+            }}
+            aria-label="Close"
           >
-            {saving ? <BeatLoader color="#fff" size={12} /> : editingService ? "Update" : "Add"}
-          </Button>
-        </DialogActions>
+            <FiX size={22} />
+          </IconButton>
+        </DialogTitle>
+        <DialogContent dividers sx={{ p: 0 }}>
+          <Box sx={{ p: 2, pb: 3 }}>
+            {viewService?.imageUrl && (
+              <Box
+                sx={{
+                  mb: 2,
+                  borderRadius: 2,
+                  overflow: "hidden",
+                  border: `1px solid ${bordergrayColor}`,
+                  bgcolor: bggrayColor,
+                }}
+              >
+                <Box
+                  component="img"
+                  src={viewService.imageUrl}
+                  alt={viewService.title}
+                  sx={{
+                    display: "block",
+                    width: "100%",
+                    maxHeight: 280,
+                    objectFit: "contain",
+                  }}
+                />
+              </Box>
+            )}
+            {viewService?.description && (
+              <Box sx={{ mb: 2 }}>
+                <Typography variant="subtitle2" sx={{ fontWeight: 600, color: "rgba(0,0,0,0.8)", mb: 0.5 }}>
+                  Description
+                </Typography>
+                <Typography variant="body2" sx={{ color: "rgba(0,0,0,0.7)", whiteSpace: "pre-wrap" }}>
+                  {viewService.description}
+                </Typography>
+              </Box>
+            )}
+            {Array.isArray(viewService?.whatYouGet) && viewService.whatYouGet.length > 0 && (
+              <Box sx={{ mb: 2 }}>
+                <Typography variant="subtitle2" sx={{ fontWeight: 600, color: "rgba(0,0,0,0.8)", mb: 0.5 }}>
+                  What you will get
+                </Typography>
+                <Box component="ul" sx={{ m: 0, pl: 2.5 }}>
+                  {viewService.whatYouGet.map((point, i) => (
+                    <Typography key={i} component="li" variant="body2" sx={{ color: "rgba(0,0,0,0.7)", mb: 0.5 }}>
+                      {point}
+                    </Typography>
+                  ))}
+                </Box>
+              </Box>
+            )}
+            {Array.isArray(viewService?.extraBenefits) && viewService.extraBenefits.length > 0 && (
+              <Box sx={{ mb: 2 }}>
+                <Typography variant="subtitle2" sx={{ fontWeight: 600, color: "rgba(0,0,0,0.8)", mb: 0.5 }}>
+                  Extra benefits
+                </Typography>
+                <Box component="ul" sx={{ m: 0, pl: 2.5 }}>
+                  {viewService.extraBenefits.map((point, i) => (
+                    <Typography key={i} component="li" variant="body2" sx={{ color: "rgba(0,0,0,0.7)", mb: 0.5 }}>
+                      {point}
+                    </Typography>
+                  ))}
+                </Box>
+              </Box>
+            )}
+            {viewService?.conclusion && (
+              <Box sx={{ mb: 2 }}>
+                <Typography variant="subtitle2" sx={{ fontWeight: 600, color: "rgba(0,0,0,0.8)", mb: 0.5 }}>
+                  Conclusion
+                </Typography>
+                <Typography variant="body2" sx={{ color: "rgba(0,0,0,0.7)", whiteSpace: "pre-wrap" }}>
+                  {viewService.conclusion}
+                </Typography>
+              </Box>
+            )}
+            {Array.isArray(viewService?.subServices) && viewService.subServices.length > 0 && (
+              <Box>
+                <Typography variant="subtitle2" sx={{ fontWeight: 600, color: "rgba(0,0,0,0.8)", mb: 1 }}>
+                  Sub services
+                </Typography>
+                {viewService.subServices.map((sub, idx) => (
+                  <Box
+                    key={idx}
+                    sx={{
+                      mb: 2,
+                      p: 1.5,
+                      borderRadius: 1.5,
+                      border: `1px solid ${bordergrayColor}`,
+                      bgcolor: bggrayColor,
+                    }}
+                  >
+                    {sub.title && (
+                      <Typography variant="body2" sx={{ fontWeight: 600, color: "#000", mb: 0.5 }}>
+                        {sub.title}
+                      </Typography>
+                    )}
+                    {sub.description && (
+                      <Typography variant="body2" sx={{ color: "rgba(0,0,0,0.7)", mb: 1, whiteSpace: "pre-wrap" }}>
+                        {sub.description}
+                      </Typography>
+                    )}
+                    {Array.isArray(sub.items) && sub.items.length > 0 && (
+                      <Box component="ul" sx={{ m: 0, pl: 2 }}>
+                        {sub.items.map((item, i) => (
+                          <Typography key={i} component="li" variant="caption" sx={{ color: "rgba(0,0,0,0.7)" }}>
+                            {item}
+                          </Typography>
+                        ))}
+                      </Box>
+                    )}
+                  </Box>
+                ))}
+              </Box>
+            )}
+          </Box>
+        </DialogContent>
       </Dialog>
     </Box>
   );

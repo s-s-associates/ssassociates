@@ -2,6 +2,7 @@ import { connectDB } from "@/lib/db";
 import { getUserFromRequest } from "@/lib/get-user-from-request";
 import Service from "@/models/Service";
 import { NextResponse } from "next/server";
+import { normalizeServiceBody, validateServiceBody } from "../helpers";
 
 export async function GET(req, { params }) {
   try {
@@ -44,13 +45,19 @@ export async function PATCH(req, { params }) {
       return NextResponse.json({ success: false, message: "Service not found" }, { status: 404 });
     }
     const body = await req.json();
-    const title = (body.title || "").trim();
-    if (!title) {
-      return NextResponse.json({ success: false, message: "Title is required" }, { status: 400 });
+    const normalized = normalizeServiceBody(body);
+    const validationError = validateServiceBody(normalized);
+    if (validationError) {
+      return NextResponse.json({ success: false, message: validationError }, { status: 400 });
     }
-    service.title = title;
-    if (body.description !== undefined) service.description = (body.description || "").trim();
-    if (body.icon !== undefined) service.icon = (body.icon || "").trim();
+    service.title = normalized.title;
+    service.description = normalized.description;
+    service.imageUrl = normalized.imageUrl;
+    service.whatYouGet = normalized.whatYouGet;
+    service.extraBenefits = normalized.extraBenefits;
+    service.conclusion = normalized.conclusion;
+    service.subServices = normalized.subServices;
+    service.markModified("subServices");
     if (typeof body.order === "number") service.order = body.order;
     await service.save();
     return NextResponse.json({ success: true, service });
