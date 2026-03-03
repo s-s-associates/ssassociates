@@ -1,6 +1,7 @@
 import { connectDB } from "@/lib/db";
 import { getUserFromRequest } from "@/lib/get-user-from-request";
 import Category from "@/models/Category";
+import Project from "@/models/Project";
 import { NextResponse } from "next/server";
 
 export async function GET(req, { params }) {
@@ -71,10 +72,25 @@ export async function DELETE(req, { params }) {
       return NextResponse.json({ success: false, message: "Category ID required" }, { status: 400 });
     }
     await connectDB();
-    const category = await Category.findOneAndDelete({ _id: id, userId: user._id });
+    const category = await Category.findOne({ _id: id, userId: user._id }).lean();
     if (!category) {
       return NextResponse.json({ success: false, message: "Category not found" }, { status: 404 });
     }
+    const projectCount = await Project.countDocuments({
+      userId: user._id,
+      category: category.name?.trim() || "",
+    });
+    if (projectCount > 0) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: `This category is used in ${projectCount} project(s). Remove it from those projects first, then you can delete the category.`,
+          projectCount,
+        },
+        { status: 400 }
+      );
+    }
+    await Category.findOneAndDelete({ _id: id, userId: user._id });
     return NextResponse.json({ success: true, message: "Category deleted" });
   } catch (err) {
     console.error("Category DELETE error:", err);

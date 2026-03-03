@@ -26,9 +26,11 @@ import { BeatLoader } from "react-spinners";
 import Swal from "sweetalert2";
 import { FiArrowLeft, FiEdit2, FiPlus, FiSearch, FiTrash2 } from "react-icons/fi";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function CategoryPage() {
   const { token } = getAuth();
+  const router = useRouter();
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [deletingId, setDeletingId] = useState(null);
@@ -178,6 +180,22 @@ export default function CategoryPage() {
   };
 
   const handleDelete = (category) => {
+    const projectCount = category.projectCount ?? 0;
+    if (projectCount > 0) {
+      Swal.fire({
+        icon: "warning",
+        title: "Cannot delete",
+        html: `"<strong>${(category.name || "").replace(/</g, "&lt;")}</strong>" is used in <strong>${projectCount}</strong> project${projectCount !== 1 ? "s" : ""}. Remove this category from those projects first, then you can delete it.`,
+        confirmButtonColor: primaryColor,
+        confirmButtonText: "Go to Projects",
+        showCancelButton: true,
+        cancelButtonText: "Cancel",
+        cancelButtonColor: "#666",
+      }).then((result) => {
+        if (result.isConfirmed) router.push("/user/projects");
+      });
+      return;
+    }
     Swal.fire({
       title: "Delete category?",
       text: `"${category.name}" will be removed. This cannot be undone.`,
@@ -353,16 +371,18 @@ export default function CategoryPage() {
         ) : (
           <>
           <Box sx={{ overflowX: "auto", width: "100%" }}>
-            <Table size="medium" sx={{ minWidth: 360 }}>
+            <Table size="medium" sx={{ minWidth: 440 }}>
             <TableHead>
               <TableRow sx={{ bgcolor: bggrayColor }}>
                 <TableCell sx={{ fontWeight: 700, color: "#000", whiteSpace: "nowrap", minWidth: 140 }}>Name</TableCell>
+                <TableCell sx={{ fontWeight: 700, color: "#000", whiteSpace: "nowrap", minWidth: 140 }}>Used in projects</TableCell>
                 <TableCell align="right" sx={{ fontWeight: 700, color: "#000", whiteSpace: "nowrap", minWidth: 120 }}>Actions</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {paginatedCategories.map((row) => {
                 const isDeleting = deletingId === row._id;
+                const projectCount = row.projectCount ?? 0;
                 return (
                   <TableRow
                     key={row._id}
@@ -374,6 +394,9 @@ export default function CategoryPage() {
                       <Typography sx={{ fontWeight: 600, fontSize: 14, color: "#000" }}>
                         {row.name || "—"}
                       </Typography>
+                    </TableCell>
+                    <TableCell sx={{ color: "rgba(0,0,0,0.7)", fontSize: 14 }}>
+                      {projectCount} project{projectCount !== 1 ? "s" : ""}
                     </TableCell>
                     <TableCell align="right">
                       <IconButton

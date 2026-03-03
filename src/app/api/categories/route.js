@@ -1,6 +1,7 @@
 import { connectDB } from "@/lib/db";
 import { getUserFromRequest } from "@/lib/get-user-from-request";
 import Category from "@/models/Category";
+import Project from "@/models/Project";
 import { NextResponse } from "next/server";
 
 export async function GET(req) {
@@ -13,7 +14,18 @@ export async function GET(req) {
     const categories = await Category.find({ userId: user._id })
       .sort({ createdAt: -1 })
       .lean();
-    return NextResponse.json({ success: true, categories });
+    const projectCounts = await Project.aggregate([
+      { $match: { userId: user._id, category: { $exists: true, $ne: "" } } },
+      { $group: { _id: "$category", count: { $sum: 1 } } },
+    ]);
+    const countByCategoryName = Object.fromEntries(
+      projectCounts.map((p) => [String(p._id).trim(), p.count])
+    );
+    const categoriesWithCount = categories.map((c) => ({
+      ...c,
+      projectCount: countByCategoryName[c.name?.trim()] ?? 0,
+    }));
+    return NextResponse.json({ success: true, categories: categoriesWithCount });
   } catch (err) {
     console.error("Categories GET error:", err);
     return NextResponse.json(
