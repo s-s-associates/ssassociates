@@ -6,11 +6,9 @@ import { NextResponse } from "next/server";
 export async function GET(req) {
   try {
     const user = await getUserFromRequest(req);
-    if (!user) {
-      return NextResponse.json({ success: false, message: "Unauthorized" }, { status: 401 });
-    }
     await connectDB();
-    const testimonials = await Testimonial.find({ userId: user._id })
+    const filter = user ? { userId: user._id } : {};
+    const testimonials = await Testimonial.find(filter)
       .sort({ createdAt: -1 })
       .lean();
     return NextResponse.json({ success: true, testimonials });

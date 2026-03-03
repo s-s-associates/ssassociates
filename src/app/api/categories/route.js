@@ -7,15 +7,14 @@ import { NextResponse } from "next/server";
 export async function GET(req) {
   try {
     const user = await getUserFromRequest(req);
-    if (!user) {
-      return NextResponse.json({ success: false, message: "Unauthorized" }, { status: 401 });
-    }
     await connectDB();
-    const categories = await Category.find({ userId: user._id })
+    const filter = user ? { userId: user._id } : {};
+    const categories = await Category.find(filter)
       .sort({ createdAt: -1 })
       .lean();
+    const projectMatch = user ? { userId: user._id, category: { $exists: true, $ne: "" } } : { category: { $exists: true, $ne: "" } };
     const projectCounts = await Project.aggregate([
-      { $match: { userId: user._id, category: { $exists: true, $ne: "" } } },
+      { $match: projectMatch },
       { $group: { _id: "$category", count: { $sum: 1 } } },
     ]);
     const countByCategoryName = Object.fromEntries(

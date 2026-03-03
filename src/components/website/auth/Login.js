@@ -257,7 +257,7 @@ function Login() {
               py: 1.5,
               borderRadius: 2,
               textTransform: "none",
-              "&:hover": { bgcolor: "#7A2FE5" },
+              "&:hover": { bgcolor: "red" },
             }}
           >
             {loading ? <BeatLoader color="#fff" size={10} /> : "Sign In"}

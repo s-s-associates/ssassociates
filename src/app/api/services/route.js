@@ -7,11 +7,9 @@ import { normalizeServiceBody, validateServiceBody } from "./helpers";
 export async function GET(req) {
   try {
     const user = await getUserFromRequest(req);
-    if (!user) {
-      return NextResponse.json({ success: false, message: "Unauthorized" }, { status: 401 });
-    }
     await connectDB();
-    const services = await Service.find({ userId: user._id })
+    const filter = user ? { userId: user._id } : {};
+    const services = await Service.find(filter)
       .sort({ order: 1, createdAt: -1 })
       .lean();
     return NextResponse.json({ success: true, services });
