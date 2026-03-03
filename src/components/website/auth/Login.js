@@ -19,6 +19,7 @@ import { useRouter } from "next/navigation";
 import Swal from "sweetalert2";
 import { BeatLoader } from "react-spinners";
 import { setAuth } from "@/lib/auth-storage";
+import ArrowBack from "@mui/icons-material/ArrowBack";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 
@@ -117,6 +118,23 @@ function Login() {
           p: 4,
         }}
       >
+        <Box component={motion.div} variants={authItemVariants} sx={{ mb: 3 }}>
+          <Button
+            component={Link}
+            href="/"
+            startIcon={<ArrowBack />}
+            size="small"
+            sx={{
+              color: grayColor,
+              fontWeight: 600,
+              fontSize: 14,
+              textTransform: "none",
+              "&:hover": { bgcolor: "rgba(0,0,0,0.04)", color: primaryColor },
+            }}
+          >
+            Back to home
+          </Button>
+        </Box>
         <Box
           component={motion.div}
           variants={authItemVariants}
@@ -245,27 +263,7 @@ function Login() {
             {loading ? <BeatLoader color="#fff" size={10} /> : "Sign In"}
           </Button>
         </Box>
-
-        <Box
-          component={motion.div}
-          variants={authItemVariants}
-          sx={{ textAlign: "center", mt: 3, fontSize: 14, color: grayColor }}
-        >
-          Don&apos;t have an account yet?{" "}
-          <Box
-            component={Link}
-            href="/signup"
-            sx={{
-              color: primaryColor,
-              fontWeight: 600,
-              textDecoration: "none",
-              "&:hover": { textDecoration: "underline" },
-            }}
-          >
-            Create Account
-          </Box>
-        </Box>
-      </Box>
+  </Box>
       </Box>
     </Box>
     </>

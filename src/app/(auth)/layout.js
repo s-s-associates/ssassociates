@@ -6,11 +6,11 @@ import { Box } from "@mui/material";
 export default function AuthLayout({ children }) {
   return (
     <>
-      <AuthNav />
+      {/* <AuthNav /> */}
       <Box component="main" sx={{ minHeight: "30vh", pt: 10, pb: 6 }}>
         {children}
       </Box>
-      <Footer/>
+      {/* <Footer/> */}
     </>
   );
 }
