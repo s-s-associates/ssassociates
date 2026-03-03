@@ -16,8 +16,11 @@ const plusJakartaSans = Plus_Jakarta_Sans({
 });
 
 export const metadata = {
-  title: "SsAssociates",
-  description: "SsAssociates is a platform for coaches to find the best players for their team.",
+  title: "S&S Associates",
+  description: "S&S Associates is a platform for coaches to find the best players for their team.",
+  icons: {
+    icon: "/ss-logo.png",
+  },
 };
 
 export default function RootLayout({ children }) {

@@ -85,10 +85,11 @@ function Footer() {
           display: "grid",
           gridTemplateColumns: {
             xs: "1fr",
-            sm: "1fr 1fr",
-            lg: "1.2fr 1fr 1fr 1.2fr",
+            sm: "repeat(2, minmax(0, 1fr))",
+            lg: "repeat(4, minmax(0, 1fr))",
           },
-          gap: { xs: 4, md: 3 },
+          columnGap: { xs: 4, md: 4 },
+          rowGap: { xs: 4, md: 3 },
           pb: 4,
         }}
       >
@@ -482,7 +483,7 @@ function Footer() {
             }}
           >
             <Link
-              href="/privacy"
+              href="/privacy-policy"
               style={{ textDecoration: "none" }}
             >
               <Box
@@ -504,7 +505,7 @@ function Footer() {
               </Box>
             </Link>
             <Link
-              href="/terms"
+              href="/terms-&-conditions"
               style={{ textDecoration: "none" }}
             >
               <Box
@@ -523,28 +524,6 @@ function Footer() {
                 }}
               >
                 Terms of Service
-              </Box>
-            </Link>
-            <Link
-              href="/sitemap"
-              style={{ textDecoration: "none" }}
-            >
-              <Box
-                component="span"
-                sx={{
-                  ...underlineFromLeft,
-                  fontFamily: "var(--font-plus-jakarta), 'Plus Jakarta Sans', sans-serif",
-                  fontWeight: 400,
-                  fontSize: 14,
-                  color: textGrayLight,
-                  transition: "color 0.2s",
-                  "&:hover": {
-                    color: primaryColor,
-                    ...underlineFromLeftHover,
-                  },
-                }}
-              >
-                Sitemap
               </Box>
             </Link>
           </Box>

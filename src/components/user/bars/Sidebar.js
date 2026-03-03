@@ -61,6 +61,9 @@ function Sidebar() {
         display: "flex",
         flexDirection: "column",
         overflowY: "auto",
+        scrollbarWidth: "none",
+        msOverflowStyle: "none",
+        "&::-webkit-scrollbar": { display: "none" },
       }}
     >
       {/* Logo */}
@@ -78,7 +81,7 @@ function Sidebar() {
           px: 1.5,
         }}
       >
-        SsAssociates
+        S&S Associates
       </Box>
 
       {/* MENU label */}

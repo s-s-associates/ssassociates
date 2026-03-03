@@ -1,22 +1,20 @@
 import React from 'react'
-import Banner from './Banner'
-import StopLosing from './StopLosing'
-import EverythingNeed from './EverythingNeed'
-
-import Pricing from './Pricing'
-import Insights from './Insights'
-import Guessing from './Guessing'
+import OurClients from './OurClients'
+import Stats from '../about/Stats'
+import OurPrinciples from '../about/OurPrinciples'
+import WhyChooseUs from '../about/WhyChooseUs'
+import Faqs from './Faqs'
+import ContactForm from '../contact/ContactForm'
 
 function LandingPage() {
   return (
     <div>
-        <Banner/>
-        <StopLosing/>
-        <Insights/>
-        <EverythingNeed/>
-   
-        <Pricing/>
-        <Guessing/>
+        <Stats />
+      <OurPrinciples />
+      <WhyChooseUs />
+        <OurClients/>
+        <ContactForm/>
+        <Faqs/>
     </div>
   )
 }

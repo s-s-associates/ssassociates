@@ -1,0 +1,344 @@
+"use client";
+
+import {
+  primaryColor,
+  primaryBg,
+  secondaryColor,
+  textGrayDark,
+  textGrayLight,
+  whiteColor,
+  secondaryBg,
+} from "@/components/utils/Colors";
+import {
+  btnRadius,
+  boxShadow,
+  boxShadowHover,
+  transition,
+} from "@/components/utils/GlobalVariables";
+import {
+  Flag,
+  Visibility,
+  FavoriteBorder,
+} from "@mui/icons-material";
+import { Box } from "@mui/material";
+import { motion } from "framer-motion";
+import React from "react";
+
+const principleCards = [
+  {
+    icon: Flag,
+    label: "Our Mission",
+    title: "Deliver reliable spaces that stand the test of time.",
+    description:
+      "We are committed to turning ideas into durable, functional spaces by combining engineering expertise, quality materials, and disciplined project management.",
+  },
+  {
+    icon: Visibility,
+    label: "Our Vision",
+    title: "Shape the future skyline with integrity.",
+    description:
+      "We aim to be the trusted construction partner for ambitious residential and commercial projects, known for transparency, innovation, and craftsmanship.",
+  },
+  {
+    icon: FavoriteBorder,
+    label: "Our Values",
+    title: "Built on trust, safety, and respect.",
+    description:
+      "Every decision we make is guided by safety, accountability, and respect—for our clients, our teams, and the communities we build in.",
+  },
+];
+
+const cardContainerVariants = {
+  hidden: { opacity: 0, y: 24 },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: { staggerChildren: 0.08, delayChildren: 0.12 },
+  },
+};
+
+const cardItemVariants = {
+  hidden: { opacity: 0, y: 18 },
+  show: { opacity: 1, y: 0 },
+  rest: { y: 0, scale: 1 },
+  hover: { y: -6, scale: 1.02 },
+};
+
+const cardBorderTopVariants = {
+  rest: { scaleX: 0 },
+  hover: { scaleX: 1 },
+};
+
+const cardBorderRightVariants = {
+  rest: { scaleY: 0 },
+  hover: { scaleY: 1 },
+};
+
+const cardBorderBottomVariants = {
+  rest: { scaleX: 0 },
+  hover: { scaleX: 1 },
+};
+
+const cardBorderLeftVariants = {
+  rest: { scaleY: 0 },
+  hover: { scaleY: 1 },
+};
+
+function OurPrinciples() {
+  return (
+    <Box
+      component="section"
+      sx={{
+        py: { xs: 6, md: 8 },
+        px: { xs: 2, sm: 3, md: 4 },
+        backgroundColor: whiteColor,
+      }}
+    >
+      <Box
+        sx={{
+          maxWidth: 1200,
+          mx: "auto",
+        }}
+      >
+        <Box
+          component={motion.div}
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.3 }}
+          sx={{ textAlign: "center", mb: 4 }}
+        >
+          <Box
+            component="span"
+            sx={{
+              display: "inline-flex",
+              alignItems: "center",
+              justifyContent: "center",
+              px: 1.5,
+              py: 0.75,
+              mb: 1.5,
+              borderRadius: 999,
+              backgroundColor: secondaryBg,
+              color: secondaryColor,
+              fontFamily:
+                "var(--font-plus-jakarta), 'Plus Jakarta Sans', sans-serif",
+              fontWeight: 600,
+              fontSize: 12,
+            }}
+          >
+            Our Principles
+          </Box>
+          <Box
+            component="h2"
+            sx={{
+              fontFamily:
+                "var(--font-plus-jakarta), 'Plus Jakarta Sans', sans-serif",
+              fontWeight: 700,
+              fontSize: { xs: 26, md: 30 },
+              color: secondaryColor,
+              mb: 1,
+            }}
+          >
+            The foundation behind every project.
+          </Box>
+          <Box
+            component="p"
+            sx={{
+              fontFamily:
+                "var(--font-plus-jakarta), 'Plus Jakarta Sans', sans-serif",
+              fontWeight: 400,
+              fontSize: 14,
+              lineHeight: 1.7,
+              color: textGrayDark,
+              maxWidth: 560,
+              mx: "auto",
+            }}
+          >
+            Our core principles guide how we plan, communicate, and build—so you
+            experience a smooth process and a dependable result.
+          </Box>
+        </Box>
+
+        <Box
+          component={motion.div}
+          variants={cardContainerVariants}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, amount: 0.2 }}
+          sx={{
+            display: "grid",
+            gridTemplateColumns: { xs: "1fr", md: "repeat(3, minmax(0, 1fr))" },
+            gap: { xs: 2.5, md: 3 },
+            mt: 3,
+          }}
+        >
+          {principleCards.map((card) => {
+            const Icon = card.icon;
+            return (
+              <Box
+                key={card.label}
+                component={motion.div}
+                variants={cardItemVariants}
+                initial="rest"
+                whileHover="hover"
+                transition={{ duration: 0.2 }}
+                sx={{
+                  position: "relative",
+                  backgroundColor: whiteColor,
+                  borderRadius: btnRadius,
+                  border: `1px solid ${textGrayLight}`,
+                  boxShadow,
+                  px: 2.5,
+                  py: 2.5,
+                  overflow: "hidden",
+                  cursor: "default",
+                  transition,
+                  "&:hover": {
+                    boxShadow: boxShadowHover,
+                  },
+                }}
+              >
+                {/* Animated border segments */}
+                <Box
+                  component={motion.div}
+                  variants={cardBorderTopVariants}
+                  sx={{
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    height: 2,
+                    backgroundColor: primaryColor,
+                    transformOrigin: "left center",
+                    zIndex: 0,
+                  }}
+                  transition={{ duration: 0.35, ease: "easeInOut" }}
+                />
+                <Box
+                  component={motion.div}
+                  variants={cardBorderRightVariants}
+                  sx={{
+                    position: "absolute",
+                    top: 0,
+                    right: 0,
+                    bottom: 0,
+                    width: 2,
+                    backgroundColor: primaryColor,
+                    transformOrigin: "center top",
+                    zIndex: 0,
+                  }}
+                  transition={{ duration: 0.35, ease: "easeInOut", delay: 0.08 }}
+                />
+                <Box
+                  component={motion.div}
+                  variants={cardBorderBottomVariants}
+                  sx={{
+                    position: "absolute",
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    height: 2,
+                    backgroundColor: primaryColor,
+                    transformOrigin: "right center",
+                    zIndex: 0,
+                  }}
+                  transition={{ duration: 0.35, ease: "easeInOut", delay: 0.16 }}
+                />
+                <Box
+                  component={motion.div}
+                  variants={cardBorderLeftVariants}
+                  sx={{
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    bottom: 0,
+                    width: 2,
+                    backgroundColor: primaryColor,
+                    transformOrigin: "center bottom",
+                    zIndex: 0,
+                  }}
+                  transition={{ duration: 0.35, ease: "easeInOut", delay: 0.24 }}
+                />
+
+                <Box
+                  sx={{
+                    position: "relative",
+                    zIndex: 1,
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 1.25,
+                  }}
+                >
+                  <Box
+                    sx={{
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: 1,
+                      mb: 0.5,
+                    }}
+                  >
+                    <Box
+                      sx={{
+                        width: 36,
+                        height: 36,
+                        borderRadius: "50%",
+                        backgroundColor: primaryBg,
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        color: primaryColor,
+                      }}
+                    >
+                      <Icon sx={{ fontSize: 20 }} />
+                    </Box>
+                    <Box
+                      component="span"
+                      sx={{
+                        fontFamily:
+                          "var(--font-plus-jakarta), 'Plus Jakarta Sans', sans-serif",
+                        fontWeight: 600,
+                        fontSize: 13,
+                        textTransform: "uppercase",
+                        letterSpacing: "0.08em",
+                        color: textGrayDark,
+                      }}
+                    >
+                      {card.label}
+                    </Box>
+                  </Box>
+                  <Box
+                    component="h3"
+                    sx={{
+                      fontFamily:
+                        "var(--font-plus-jakarta), 'Plus Jakarta Sans', sans-serif",
+                      fontWeight: 600,
+                      fontSize: 16,
+                      color: secondaryColor,
+                    }}
+                  >
+                    {card.title}
+                  </Box>
+                  <Box
+                    component="p"
+                    sx={{
+                      fontFamily:
+                        "var(--font-plus-jakarta), 'Plus Jakarta Sans', sans-serif",
+                      fontWeight: 400,
+                      fontSize: 14,
+                      lineHeight: 1.7,
+                      color: textGrayDark,
+                    }}
+                  >
+                    {card.description}
+                  </Box>
+                </Box>
+              </Box>
+            );
+          })}
+        </Box>
+      </Box>
+    </Box>
+  );
+}
+
+export default OurPrinciples;
+

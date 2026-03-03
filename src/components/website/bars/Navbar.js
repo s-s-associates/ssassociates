@@ -1,18 +1,34 @@
 "use client";
 
-import { primaryColor, grayColor } from "@/components/utils/Colors";
+import {
+  primaryColor,
+  secondaryColor,
+  textGrayDark,
+  textGrayLight,
+  whiteColor,
+  secondaryBg,
+} from "@/components/utils/Colors";
+import {
+  btnRadius,
+  boxShadow,
+  boxShadowHover,
+  transition,
+} from "@/components/utils/GlobalVariables";
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
 import { Box, IconButton } from "@mui/material";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import React, { useState, useEffect } from "react";
 
 const navLinks = [
-  { label: "Features", href: "/features" },
-  { label: "How It Works", href: "/how-it-works" },
-  { label: "Pricing", href: "/pricing" },
+  { label: "Home", href: "/" },
+  { label: "About", href: "/about" },
+  { label: "Services", href: "/services" },
+  { label: "Projects", href: "/projects" },
+  { label: "Contact", href: "/contact" },
 ];
 
 const container = {
@@ -26,6 +42,38 @@ const container = {
 const item = {
   hidden: { opacity: 0, y: -12 },
   show: { opacity: 1, y: 0 },
+};
+
+// Animated underline for nav links: line enters from left to right
+const underlineFromLeft = {
+  position: "relative",
+  display: "inline-block",
+  "&::after": {
+    content: '""',
+    position: "absolute",
+    left: 0,
+    bottom: 0,
+    width: "100%",
+    height: 2,
+    background: primaryColor,
+    transform: "scaleX(0)",
+    transformOrigin: "left",
+    transition: "transform 0.25s ease",
+  },
+};
+const underlineFromLeftHover = {
+  "&::after": {
+    content: '""',
+    position: "absolute",
+    left: 0,
+    bottom: 0,
+    width: "100%",
+    height: 2,
+    background: primaryColor,
+    transform: "scaleX(1)",
+    transformOrigin: "left",
+    transition: "transform 0.25s ease",
+  },
 };
 
 function Navbar() {
@@ -55,10 +103,10 @@ function Navbar() {
           left: 0,
           right: 0,
           zIndex: 1100,
-          background: "#fff",
-          borderBottom: "1px solid rgba(21, 21, 29, 0.08)",
-          boxShadow: scrolled ? "0 1px 12px rgba(0,0,0,0.06)" : "none",
-          transition: "box-shadow 0.25s ease",
+          backgroundColor: whiteColor,
+          borderBottom: `1px solid ${secondaryBg}`,
+          boxShadow: scrolled ? boxShadowHover : boxShadow,
+          transition,
         }}
       >
         <Box
@@ -86,21 +134,69 @@ function Navbar() {
               component={motion.div}
               variants={item}
               sx={{
-                fontFamily: "var(--font-inter), Inter, sans-serif",
-                fontWeight: 600,
-                fontSize: 24,
-                lineHeight: "100%",
-                letterSpacing: 0,
-                color: grayColor,
-                width: { xs: "auto", md: 371.5 },
-                height: 29,
                 display: "flex",
                 alignItems: "center",
+                gap: 1.25,
               }}
             >
-              <Link href="/" style={{ color: "inherit", textDecoration: "none" }}>
-                SsAssociates
-              </Link>
+              <Box
+                sx={{
+                  width: 40,
+                  height: 40,
+                  borderRadius: 1.5,
+                  overflow: "hidden",
+                  bgcolor: secondaryColor,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  mr: { xs: 0, md: 0.5 },
+                }}
+              >
+                <Link href="/" style={{ display: "inline-flex" }}>
+                  <Image
+                    src="/ss-logo.png"
+                    alt="S&S Associates"
+                    width={40}
+                    height={40}
+                    style={{ objectFit: "contain" }}
+                  />
+                </Link>
+              </Box>
+              <Box sx={{ display: "flex", flexDirection: "column", lineHeight: 1 }}>
+                <Link href="/" style={{ textDecoration: "none" }}>
+                  <Box
+                    component="span"
+                    sx={{
+                      ...underlineFromLeft,
+                      fontFamily:
+                        "var(--font-plus-jakarta), 'Plus Jakarta Sans', sans-serif",
+                      fontWeight: 600,
+                      fontSize: 20,
+                      color: primaryColor,
+                      transition: "color 0.2s ease",
+                      "&:hover": {
+                        color: primaryColor,
+                        ...underlineFromLeftHover,
+                      },
+                    }}
+                  >
+                    S&S Associates
+                  </Box>
+                </Link>
+                <Box
+                  component="span"
+                  sx={{
+                    fontFamily:
+                      "var(--font-plus-jakarta), 'Plus Jakarta Sans', sans-serif",
+                    fontWeight: 400,
+                    fontSize: 12,
+                    color: textGrayDark,
+                    mt: 0.25,
+                  }}
+                >
+                  Building Excellence
+                </Box>
+              </Box>
             </Box>
           </Box>
 
@@ -120,7 +216,10 @@ function Navbar() {
             }}
           >
             {navLinks.map((link) => {
-              const isActive = pathname === link.href;
+              const isActive =
+                link.href === "/"
+                  ? pathname === "/"
+                  : pathname.startsWith(link.href);
               return (
                 <Box
                   component={motion.div}
@@ -133,35 +232,30 @@ function Navbar() {
                     gap: 0.75,
                   }}
                 >
-                  <Link
-                    href={link.href}
-                    style={{
-                      fontFamily: "var(--font-plus-jakarta), 'Plus Jakarta Sans', sans-serif",
-                      fontWeight: 400,
-                      fontSize: 16,
-                      lineHeight: "24px",
-                      letterSpacing: "0%",
-                      color: isActive ? primaryColor : grayColor,
-                      textDecoration: "none",
-                      minWidth: 99,
-                      height: 24,
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}
-                  >
-                    {link.label}
-                  </Link>
-                  {isActive && (
+                  <Link href={link.href} style={{ textDecoration: "none" }}>
                     <Box
+                      component="span"
                       sx={{
-                        width: 6,
-                        height: 6,
-                        borderRadius: "50%",
-                        bgcolor: primaryColor,
+                        ...underlineFromLeft,
+                        fontFamily:
+                          "var(--font-plus-jakarta), 'Plus Jakarta Sans', sans-serif",
+                        fontWeight: 400,
+                        fontSize: 16,
+                        lineHeight: "24px",
+                        letterSpacing: "0%",
+                        color: isActive ? primaryColor : textGrayDark,
+                        px: 0.5,
+                        transition: "color 0.2s ease",
+                        ...(isActive ? underlineFromLeftHover : {}),
+                        "&:hover": {
+                          color: primaryColor,
+                          ...underlineFromLeftHover,
+                        },
                       }}
-                    />
-                  )}
+                    >
+                      {link.label}
+                    </Box>
+                  </Link>
                 </Box>
               );
             })}
@@ -176,25 +270,9 @@ function Navbar() {
             sx={{
               display: { xs: "none", md: "flex" },
               alignItems: "center",
-              gap: 2,
+              gap: 3,
             }}
           >
-            <Box component={motion.div} variants={item}>
-              <Link
-                href="/login"
-                style={{
-                  fontFamily: "var(--font-plus-jakarta), 'Plus Jakarta Sans', sans-serif",
-                  fontWeight: 400,
-                  fontSize: 16,
-                  lineHeight: "24px",
-                  color: grayColor,
-                  textDecoration: "none",
-                  padding: "6px 12px",
-                }}
-              >
-                Log In
-              </Link>
-            </Box>
             <Box component={motion.div} variants={item}>
               <Link
                 href="/contact"
@@ -203,17 +281,19 @@ function Navbar() {
                   fontWeight: 700,
                   fontSize: 16,
                   lineHeight: "24px",
-                  color: "#fff",
+                  color: whiteColor,
                   background: primaryColor,
                   textDecoration: "none",
-                  padding: "8px 20px",
-                  borderRadius: "8px",
+                  padding: "10px 24px",
+                  borderRadius: btnRadius,
                   display: "inline-flex",
                   alignItems: "center",
                   justifyContent: "center",
+                  boxShadow,
+                  transition,
                 }}
               >
-                Contact
+                Get a Quote
               </Link>
             </Box>
           </Box>
@@ -230,12 +310,12 @@ function Navbar() {
               onClick={() => setDrawerOpen(true)}
               aria-label="Open menu"
               sx={{
-                color: grayColor,
+                  color: textGrayDark,
                 borderRadius: "8px",
                 transition: "color 0.2s ease, transform 0.2s ease",
                 "&:hover": {
                   color: primaryColor,
-                  backgroundColor: "rgba(138, 56, 245, 0.08)",
+                    backgroundColor: secondaryBg,
                   transform: "scale(1.06)",
                 },
                 "&:hover .MuiTouchRipple-root": { borderRadius: "8px" },
@@ -290,12 +370,12 @@ function Navbar() {
                   onClick={() => setDrawerOpen(false)}
                   aria-label="Close menu"
                   sx={{
-                    color: grayColor,
+                    color: textGrayDark,
                     borderRadius: "8px",
                     transition: "color 0.2s ease, transform 0.2s ease",
                     "&:hover": {
                       color: primaryColor,
-                      backgroundColor: "rgba(138, 56, 245, 0.08)",
+                      backgroundColor: secondaryBg,
                       transform: "scale(1.06)",
                     },
                     "&:hover .MuiTouchRipple-root": { borderRadius: "8px" },
@@ -312,65 +392,69 @@ function Navbar() {
                 sx={{ display: "flex", flexDirection: "column", gap: 1 }}
               >
                 {navLinks.map((link) => {
-                  const isActive = pathname === link.href;
+                  const isActive =
+                    link.href === "/"
+                      ? pathname === "/"
+                      : pathname.startsWith(link.href);
                   return (
                     <Box component={motion.div} key={link.label} variants={item}>
                       <Link
                         href={link.href}
                         onClick={() => setDrawerOpen(false)}
-                        style={{
-                          fontFamily: "var(--font-plus-jakarta), 'Plus Jakarta Sans', sans-serif",
-                          fontWeight: 400,
-                          fontSize: 16,
-                          lineHeight: "24px",
-                          color: isActive ? primaryColor : grayColor,
-                          textDecoration: "none",
-                          display: "block",
-                          padding: "12px 16px",
-                          borderLeft: isActive ? `3px solid ${primaryColor}` : "3px solid transparent",
-                          marginLeft: 12,
-                        }}
+                        style={{ textDecoration: "none", display: "block" }}
                       >
-                        {link.label}
+                        <Box
+                          component="span"
+                          sx={{
+                            ...underlineFromLeft,
+                            display: "block",
+                            fontFamily:
+                              "var(--font-plus-jakarta), 'Plus Jakarta Sans', sans-serif",
+                            fontWeight: 400,
+                            fontSize: 16,
+                            lineHeight: "24px",
+                            color: isActive ? primaryColor : textGrayDark,
+                            px: 2,
+                            py: 1.5,
+                            ml: 1.5,
+                            borderLeft: isActive
+                              ? `3px solid ${primaryColor}`
+                              : "3px solid transparent",
+                            transition,
+                            ...(isActive ? underlineFromLeftHover : {}),
+                            "&:hover": {
+                              color: primaryColor,
+                              ...underlineFromLeftHover,
+                            },
+                          }}
+                        >
+                          {link.label}
+                        </Box>
                       </Link>
                     </Box>
                   );
                 })}
                 <Box component={motion.div} variants={item} sx={{ mt: 2 }}>
                   <Link
-                    href="/login"
-                    onClick={() => setDrawerOpen(false)}
-                    style={{
-                      fontFamily: "var(--font-plus-jakarta), 'Plus Jakarta Sans', sans-serif",
-                      fontSize: 16,
-                      color: grayColor,
-                      textDecoration: "none",
-                      display: "block",
-                      padding: "12px 16px",
-                    }}
-                  >
-                    Log In
-                  </Link>
-                </Box>
-                <Box component={motion.div} variants={item}>
-                  <Link
                     href="/contact"
                     onClick={() => setDrawerOpen(false)}
                     style={{
                       fontFamily: "var(--font-plus-jakarta), 'Plus Jakarta Sans', sans-serif",
                       fontSize: 16,
-                      color: "#fff",
+                      color: whiteColor,
                       fontWeight: 700,
                       background: primaryColor,
                       textDecoration: "none",
                       display: "block",
                       padding: "12px 20px",
-                      borderRadius: "8px",
+                      borderRadius: btnRadius,
                       textAlign: "center",
                       margin: "0 16px",
+                      boxShadow,
+                      transition,
                     }}
                   >
-                    Contact
+                    Get a Quote
                   </Link>
                 </Box>
               </Box>
