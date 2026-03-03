@@ -3,12 +3,28 @@
 import { bordergrayColor, primaryColor } from "@/components/utils/Colors";
 import { Box, Card, CardContent, Typography } from "@mui/material";
 import React from "react";
-import { FiFolder, FiLayers, FiUsers } from "react-icons/fi";
+import {
+  FiFolder,
+  FiGlobe,
+  FiHelpCircle,
+  FiLayers,
+  FiMail,
+  FiMessageCircle,
+  FiUserPlus,
+  FiUsers,
+} from "react-icons/fi";
+import { MdPeopleOutline } from "react-icons/md";
 
 const CARDS_CONFIG = [
   { label: "Projects", key: "projects", icon: FiFolder, color: primaryColor },
   { label: "Categories", key: "categories", icon: FiLayers, color: "#0EA5E9" },
   { label: "Admins", key: "admins", icon: FiUsers, color: "#10B981" },
+  { label: "Clients", key: "clients", icon: MdPeopleOutline, color: "#F59E0B" },
+  { label: "Contact submissions", key: "contactSubmissions", icon: FiMail, color: "#8B5CF6" },
+  { label: "Subscribers", key: "subscribers", icon: FiUserPlus, color: "#EC4899" },
+  { label: "Services", key: "services", icon: FiGlobe, color: "#06B6D4" },
+  { label: "Testimonials", key: "testimonials", icon: FiMessageCircle, color: "#14B8A6" },
+  { label: "FAQs", key: "faqs", icon: FiHelpCircle, color: "#6366F1" },
 ];
 
 export default function KPICards({ counts }) {
@@ -17,7 +33,7 @@ export default function KPICards({ counts }) {
       sx={{
         display: "grid",
         gridTemplateColumns: { xs: "1fr", sm: "repeat(2, 1fr)", lg: "repeat(3, 1fr)" },
-        gap: 2,
+        gap: 1.5,
         mb: 3,
       }}
     >

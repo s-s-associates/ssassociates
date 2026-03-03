@@ -290,7 +290,8 @@ export default function TestimonialsPage() {
           </Box>
         ) : (
           <>
-            <Table size="medium">
+            <Box sx={{ overflowX: "auto", width: "100%", WebkitOverflowScrolling: "touch" }}>
+              <Table size="medium" sx={{ minWidth: 640 }}>
               <TableHead>
                 <TableRow sx={{ bgcolor: bggrayColor }}>
                   <TableCell sx={{ fontWeight: 700, color: "#000" }}>Client</TableCell>
@@ -333,6 +334,7 @@ export default function TestimonialsPage() {
               })}
             </TableBody>
           </Table>
+            </Box>
           <TablePagination
             component="div"
             count={filteredTestimonials.length}
