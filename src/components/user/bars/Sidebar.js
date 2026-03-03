@@ -1,48 +1,18 @@
 "use client";
 
-import {
-  FiChevronDown,
-  FiFolder,
-  FiGlobe,
-  FiGrid,
-  FiLogOut,
-  FiMail,
-  FiUserPlus,
-  FiUsers,
-} from "react-icons/fi";
-import { MdPeopleOutline } from "react-icons/md";
+import { FiChevronDown, FiLogOut } from "react-icons/fi";
 import { clearAuth } from "@/lib/auth-storage";
 import { Box } from "@mui/material";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import React, { useState } from "react";
 import Swal from "sweetalert2";
+import { menuItems, projectPagesChildren, websiteChildren } from "./sidebarMenuConfig";
 
 const SIDEBAR_BG = "#1A1A1A";
 const MENU_ITEM_ACTIVE_BG = "#FFFFFF";
 const MENU_ITEM_ACTIVE_COLOR = "#15151D";
 const LOGOUT_BG = "rgba(255, 255, 255, 0.08)";
-
-const menuItems = [
-  { label: "Dashboard", href: "/user/dashboard", Icon: FiGrid },
-  { label: "Admins", href: "/user/admins", Icon: FiUsers },
-  { label: "Clients", href: "/user/clients", Icon: MdPeopleOutline },
-  { label: "Contact submission", href: "/user/contact-submissions", Icon: FiMail },
-  { label: "Subscribers", href: "/user/subscribers", Icon: FiUserPlus },
-  { label: "Project pages", href: "/user/category", Icon: FiFolder, hasSubmenu: true },
-  { label: "Website", href: "/user/services", Icon: FiGlobe, hasSubmenu: true },
-];
-
-const projectPagesChildren = [
-  { label: "Category", href: "/user/category" },
-  { label: "Projects", href: "/user/projects" },
-];
-
-const websiteChildren = [
-  { label: "Services", href: "/user/services" },
-  { label: "Testimonials", href: "/user/testimonials" },
-  { label: "FAQs", href: "/user/faqs" },
-];
 
 function Sidebar() {
   const pathname = usePathname();

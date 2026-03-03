@@ -9,12 +9,14 @@ import {
   DialogContent,
   DialogTitle,
   IconButton,
+  InputAdornment,
   Skeleton,
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableRow,
+  TablePagination,
   TextField,
   Typography,
 } from "@mui/material";
@@ -22,7 +24,7 @@ import { getAuth } from "@/lib/auth-storage";
 import React, { useCallback, useEffect, useState } from "react";
 import { BeatLoader } from "react-spinners";
 import Swal from "sweetalert2";
-import { FiChevronDown, FiChevronUp, FiEdit2, FiEye, FiPlus, FiTrash2 } from "react-icons/fi";
+import { FiChevronDown, FiChevronUp, FiEdit2, FiEye, FiPlus, FiRefreshCw, FiSearch, FiTrash2 } from "react-icons/fi";
 
 export default function FaqsPage() {
   const { token } = getAuth();
@@ -36,6 +38,28 @@ export default function FaqsPage() {
   const [saving, setSaving] = useState(false);
   const [viewingItem, setViewingItem] = useState(null);
   const [reorderingId, setReorderingId] = useState(null);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const handleChangePage = (_, newPage) => setPage(newPage);
+  const handleChangeRowsPerPage = (e) => {
+    setRowsPerPage(parseInt(e.target.value, 10));
+    setPage(0);
+  };
+
+  const filteredFaqs = faqs.filter((row) => {
+    const q = (searchQuery || "").trim().toLowerCase();
+    if (!q) return true;
+    const questionStr = (row.question || "").toLowerCase();
+    const answerStr = (row.answer || "").toLowerCase();
+    return questionStr.includes(q) || answerStr.includes(q);
+  });
+
+  const paginatedFaqs = filteredFaqs.slice(
+    page * rowsPerPage,
+    page * rowsPerPage + rowsPerPage
+  );
 
   const fetchFaqs = useCallback(async () => {
     if (!token) return;
@@ -262,26 +286,86 @@ export default function FaqsPage() {
         <Typography component="h1" sx={{ fontSize: 24, fontWeight: 700, color: "#000", m: 0 }}>
           FAQs
         </Typography>
-        <Button
-          variant="contained"
-          startIcon={<FiPlus size={18} />}
-          onClick={openAddDialog}
-          sx={{
-            bgcolor: primaryColor,
-            color: "#fff",
-            fontWeight: 600,
-            fontSize: 14,
-            py: 1,
-            px: 2,
-            borderRadius: 2,
-            textTransform: "none",
-            boxShadow: "none",
-            "&:hover": { bgcolor: "#7A2FE5", boxShadow: "none" },
-          }}
-        >
-          Add FAQ
-        </Button>
+        <Box sx={{ display: "flex", gap: 1.5, flexWrap: "wrap" }}>
+          <Button
+            startIcon={<FiRefreshCw size={18} />}
+            onClick={() => fetchFaqs()}
+            disabled={loading}
+            variant="outlined"
+            size="small"
+            sx={{
+              borderColor: bordergrayColor,
+              color: "#000",
+              textTransform: "none",
+              fontWeight: 600,
+              "&:hover": {
+                borderColor: primaryColor,
+                color: primaryColor,
+                bgcolor: "rgba(138,56,245,0.06)",
+              },
+            }}
+          >
+            Refresh
+          </Button>
+          <Button
+            variant="contained"
+            startIcon={<FiPlus size={18} />}
+            onClick={openAddDialog}
+            sx={{
+              bgcolor: primaryColor,
+              color: "#fff",
+              fontWeight: 600,
+              fontSize: 14,
+              py: 1,
+              px: 2,
+              borderRadius: 2,
+              textTransform: "none",
+              boxShadow: "none",
+              "&:hover": { bgcolor: "#7A2FE5", boxShadow: "none" },
+            }}
+          >
+            Add FAQ
+          </Button>
+        </Box>
       </Box>
+
+      {faqs.length > 0 && (
+        <Box sx={{ display: "flex", flexWrap: "nowrap", gap: 1.5, mb: 2, alignItems: "center", overflow: "hidden" }}>
+          <TextField
+            placeholder="Search by question or answer..."
+            value={searchQuery}
+            onChange={(e) => {
+              setSearchQuery(e.target.value);
+              setPage(0);
+            }}
+            size="small"
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <FiSearch size={18} style={{ color: "rgba(0,0,0,0.5)" }} />
+                </InputAdornment>
+              ),
+            }}
+            sx={{
+              flex: { xs: "1 1 0", sm: "none" },
+              minWidth: 0,
+              "& .MuiOutlinedInput-input": { minWidth: 0 },
+              "& .MuiOutlinedInput-root": {
+                borderRadius: 2,
+                bgcolor: "#fff",
+                "& fieldset": { borderColor: bordergrayColor },
+                "&:hover fieldset": { borderColor: primaryColor },
+                "&.Mui-focused fieldset": { borderColor: primaryColor, borderWidth: 2 },
+              },
+            }}
+          />
+          {searchQuery.trim() && (
+            <Typography sx={{ fontSize: 13, color: "rgba(0,0,0,0.6)", flexShrink: 0, whiteSpace: "nowrap" }}>
+              {filteredFaqs.length} result{filteredFaqs.length !== 1 ? "s" : ""}
+            </Typography>
+          )}
+        </Box>
+      )}
 
       <Box
         bgcolor="white"
@@ -319,24 +403,32 @@ export default function FaqsPage() {
               Add your first FAQ
             </Button>
           </Box>
+        ) : filteredFaqs.length === 0 ? (
+          <Box sx={{ py: 6, textAlign: "center" }}>
+            <Typography sx={{ color: "rgba(0,0,0,0.5)", fontSize: 15 }}>
+              No results match your search.
+            </Typography>
+          </Box>
         ) : (
-          <Table size="medium">
-            <TableHead>
-              <TableRow sx={{ bgcolor: bggrayColor }}>
-                <TableCell sx={{ fontWeight: 700, color: "#000", width: 100 }}>Sequence</TableCell>
-                <TableCell sx={{ fontWeight: 700, color: "#000" }}>Question</TableCell>
-                <TableCell sx={{ fontWeight: 700, color: "#000" }}>Answer</TableCell>
-                <TableCell align="right" sx={{ fontWeight: 700, color: "#000" }}>
-                  Actions
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {faqs.map((row, index) => {
-                const isDeleting = deletingId === row._id;
-                const isReordering = reorderingId === row._id;
-                const canMoveUp = index > 0;
-                const canMoveDown = index < faqs.length - 1;
+          <>
+            <Table size="medium">
+              <TableHead>
+                <TableRow sx={{ bgcolor: bggrayColor }}>
+                  <TableCell sx={{ fontWeight: 700, color: "#000", width: 100 }}>Sequence</TableCell>
+                  <TableCell sx={{ fontWeight: 700, color: "#000" }}>Question</TableCell>
+                  <TableCell sx={{ fontWeight: 700, color: "#000" }}>Answer</TableCell>
+                  <TableCell align="right" sx={{ fontWeight: 700, color: "#000" }}>
+                    Actions
+                  </TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {paginatedFaqs.map((row, index) => {
+                  const isDeleting = deletingId === row._id;
+                  const isReordering = reorderingId === row._id;
+                  const fullListIndex = faqs.findIndex((f) => String(f._id) === String(row._id));
+                  const canMoveUp = fullListIndex > 0;
+                  const canMoveDown = fullListIndex >= 0 && fullListIndex < faqs.length - 1;
                 return (
                   <TableRow key={row._id} sx={{ "&:hover": { bgcolor: "rgba(0,0,0,0.02)" } }}>
                     <TableCell sx={{ color: "rgba(0,0,0,0.7)", verticalAlign: "middle" }}>
@@ -407,6 +499,28 @@ export default function FaqsPage() {
               })}
             </TableBody>
           </Table>
+          <TablePagination
+            component="div"
+            count={filteredFaqs.length}
+            page={page}
+            onPageChange={handleChangePage}
+            rowsPerPage={rowsPerPage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+            rowsPerPageOptions={[5, 10, 25, 50]}
+            sx={{
+              borderTop: `1px solid ${bordergrayColor}`,
+              bgcolor: bggrayColor,
+              "& .MuiTablePagination-selectLabel": { fontSize: 14, color: "rgba(0,0,0,0.7)" },
+              "& .MuiTablePagination-displayedRows": { fontSize: 14, color: "#000", fontWeight: 500 },
+              "& .MuiTablePagination-select": { fontSize: 14 },
+              "& .MuiIconButton-root": {
+                color: "rgba(0,0,0,0.7)",
+                "&:hover": { bgcolor: "rgba(138,56,245,0.08)", color: primaryColor },
+                "&.Mui-disabled": { color: "rgba(0,0,0,0.26)" },
+              },
+            }}
+          />
+        </>
         )}
       </Box>
 
