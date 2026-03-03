@@ -55,8 +55,9 @@ export async function PATCH(req, { params }) {
     testimonial.clientName = clientName;
     testimonial.content = content;
     if (body.role !== undefined) testimonial.role = (body.role || "").trim();
+    if (body.companyName !== undefined) testimonial.companyName = (body.companyName || "").trim();
     if (body.imageUrl !== undefined) testimonial.imageUrl = (body.imageUrl || "").trim();
-    if (typeof body.order === "number") testimonial.order = body.order;
+    if (body.rating !== undefined) testimonial.rating = Math.min(5, Math.max(0, Number(body.rating) || 0));
     await testimonial.save();
     return NextResponse.json({ success: true, testimonial });
   } catch (err) {

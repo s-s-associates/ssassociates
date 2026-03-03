@@ -11,7 +11,7 @@ export async function GET(req) {
     }
     await connectDB();
     const testimonials = await Testimonial.find({ userId: user._id })
-      .sort({ order: 1, createdAt: -1 })
+      .sort({ createdAt: -1 })
       .lean();
     return NextResponse.json({ success: true, testimonials });
   } catch (err) {
@@ -39,13 +39,15 @@ export async function POST(req) {
     if (!content) {
       return NextResponse.json({ success: false, message: "Content/quote is required" }, { status: 400 });
     }
+    const rating = Math.min(5, Math.max(0, Number(body.rating) || 0));
     const testimonial = await Testimonial.create({
       userId: user._id,
       clientName,
       role: (body.role || "").trim(),
+      companyName: (body.companyName || "").trim(),
       content,
       imageUrl: (body.imageUrl || "").trim(),
-      order: typeof body.order === "number" ? body.order : 0,
+      rating,
     });
     return NextResponse.json({ success: true, testimonial });
   } catch (err) {
