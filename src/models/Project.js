@@ -40,10 +40,11 @@ const projectSchema = new mongoose.Schema(
     solutionsImplemented: { type: String, trim: true, default: "" },
     uniqueApproach: { type: String, trim: true, default: "" },
 
+    order: { type: Number, default: 0 },
     userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   },
   { timestamps: true }
 );
 
-projectSchema.index({ userId: 1, createdAt: -1 });
+projectSchema.index({ userId: 1, order: 1, createdAt: -1 });
 export default mongoose.models.Project || mongoose.model("Project", projectSchema);

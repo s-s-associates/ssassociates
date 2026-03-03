@@ -39,7 +39,7 @@ import { useRouter } from "next/navigation";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { BeatLoader } from "react-spinners";
 import Swal from "sweetalert2";
-import { FiEdit2, FiEye, FiPlus, FiRefreshCw, FiSearch, FiTrash2 } from "react-icons/fi";
+import { FiChevronDown, FiChevronUp, FiEdit2, FiEye, FiPlus, FiRefreshCw, FiSearch, FiTrash2 } from "react-icons/fi";
 
 function getStatusStyle(status) {
   switch (status) {
@@ -60,6 +60,7 @@ export default function ProjectPages() {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [deletingId, setDeletingId] = useState(null);
+  const [reorderingId, setReorderingId] = useState(null);
   const [viewingProject, setViewingProject] = useState(null);
   const [viewLoadingId, setViewLoadingId] = useState(null);
   const viewClosedRef = useRef(false);
@@ -118,6 +119,7 @@ export default function ProjectPages() {
     try {
       const res = await fetch("/api/projects", {
         headers: { Authorization: `Bearer ${token}` },
+        cache: "no-store",
       });
       const data = await res.json();
       if (data.success && Array.isArray(data.projects)) setProjects(data.projects);
@@ -202,6 +204,41 @@ export default function ProjectPages() {
         setDeletingId(null);
       }
     });
+  };
+
+  const handleReorder = async (projectId, direction) => {
+    if (!token || !projectId) return;
+    setReorderingId(projectId);
+    try {
+      const res = await fetch("/api/projects/reorder", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ projectId, direction }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        await fetchProjects();
+      } else {
+        await Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: data.message || "Could not change sequence.",
+          confirmButtonColor: primaryColor,
+        });
+      }
+    } catch (err) {
+      await Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: err?.message || "Something went wrong.",
+        confirmButtonColor: primaryColor,
+      });
+    } finally {
+      setReorderingId(null);
+    }
   };
 
   return (
@@ -390,9 +427,10 @@ export default function ProjectPages() {
         ) : (
           <>
             <Box sx={{ overflowX: "auto", width: "100%" }}>
-              <Table size="medium" sx={{ minWidth: 720 }}>
+              <Table size="medium" sx={{ minWidth: 820 }}>
               <TableHead>
                 <TableRow sx={{ bgcolor: bggrayColor }}>
+                  <TableCell sx={{ fontWeight: 700, color: "#000", width: 100, whiteSpace: "nowrap" }}>Sequence</TableCell>
                   <TableCell sx={{ fontWeight: 700, color: "#000", whiteSpace: "nowrap", minWidth: 140 }}>Title</TableCell>
                   <TableCell sx={{ fontWeight: 700, color: "#000", whiteSpace: "nowrap", minWidth: 120 }}>Category</TableCell>
                   <TableCell sx={{ fontWeight: 700, color: "#000", whiteSpace: "nowrap", minWidth: 100 }}>Status</TableCell>
@@ -403,9 +441,13 @@ export default function ProjectPages() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {paginatedProjects.map((row) => {
+                {paginatedProjects.map((row, index) => {
                 const statusStyle = getStatusStyle(row.status);
                 const isDeleting = deletingId === row._id;
+                const isReordering = reorderingId === row._id;
+                const fullListIndex = projects.findIndex((p) => String(p._id) === String(row._id));
+                const canMoveUp = fullListIndex > 0;
+                const canMoveDown = fullListIndex >= 0 && fullListIndex < projects.length - 1;
                 return (
                   <TableRow
                     key={row._id}
@@ -413,6 +455,34 @@ export default function ProjectPages() {
                       "&:hover": { bgcolor: "rgba(0,0,0,0.02)" },
                     }}
                   >
+                    <TableCell sx={{ verticalAlign: "middle" }}>
+                      <Box sx={{ display: "flex", alignItems: "center", gap: 0.25 }}>
+                        <IconButton
+                          size="small"
+                          disabled={!canMoveUp || isReordering}
+                          onClick={() => handleReorder(row._id, "up")}
+                          sx={{
+                            color: canMoveUp ? primaryColor : "rgba(0,0,0,0.26)",
+                            "&:hover": canMoveUp ? { bgcolor: "rgba(138,56,245,0.08)" } : {},
+                          }}
+                          aria-label="Move up"
+                        >
+                          <FiChevronUp size={20} />
+                        </IconButton>
+                        <IconButton
+                          size="small"
+                          disabled={!canMoveDown || isReordering}
+                          onClick={() => handleReorder(row._id, "down")}
+                          sx={{
+                            color: canMoveDown ? primaryColor : "rgba(0,0,0,0.26)",
+                            "&:hover": canMoveDown ? { bgcolor: "rgba(138,56,245,0.08)" } : {},
+                          }}
+                          aria-label="Move down"
+                        >
+                          <FiChevronDown size={20} />
+                        </IconButton>
+                      </Box>
+                    </TableCell>
                     <TableCell>
                       <Typography sx={{ fontWeight: 600, fontSize: 14, color: "#000" }}>
                         {row.title || "—"}

@@ -11,7 +11,7 @@ export async function GET(req) {
     }
     await connectDB();
     const projects = await Project.find({ userId: user._id })
-      .sort({ createdAt: -1 })
+      .sort({ order: 1, createdAt: -1 })
       .lean();
     return NextResponse.json({ success: true, projects });
   } catch (err) {
@@ -31,9 +31,11 @@ export async function POST(req) {
     }
     await connectDB();
     const body = await req.json();
+    const count = await Project.countDocuments({ userId: user._id });
     const project = await Project.create({
       userId: user._id,
       ...body,
+      order: typeof body.order === "number" ? body.order : count,
     });
     return NextResponse.json({
       success: true,
