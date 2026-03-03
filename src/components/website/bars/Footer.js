@@ -1,265 +1,555 @@
 "use client";
 
-import { grayColor, primaryColor } from "@/components/utils/Colors";
-import { Box, Button, TextField } from "@mui/material";
-import { motion } from "framer-motion";
+import {
+  primaryColor,
+  secondaryColor,
+  textGrayLight,
+  whiteColor,
+} from "@/components/utils/Colors";
+import LocationOn from "@mui/icons-material/LocationOn";
+import Phone from "@mui/icons-material/Phone";
+import Email from "@mui/icons-material/Email";
+import AccessTime from "@mui/icons-material/AccessTime";
+import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
+import { Box } from "@mui/material";
+import Image from "next/image";
 import Link from "next/link";
-import React, { useState } from "react";
-import Swal from "sweetalert2";
+import React from "react";
+import { FaFacebookF, FaTwitter, FaInstagram, FaWhatsapp, FaLinkedinIn } from "react-icons/fa";
 
-const container = {
-  hidden: { opacity: 0 },
-  show: {
-    opacity: 1,
-    transition: { staggerChildren: 0.08, delayChildren: 0.05 },
-  },
-};
-
-const item = {
-  hidden: { opacity: 0, y: 8 },
-  show: { opacity: 1, y: 0 },
-};
-
-const columns = [
-  {
-    heading: "Product",
-    links: [
-      { label: "Features", href: "/features" },
-      { label: "How It Works", href: "/how-it-works" },
-      { label: "Pricing", href: "/pricing" },
-    ],
-  },
-  {
-    heading: "Resources",
-    links: [
-      { label: "Features", href: "/features" },
-      { label: "How It Works", href: "/how-it-works" },
-      { label: "Pricing", href: "/pricing" },
-    ],
-  },
-  {
-    heading: "Company",
-    links: [
-      { label: "About", href: "#about" },
-      { label: "Terms & Conditions", href: "#terms" },
-      { label: "Privacy Policy", href: "#privacy" },
-    ],
-  },
+const quickLinks = [
+  { label: "Home", href: "/" },
+  { label: "About Us", href: "/about" },
+  { label: "Services", href: "/services" },
+  { label: "Projects", href: "/projects" },
+  { label: "Contact", href: "/contact" },
 ];
 
+const services = [
+  "Residential Construction",
+  "Commercial Construction",
+  "Interior Design",
+  "Renovation & Remodeling",
+  "Project Management",
+  "Consultation",
+];
+
+const socialLinks = [
+  { Icon: FaFacebookF, href: "#" },
+  { Icon: FaTwitter, href: "#" },
+  { Icon: FaInstagram, href: "#" },
+  { Icon: FaWhatsapp, href: "#" },
+  { Icon: FaLinkedinIn, href: "#" },
+];
+
+// Animated underline: line enters from left to right on hover
+const underlineFromLeft = {
+  position: "relative",
+  display: "inline-block",
+  "&::after": {
+    content: '""',
+    position: "absolute",
+    left: 0,
+    bottom: 0,
+    width: "100%",
+    height: 2,
+    background: primaryColor,
+    transform: "scaleX(0)",
+    transformOrigin: "left",
+    transition: "transform 0.3s ease",
+  },
+};
+const underlineFromLeftHover = {
+  "&::after": {
+    transform: "scaleX(1)",
+  },
+};
+
 function Footer() {
-  const [subscribeEmail, setSubscribeEmail] = useState("");
-  const [submitting, setSubmitting] = useState(false);
-
-  const handleSubscribe = async (e) => {
-    e.preventDefault();
-    const email = (subscribeEmail || "").trim();
-    if (!email) {
-      Swal.fire({ icon: "warning", title: "Email required", text: "Please enter your email.", confirmButtonColor: primaryColor });
-      return;
-    }
-    setSubmitting(true);
-    try {
-      const res = await fetch("/api/subscribe", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
-      });
-      const data = await res.json();
-      if (data.success) {
-        setSubscribeEmail("");
-        Swal.fire({ icon: "success", title: "Subscribed!", text: "You're on our list. We'll keep you updated.", confirmButtonColor: primaryColor });
-      } else if (data.alreadySubscribed) {
-        Swal.fire({ icon: "info", title: "Already subscribed", text: "This email is already on our list.", confirmButtonColor: primaryColor });
-      } else {
-        Swal.fire({ icon: "error", title: "Error", text: data.message || "Something went wrong.", confirmButtonColor: primaryColor });
-      }
-    } catch (err) {
-      Swal.fire({ icon: "error", title: "Error", text: "Could not subscribe. Please try again.", confirmButtonColor: primaryColor });
-    } finally {
-      setSubmitting(false);
-    }
-  };
-
   return (
     <Box
       component="footer"
       sx={{
-        px: { xs: 2, sm: 5 },
-        bgcolor: "#fff",
-        borderTop: "1px solid rgba(21, 21, 29, 0.08)",
-        py: 6,
-        // px: { xs: 2, sm: 3 },
+        bgcolor: secondaryColor,
+        color: textGrayLight,
+        pt: 6,
+        pb: 0,
       }}
     >
+      {/* Main content - 4 columns */}
       <Box
-        component={motion.div}
-        variants={container}
-        initial="hidden"
-        whileInView="show"
-        viewport={{ once: true, margin: "-40px" }}
         sx={{
-        //   maxWidth: 1200,
+          maxWidth: 1200,
           margin: "0 auto",
-          display: "flex",
-          flexDirection: { xs: "column", md: "row" },
-          justifyContent: "space-between",
-          alignItems: { xs: "flex-start", md: "flex-start" },
-          gap: { xs: 4, md: 0 },
+          px: { xs: 2, sm: 3, md: 4 },
+          display: "grid",
+          gridTemplateColumns: {
+            xs: "1fr",
+            sm: "1fr 1fr",
+            lg: "1.2fr 1fr 1fr 1.2fr",
+          },
+          gap: { xs: 4, md: 3 },
+          pb: 4,
         }}
       >
-        {/* Left: Brand + Copyright */}
-        <Box component={motion.div} variants={item} sx={{ flexShrink: 0 }}>
-          <Box
-            component={Link}
-            href="/"
-            sx={{
-              fontFamily: "var(--font-inter), Inter, sans-serif",
-              fontWeight: 600,
-              fontSize: 24,
-              lineHeight: "100%",
-              letterSpacing: 0,
-              color: grayColor,
-              textDecoration: "none",
-              display: "block",
-              mb: 1.5,
-              transition: "color 0.2s ease",
-              "&:hover": { color: primaryColor },
-            }}
-          >
-            SsAssociates
-          </Box>
-        
-        </Box>
-
-        {/* Right: Three columns + Subscribe */}
-        <Box
-          component={motion.div}
-          variants={container}
-          sx={{
-            display: "flex",
-            flexDirection: { xs: "column", sm: "row" },
-            gap: { xs: 3, sm: 6, md: 8 },
-          }}
-        >
-          {columns.map((col) => (
-            <Box component={motion.div} key={col.heading} variants={item}>
-              <Box
-                sx={{
-                  fontFamily: "var(--font-plus-jakarta), 'Plus Jakarta Sans', sans-serif",
-                  fontWeight: 600,
-                  fontSize: 18,
-                  lineHeight: "24px",
-                  color: grayColor,
-                  mb: 1.5,
-                }}
-              >
-                {col.heading}
-              </Box>
-              <Box
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: 0.5,
-                }}
-              >
-                {col.links.map((link) => (
-                  <Box
-                    key={link.label}
-                    component={motion.div}
-                    variants={item}
-                    whileHover={{ x: 4 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    <Link
-                      href={link.href}
-                      style={{
-                        fontFamily: "var(--font-plus-jakarta), 'Plus Jakarta Sans', sans-serif",
-                        fontWeight: 400,
-                        fontSize: 16,
-                        lineHeight: "24px",
-                        letterSpacing: "0%",
-                        color: grayColor,
-                        textDecoration: "none",
-                        transition: "color 0.2s ease",
-                      }}
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.color = primaryColor;
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.color = grayColor;
-                      }}
-                    >
-                      {link.label}
-                    </Link>
-                  </Box>
-                ))}
-              </Box>
-            </Box>
-          ))}
-          {/* Subscribe - no subscriber emails shown */}
-          <Box component={motion.div} variants={item}>
+        {/* Column 1: Company info + logo + social */}
+        <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+          <Box sx={{ display: "flex", alignItems: "center", gap: 2, flexWrap: "wrap" }}>
             <Box
               sx={{
-                fontFamily: "var(--font-plus-jakarta), 'Plus Jakarta Sans', sans-serif",
-                fontWeight: 600,
-                fontSize: 18,
-                lineHeight: "24px",
-                color: grayColor,
-                mb: 1.5,
+                width: 70,
+                height: 70,
+                flexShrink: 0,
+                borderRadius: 1.5,
+                overflow: "hidden",
+                bgcolor: primaryColor,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
               }}
             >
-              Subscribe
+              <Image
+                src="/ss-logo.png"
+                alt="S&S Associates"
+                width={70}
+                height={70}
+                style={{ objectFit: "contain" }}
+              />
             </Box>
-            <Box component="form" onSubmit={handleSubscribe} sx={{ display: "flex", flexDirection: "column", gap: 1, maxWidth: 280 }}>
-              <TextField
-                type="email"
-                placeholder="Your email"
-                value={subscribeEmail}
-                onChange={(e) => setSubscribeEmail(e.target.value)}
-                size="small"
-                disabled={submitting}
+            <Box
+                component={Link}
+                href="/"
                 sx={{
-                  "& .MuiOutlinedInput-root": {
-                    borderRadius: 2,
-                    bgcolor: "#fff",
-                    "& fieldset": { borderColor: "rgba(21, 21, 29, 0.15)" },
-                    "&:hover fieldset": { borderColor: primaryColor },
-                    "&.Mui-focused fieldset": { borderColor: primaryColor },
+                  ...underlineFromLeft,
+                  fontFamily: "var(--font-plus-jakarta), 'Plus Jakarta Sans', sans-serif",
+                  fontWeight: 600,
+                  fontSize: 20,
+                  color: whiteColor,
+                  textDecoration: "none",
+                  transition: "color 0.2s",
+                  "&:hover": {
+                    color: primaryColor,
+                    ...underlineFromLeftHover,
                   },
                 }}
-              />
-              <Button
-                type="submit"
-                variant="contained"
-                disabled={submitting}
+              >
+                S&S Associates
+              </Box>
+              <Box
+                component="span"
                 sx={{
-                  bgcolor: primaryColor,
-                  color: "#fff",
-                  fontWeight: 600,
-                  textTransform: "none",
-                  borderRadius: 2,
-                  "&:hover": { bgcolor: "#7A2FE5" },
+                  fontFamily: "var(--font-plus-jakarta), 'Plus Jakarta Sans', sans-serif",
+                  fontWeight: 400,
+                  fontSize: 14,
+                  color: textGrayLight,
                 }}
               >
-                {submitting ? "..." : "Subscribe"}
-              </Button>
+                Building Excellence
+              </Box>
+          </Box>
+          <Box
+            sx={{
+              fontFamily: "var(--font-plus-jakarta), 'Plus Jakarta Sans', sans-serif",
+              fontWeight: 400,
+              fontSize: 14,
+              lineHeight: 1.6,
+              color: textGrayLight,
+              maxWidth: 320,
+            }}
+          >
+            We are a leading construction company committed to delivering
+            exceptional quality and innovative solutions for all your
+            construction needs.
+          </Box>
+          <Box sx={{ display: "flex", gap: 1.5, alignItems: "center" }}>
+            {socialLinks.map(({ Icon, href }, idx) => (
+              <Box
+                key={idx}
+                component="a"
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                sx={{
+                  width: 40,
+                  height: 40,
+                  borderRadius: "50%",
+                  bgcolor: "rgba(255,255,255,0.1)",
+                  border: `1px solid ${textGrayLight}`,
+                  color: whiteColor,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontSize: 18,
+                  textDecoration: "none",
+                  transition: "background-color 0.2s, border-color 0.2s",
+                  "&:hover": {
+                    bgcolor: primaryColor,
+                    borderColor: primaryColor,
+                  },
+                }}
+              >
+                <Icon />
+              </Box>
+            ))}
+          </Box>
+        </Box>
+
+        {/* Column 2: Quick Links */}
+        <Box>
+          <Box
+            sx={{
+              fontFamily: "var(--font-plus-jakarta), 'Plus Jakarta Sans', sans-serif",
+              fontWeight: 600,
+              fontSize: 18,
+              color: whiteColor,
+              mb: 2,
+            }}
+          >
+            Quick Links
+          </Box>
+          <Box sx={{ display: "flex", flexDirection: "column", gap: 1.25 }}>
+            {quickLinks.map((link) => (
+              <Box
+                key={link.label}
+                sx={{
+                  "&:hover span": {
+                    color: primaryColor,
+                    ...underlineFromLeftHover,
+                  },
+                }}
+              >
+                <Link
+                  href={link.href}
+                  style={{ textDecoration: "none", display: "flex", alignItems: "center", gap: 8 }}
+                >
+                  <KeyboardArrowRight sx={{ color: primaryColor, fontSize: 20 }} />
+                  <Box
+                    component="span"
+                    sx={{
+                      ...underlineFromLeft,
+                      fontFamily: "var(--font-plus-jakarta), 'Plus Jakarta Sans', sans-serif",
+                      fontWeight: 400,
+                      fontSize: 14,
+                      color: textGrayLight,
+                      transition: "color 0.2s",
+                    }}
+                  >
+                    {link.label}
+                  </Box>
+                </Link>
+              </Box>
+            ))}
+          </Box>
+        </Box>
+
+        {/* Column 3: Our Services */}
+        <Box>
+          <Box
+            sx={{
+              fontFamily: "var(--font-plus-jakarta), 'Plus Jakarta Sans', sans-serif",
+              fontWeight: 600,
+              fontSize: 18,
+              color: whiteColor,
+              mb: 2,
+            }}
+          >
+            Our Services
+          </Box>
+          <Box sx={{ display: "flex", flexDirection: "column", gap: 1.25 }}>
+            {services.map((name) => (
+              <Box
+                key={name}
+                sx={{
+                  "&:hover span": {
+                    color: primaryColor,
+                    ...underlineFromLeftHover,
+                  },
+                }}
+              >
+                <Link
+                  href="/services"
+                  style={{ textDecoration: "none", display: "flex", alignItems: "center", gap: 8 }}
+                >
+                  <KeyboardArrowRight sx={{ color: primaryColor, fontSize: 20 }} />
+                  <Box
+                    component="span"
+                    sx={{
+                      ...underlineFromLeft,
+                      fontFamily: "var(--font-plus-jakarta), 'Plus Jakarta Sans', sans-serif",
+                      fontWeight: 400,
+                      fontSize: 14,
+                      color: textGrayLight,
+                      transition: "color 0.2s",
+                    }}
+                  >
+                    {name}
+                  </Box>
+                </Link>
+              </Box>
+            ))}
+          </Box>
+        </Box>
+
+        {/* Column 4: Contact Us */}
+        <Box>
+          <Box
+            sx={{
+              fontFamily: "var(--font-plus-jakarta), 'Plus Jakarta Sans', sans-serif",
+              fontWeight: 600,
+              fontSize: 18,
+              color: whiteColor,
+              mb: 2,
+            }}
+          >
+            Contact Us
+          </Box>
+          <Box sx={{ display: "flex", flexDirection: "column", gap: 1.5 }}>
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "flex-start",
+                gap: 1.5,
+                cursor: "default",
+                "&:hover .contact-text": {
+                  color: primaryColor,
+                  ...underlineFromLeftHover,
+                },
+              }}
+            >
+              <LocationOn sx={{ color: primaryColor, fontSize: 20, mt: 0.25, flexShrink: 0 }} />
+              <Box
+                className="contact-text"
+                sx={{
+                  ...underlineFromLeft,
+                  fontFamily: "var(--font-plus-jakarta), 'Plus Jakarta Sans', sans-serif",
+                  fontWeight: 400,
+                  fontSize: 14,
+                  color: textGrayLight,
+                  lineHeight: 1.5,
+                  transition: "color 0.2s",
+                }}
+              >
+                123 Construction Ave, Building City, BC 12345
+              </Box>
+            </Box>
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                gap: 1.5,
+                cursor: "default",
+                "&:hover .contact-text": {
+                  color: primaryColor,
+                  ...underlineFromLeftHover,
+                },
+              }}
+            >
+              <Phone sx={{ color: primaryColor, fontSize: 20, flexShrink: 0 }} />
+              <Box
+                className="contact-text"
+                sx={{
+                  ...underlineFromLeft,
+                  fontFamily: "var(--font-plus-jakarta), 'Plus Jakarta Sans', sans-serif",
+                  fontWeight: 400,
+                  fontSize: 14,
+                  color: textGrayLight,
+                  transition: "color 0.2s",
+                }}
+              >
+                +1 (234) 567-890
+              </Box>
+            </Box>
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                gap: 1.5,
+                cursor: "default",
+                "&:hover .contact-text": {
+                  color: primaryColor,
+                  ...underlineFromLeftHover,
+                },
+              }}
+            >
+              <Phone sx={{ color: primaryColor, fontSize: 20, flexShrink: 0 }} />
+              <Box
+                className="contact-text"
+                sx={{
+                  ...underlineFromLeft,
+                  fontFamily: "var(--font-plus-jakarta), 'Plus Jakarta Sans', sans-serif",
+                  fontWeight: 400,
+                  fontSize: 14,
+                  color: textGrayLight,
+                  transition: "color 0.2s",
+                }}
+              >
+                +1 (234) 567-891
+              </Box>
+            </Box>
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                gap: 1.5,
+                cursor: "default",
+                "&:hover .contact-text": {
+                  color: primaryColor,
+                  ...underlineFromLeftHover,
+                },
+              }}
+            >
+              <Email sx={{ color: primaryColor, fontSize: 20, flexShrink: 0 }} />
+              <Box
+                className="contact-text"
+                sx={{
+                  ...underlineFromLeft,
+                  fontFamily: "var(--font-plus-jakarta), 'Plus Jakarta Sans', sans-serif",
+                  fontWeight: 400,
+                  fontSize: 14,
+                  color: textGrayLight,
+                  transition: "color 0.2s",
+                }}
+              >
+                info@ssassociates.com
+              </Box>
+            </Box>
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                gap: 1.5,
+                cursor: "default",
+                "&:hover .contact-text": {
+                  color: primaryColor,
+                  ...underlineFromLeftHover,
+                },
+              }}
+            >
+              <AccessTime sx={{ color: primaryColor, fontSize: 20, flexShrink: 0 }} />
+              <Box
+                className="contact-text"
+                sx={{
+                  ...underlineFromLeft,
+                  fontFamily: "var(--font-plus-jakarta), 'Plus Jakarta Sans', sans-serif",
+                  fontWeight: 400,
+                  fontSize: 14,
+                  color: textGrayLight,
+                  transition: "color 0.2s",
+                }}
+              >
+                Mon - Sat: 8:00 AM - 6:00 PM
+              </Box>
             </Box>
           </Box>
         </Box>
       </Box>
+
+      {/* Bottom bar */}
       <Box
+        sx={{
+          borderTop: `1px solid rgba(255, 255, 255, 0.08)`,
+          py: 2,
+          px: { xs: 2, sm: 3, md: 4 },
+        }}
+      >
+        <Box
+          sx={{
+            maxWidth: 1200,
+            margin: "0 auto",
+            display: "flex",
+            flexDirection: { xs: "column", sm: "row" },
+            justifyContent: "space-between",
+            alignItems: { xs: "flex-start", sm: "center" },
+            gap: 1.5,
+          }}
+        >
+          <Box
             sx={{
               fontFamily: "var(--font-plus-jakarta), 'Plus Jakarta Sans', sans-serif",
               fontWeight: 400,
-              fontSize: 16,
-              lineHeight: "24px",
-              letterSpacing: "0%",
-              color: grayColor,
+              fontSize: 14,
+              color: textGrayLight,
             }}
           >
-            © 2026 SsAssociates. All rights reserved.
+            © 2026 S&S Associates. All rights reserved. Built with excellence.
           </Box>
+          <Box
+            sx={{
+              display: "flex",
+              flexWrap: "wrap",
+              gap: 1.5,
+              alignItems: "center",
+            }}
+          >
+            <Link
+              href="/privacy"
+              style={{ textDecoration: "none" }}
+            >
+              <Box
+                component="span"
+                sx={{
+                  ...underlineFromLeft,
+                  fontFamily: "var(--font-plus-jakarta), 'Plus Jakarta Sans', sans-serif",
+                  fontWeight: 400,
+                  fontSize: 14,
+                  color: textGrayLight,
+                  transition: "color 0.2s",
+                  "&:hover": {
+                    color: primaryColor,
+                    ...underlineFromLeftHover,
+                  },
+                }}
+              >
+                Privacy Policy
+              </Box>
+            </Link>
+            <Link
+              href="/terms"
+              style={{ textDecoration: "none" }}
+            >
+              <Box
+                component="span"
+                sx={{
+                  ...underlineFromLeft,
+                  fontFamily: "var(--font-plus-jakarta), 'Plus Jakarta Sans', sans-serif",
+                  fontWeight: 400,
+                  fontSize: 14,
+                  color: textGrayLight,
+                  transition: "color 0.2s",
+                  "&:hover": {
+                    color: primaryColor,
+                    ...underlineFromLeftHover,
+                  },
+                }}
+              >
+                Terms of Service
+              </Box>
+            </Link>
+            <Link
+              href="/sitemap"
+              style={{ textDecoration: "none" }}
+            >
+              <Box
+                component="span"
+                sx={{
+                  ...underlineFromLeft,
+                  fontFamily: "var(--font-plus-jakarta), 'Plus Jakarta Sans', sans-serif",
+                  fontWeight: 400,
+                  fontSize: 14,
+                  color: textGrayLight,
+                  transition: "color 0.2s",
+                  "&:hover": {
+                    color: primaryColor,
+                    ...underlineFromLeftHover,
+                  },
+                }}
+              >
+                Sitemap
+              </Box>
+            </Link>
+          </Box>
+        </Box>
+      </Box>
     </Box>
   );
 }
