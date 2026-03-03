@@ -22,7 +22,7 @@ import { getAuth } from "@/lib/auth-storage";
 import React, { useCallback, useEffect, useState } from "react";
 import { BeatLoader } from "react-spinners";
 import Swal from "sweetalert2";
-import { FiEdit2, FiEye, FiPlus, FiTrash2 } from "react-icons/fi";
+import { FiChevronDown, FiChevronUp, FiEdit2, FiEye, FiPlus, FiTrash2 } from "react-icons/fi";
 
 export default function FaqsPage() {
   const { token } = getAuth();
@@ -33,9 +33,9 @@ export default function FaqsPage() {
   const [editingItem, setEditingItem] = useState(null);
   const [question, setQuestion] = useState("");
   const [answer, setAnswer] = useState("");
-  const [order, setOrder] = useState(0);
   const [saving, setSaving] = useState(false);
   const [viewingItem, setViewingItem] = useState(null);
+  const [reorderingId, setReorderingId] = useState(null);
 
   const fetchFaqs = useCallback(async () => {
     if (!token) return;
@@ -62,7 +62,6 @@ export default function FaqsPage() {
     setEditingItem(null);
     setQuestion("");
     setAnswer("");
-    setOrder(faqs.length);
     setDialogOpen(true);
   };
 
@@ -70,7 +69,6 @@ export default function FaqsPage() {
     setEditingItem(item);
     setQuestion(item.question || "");
     setAnswer(item.answer || "");
-    setOrder(typeof item.order === "number" ? item.order : 0);
     setDialogOpen(true);
   };
 
@@ -79,7 +77,41 @@ export default function FaqsPage() {
     setEditingItem(null);
     setQuestion("");
     setAnswer("");
-    setOrder(0);
+  };
+
+  const handleReorder = async (faqId, direction) => {
+    if (!token || !faqId) return;
+    setReorderingId(faqId);
+    try {
+      const res = await fetch("/api/faqs/reorder", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ faqId, direction }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        await fetchFaqs();
+      } else {
+        await Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: data.message || "Could not change sequence.",
+          confirmButtonColor: primaryColor,
+        });
+      }
+    } catch (err) {
+      await Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: err?.message || "Something went wrong.",
+        confirmButtonColor: primaryColor,
+      });
+    } finally {
+      setReorderingId(null);
+    }
   };
 
   const handleSave = async () => {
@@ -108,7 +140,6 @@ export default function FaqsPage() {
       const payload = {
         question: trimmedQuestion,
         answer: trimmedAnswer,
-        order: Number(order) || 0,
       };
       if (editingItem) {
         const res = await fetch(`/api/faqs/${editingItem._id}`, {
@@ -138,6 +169,7 @@ export default function FaqsPage() {
           });
         }
       } else {
+        payload.order = faqs.length;
         const res = await fetch("/api/faqs", {
           method: "POST",
           headers: {
@@ -291,7 +323,7 @@ export default function FaqsPage() {
           <Table size="medium">
             <TableHead>
               <TableRow sx={{ bgcolor: bggrayColor }}>
-                <TableCell sx={{ fontWeight: 700, color: "#000" }}>Order</TableCell>
+                <TableCell sx={{ fontWeight: 700, color: "#000", width: 100 }}>Sequence</TableCell>
                 <TableCell sx={{ fontWeight: 700, color: "#000" }}>Question</TableCell>
                 <TableCell sx={{ fontWeight: 700, color: "#000" }}>Answer</TableCell>
                 <TableCell align="right" sx={{ fontWeight: 700, color: "#000" }}>
@@ -300,11 +332,41 @@ export default function FaqsPage() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {faqs.map((row) => {
+              {faqs.map((row, index) => {
                 const isDeleting = deletingId === row._id;
+                const isReordering = reorderingId === row._id;
+                const canMoveUp = index > 0;
+                const canMoveDown = index < faqs.length - 1;
                 return (
                   <TableRow key={row._id} sx={{ "&:hover": { bgcolor: "rgba(0,0,0,0.02)" } }}>
-                    <TableCell sx={{ color: "rgba(0,0,0,0.7)" }}>{row.order ?? "—"}</TableCell>
+                    <TableCell sx={{ color: "rgba(0,0,0,0.7)", verticalAlign: "middle" }}>
+                      <Box sx={{ display: "flex", alignItems: "center", gap: 0.25 }}>
+                        <IconButton
+                          size="small"
+                          disabled={!canMoveUp || isReordering}
+                          onClick={() => handleReorder(row._id, "up")}
+                          sx={{
+                            color: canMoveUp ? primaryColor : "rgba(0,0,0,0.26)",
+                            "&:hover": canMoveUp ? { bgcolor: "rgba(138,56,245,0.08)" } : {},
+                          }}
+                          aria-label="Move up"
+                        >
+                          <FiChevronUp size={20} />
+                        </IconButton>
+                        <IconButton
+                          size="small"
+                          disabled={!canMoveDown || isReordering}
+                          onClick={() => handleReorder(row._id, "down")}
+                          sx={{
+                            color: canMoveDown ? primaryColor : "rgba(0,0,0,0.26)",
+                            "&:hover": canMoveDown ? { bgcolor: "rgba(138,56,245,0.08)" } : {},
+                          }}
+                          aria-label="Move down"
+                        >
+                          <FiChevronDown size={20} />
+                        </IconButton>
+                      </Box>
+                    </TableCell>
                     <TableCell>
                       <Typography sx={{ fontWeight: 600, fontSize: 14, color: "#000" }}>
                         {row.question ? (row.question.length > 50 ? row.question.slice(0, 50) + "…" : row.question) : "—"}
@@ -370,15 +432,6 @@ export default function FaqsPage() {
             required
             multiline
             rows={4}
-            sx={{ mb: 2 }}
-          />
-          <TextField
-            fullWidth
-            type="number"
-            label="Order"
-            value={order}
-            onChange={(e) => setOrder(Number(e.target.value) || 0)}
-            inputProps={{ min: 0 }}
             sx={{ mb: 1 }}
           />
         </DialogContent>
