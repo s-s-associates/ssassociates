@@ -1,6 +1,6 @@
 "use client";
 
-import { bggrayColor, bordergrayColor, primaryColor } from "@/components/utils/Colors";
+import { bggrayColor, bordergrayColor, primaryColor, primaryHover } from "@/components/utils/Colors";
 import {
   Alert,
   Box,
@@ -730,7 +730,7 @@ export default function ServiceForm({ serviceId = null, initialData = null, isEd
                 sx={{
                   bgcolor: primaryColor,
                   textTransform: "none",
-                  "&:hover": { bgcolor: "#7A2FE5" },
+                    "&:hover": { bgcolor: primaryHover },
                 }}
               >
                 {formik.isSubmitting ? (

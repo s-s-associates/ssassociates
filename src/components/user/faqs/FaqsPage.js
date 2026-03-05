@@ -1,6 +1,6 @@
 "use client";
 
-import { bggrayColor, bordergrayColor, primaryColor } from "@/components/utils/Colors";
+import { bggrayColor, bordergrayColor, primaryColor, primaryHover } from "@/components/utils/Colors";
 import {
   Box,
   Button,
@@ -321,7 +321,7 @@ export default function FaqsPage() {
               borderRadius: 2,
               textTransform: "none",
               boxShadow: "none",
-              "&:hover": { bgcolor: "#7A2FE5", boxShadow: "none" },
+              "&:hover": { bgcolor: primaryHover, boxShadow: "none" },
             }}
           >
             Add FAQ
@@ -397,7 +397,7 @@ export default function FaqsPage() {
                 color: "#fff",
                 fontWeight: 600,
                 textTransform: "none",
-                "&:hover": { bgcolor: "#7A2FE5" },
+                "&:hover": { bgcolor: primaryHover },
               }}
             >
               Add your first FAQ
@@ -557,7 +557,7 @@ export default function FaqsPage() {
             variant="contained"
             onClick={handleSave}
             disabled={saving}
-            sx={{ bgcolor: primaryColor, "&:hover": { bgcolor: "#7A2FE5" } }}
+            sx={{ bgcolor: primaryColor, "&:hover": { bgcolor: primaryHover } }}
           >
             {saving ? <BeatLoader color="#fff" size={12} /> : editingItem ? "Update" : "Add"}
           </Button>
@@ -587,7 +587,7 @@ export default function FaqsPage() {
           )}
         </DialogContent>
         <DialogActions sx={{ px: 3, pb: 2, pt: 1 }}>
-          <Button variant="contained" onClick={() => setViewingItem(null)} sx={{ bgcolor: primaryColor, "&:hover": { bgcolor: "#7A2FE5" } }}>
+          <Button variant="contained" onClick={() => setViewingItem(null)} sx={{ bgcolor: primaryColor, "&:hover": { bgcolor: primaryHover } }}>
             Close
           </Button>
         </DialogActions>

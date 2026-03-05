@@ -1,6 +1,6 @@
 "use client";
 
-import { bggrayColor, bordergrayColor, primaryColor } from "@/components/utils/Colors";
+import { bggrayColor, bordergrayColor, primaryColor, primaryHover } from "@/components/utils/Colors";
 import {
   Box,
   Button,
@@ -248,7 +248,7 @@ export default function AdminsPage() {
             borderRadius: 2,
             textTransform: "none",
             boxShadow: "none",
-            "&:hover": { bgcolor: "#7A2FE5", boxShadow: "none" },
+            "&:hover": { bgcolor: primaryHover, boxShadow: "none" },
           }}
         >
           Add Admin
@@ -285,7 +285,7 @@ export default function AdminsPage() {
                 color: "#fff",
                 fontWeight: 600,
                 textTransform: "none",
-                "&:hover": { bgcolor: "#7A2FE5" },
+                "&:hover": { bgcolor: primaryHover },
               }}
             >
               Add first admin
@@ -403,7 +403,7 @@ export default function AdminsPage() {
                     type="submit"
                     variant="contained"
                     disabled={formik.isSubmitting}
-                    sx={{ bgcolor: primaryColor, "&:hover": { bgcolor: "#7A2FE5" } }}
+                    sx={{ bgcolor: primaryColor, "&:hover": { bgcolor: primaryHover } }}
                   >
                     {formik.isSubmitting ? (
                       <BeatLoader color="#fff" size={12} />

@@ -1,6 +1,6 @@
 "use client";
 
-import { bggrayColor, bordergrayColor, primaryColor } from "@/components/utils/Colors";
+import { bggrayColor, bordergrayColor, primaryColor, primaryHover } from "@/components/utils/Colors";
 import {
   Box,
   Button,
@@ -225,7 +225,7 @@ export default function TestimonialsPage() {
           >
             Refresh
           </Button>
-          <Button variant="contained" startIcon={<FiPlus size={18} />} onClick={openAddDialog} sx={{ bgcolor: primaryColor, color: "#fff", fontWeight: 600, fontSize: 14, py: 1, px: 2, borderRadius: 2, textTransform: "none", boxShadow: "none", "&:hover": { bgcolor: "#7A2FE5", boxShadow: "none" } }}>
+          <Button variant="contained" startIcon={<FiPlus size={18} />} onClick={openAddDialog} sx={{ bgcolor: primaryColor, color: "#fff", fontWeight: 600, fontSize: 14, py: 1, px: 2, borderRadius: 2, textTransform: "none", boxShadow: "none", "&:hover": { bgcolor: primaryHover, boxShadow: "none" } }}>
             Add Testimonial
           </Button>
         </Box>
@@ -280,7 +280,7 @@ export default function TestimonialsPage() {
         ) : testimonials.length === 0 ? (
           <Box sx={{ py: 6, textAlign: "center" }}>
             <Typography sx={{ color: "rgba(0,0,0,0.5)", fontSize: 15, mb: 2 }}>No testimonials yet.</Typography>
-            <Button variant="contained" startIcon={<FiPlus size={18} />} onClick={openAddDialog} sx={{ bgcolor: primaryColor, color: "#fff", fontWeight: 600, textTransform: "none", "&:hover": { bgcolor: "#7A2FE5" } }}>
+            <Button variant="contained" startIcon={<FiPlus size={18} />} onClick={openAddDialog} sx={{ bgcolor: primaryColor, color: "#fff", fontWeight: 600, textTransform: "none", "&:hover": { bgcolor: primaryHover } }}>
               Add your first testimonial
             </Button>
           </Box>
@@ -385,7 +385,7 @@ export default function TestimonialsPage() {
         </DialogContent>
         <DialogActions sx={{ px: 3, pb: 2 }}>
           <Button onClick={closeDialog} color="inherit">Cancel</Button>
-          <Button variant="contained" onClick={handleSave} disabled={saving} sx={{ bgcolor: primaryColor, "&:hover": { bgcolor: "#7A2FE5" } }}>
+          <Button variant="contained" onClick={handleSave} disabled={saving} sx={{ bgcolor: primaryColor, "&:hover": { bgcolor: primaryHover } }}>
             {saving ? <BeatLoader color="#fff" size={12} /> : editingItem ? "Update" : "Add"}
           </Button>
         </DialogActions>
@@ -426,7 +426,7 @@ export default function TestimonialsPage() {
           )}
         </DialogContent>
         <DialogActions sx={{ px: 3, pb: 2, pt: 1 }}>
-          <Button variant="contained" onClick={() => setViewingItem(null)} sx={{ bgcolor: primaryColor, "&:hover": { bgcolor: "#7A2FE5" } }}>Close</Button>
+          <Button variant="contained" onClick={() => setViewingItem(null)} sx={{ bgcolor: primaryColor, "&:hover": { bgcolor: primaryHover } }}>Close</Button>
         </DialogActions>
       </Dialog>
     </Box>

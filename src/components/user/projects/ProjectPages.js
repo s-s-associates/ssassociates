@@ -10,6 +10,7 @@ import {
   statusYellowBg,
   statusRed,
   statusRedBg,
+  primaryHover,
 } from "@/components/utils/Colors";
 import {
   Box,
@@ -283,7 +284,7 @@ export default function ProjectPages() {
               borderRadius: 2,
               textTransform: "none",
               boxShadow: "none",
-              "&:hover": { bgcolor: "#7A2FE5", boxShadow: "none" },
+              "&:hover": { bgcolor: primaryHover, boxShadow: "none" },
             }}
           >
             Add Project
@@ -412,7 +413,7 @@ export default function ProjectPages() {
                 color: "#fff",
                 fontWeight: 600,
                 textTransform: "none",
-                "&:hover": { bgcolor: "#7A2FE5" },
+                "&:hover": { bgcolor: primaryHover },
               }}
             >
               Add your first project
@@ -671,7 +672,7 @@ export default function ProjectPages() {
           <Button
             variant="contained"
             onClick={closeViewDialog}
-            sx={{ bgcolor: primaryColor, "&:hover": { bgcolor: "#7A2FE5" } }}
+            sx={{ bgcolor: primaryColor, "&:hover": { bgcolor: primaryHover } }}
           >
             Close
           </Button>

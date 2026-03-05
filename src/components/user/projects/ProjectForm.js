@@ -1,6 +1,6 @@
 "use client";
 
-import { bggrayColor, primaryColor } from "@/components/utils/Colors";
+import { bggrayColor, primaryColor, primaryHover } from "@/components/utils/Colors";
 import {
   Box,
   Button,
@@ -971,7 +971,7 @@ export default function ProjectForm({ projectId, initialData, onSuccess }) {
                   borderRadius: 2.5,
                   textTransform: "none",
                   boxShadow: "0 4px 14px rgba(138,56,245,0.4)",
-                  "&:hover": { bgcolor: "#7A2FE5", boxShadow: "0 6px 20px rgba(138,56,245,0.45)" },
+                  "&:hover": { bgcolor: primaryHover, boxShadow: "0 6px 20px rgba(138,56,245,0.45)" },
                 }}
               >
                 {isSubmitting ? <BeatLoader color="#fff" size={12} /> : projectId ? "Update Project" : "Add Project"}

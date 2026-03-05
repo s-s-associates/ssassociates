@@ -1,6 +1,6 @@
 "use client";
 
-import { bggrayColor, bordergrayColor, primaryColor } from "@/components/utils/Colors";
+import { bggrayColor, bordergrayColor, primaryColor, primaryHover } from "@/components/utils/Colors";
 import {
   Box,
   Button,
@@ -319,9 +319,9 @@ export default function CategoryPage() {
             borderRadius: 2,
             textTransform: "none",
             boxShadow: "none",
-            "&:hover": { bgcolor: "#7A2FE5", boxShadow: "none" },
+            "&:hover": { bgcolor: primaryHover, boxShadow: "none" },
           }}
-        >
+        > 
           Add Category
         </Button>
       </Box>
@@ -356,7 +356,7 @@ export default function CategoryPage() {
                 color: "#fff",
                 fontWeight: 600,
                 textTransform: "none",
-                "&:hover": { bgcolor: "#7A2FE5" },
+                "&:hover": { bgcolor: primaryHover },
               }}
             >
               Add your first category
@@ -477,7 +477,7 @@ export default function CategoryPage() {
             disabled={saving}
             sx={{
               bgcolor: primaryColor,
-              "&:hover": { bgcolor: "#7A2FE5" },
+              "&:hover": { bgcolor: primaryHover },
             }}
           >
             {saving ? <BeatLoader color="#fff" size={12} /> : editingCategory ? "Update" : "Add"}

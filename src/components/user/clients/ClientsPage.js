@@ -1,6 +1,6 @@
 "use client";
 
-import { bggrayColor, bordergrayColor, primaryColor } from "@/components/utils/Colors";
+import { bggrayColor, bordergrayColor, primaryColor, primaryHover } from "@/components/utils/Colors";
 import {
   Box,
   Button,
@@ -300,7 +300,7 @@ export default function ClientsPage() {
             borderRadius: 2,
             textTransform: "none",
             boxShadow: "none",
-            "&:hover": { bgcolor: "#7A2FE5", boxShadow: "none" },
+            "&:hover": { bgcolor: primaryHover, boxShadow: "none" },
           }}
         >
           Add Client
@@ -337,7 +337,7 @@ export default function ClientsPage() {
                 color: "#fff",
                 fontWeight: 600,
                 textTransform: "none",
-                "&:hover": { bgcolor: "#7A2FE5" },
+                "&:hover": { bgcolor: primaryHover },
               }}
             >
               Add first client
@@ -508,7 +508,7 @@ export default function ClientsPage() {
             variant="contained"
             onClick={handleSave}
             disabled={saving}
-            sx={{ bgcolor: primaryColor, "&:hover": { bgcolor: "#7A2FE5" } }}
+            sx={{ bgcolor: primaryColor, "&:hover": { bgcolor: primaryHover } }}
           >
             {saving ? <BeatLoader color="#fff" size={12} /> : editingClient ? "Update" : "Add"}
           </Button>
@@ -576,7 +576,7 @@ export default function ClientsPage() {
                     href={viewingClient.url.startsWith("http") ? viewingClient.url : `https://${viewingClient.url}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    sx={{ fontSize: 15, color: primaryColor, textDecoration: "underline", "&:hover": { color: "#7A2FE5" } }}
+                    sx={{ fontSize: 15, color: primaryColor, textDecoration: "underline", "&:hover": { color: primaryHover } }}
                   >
                     {viewingClient.url}
                   </Box>
@@ -589,7 +589,7 @@ export default function ClientsPage() {
           <Button
             variant="contained"
             onClick={() => setViewingClient(null)}
-            sx={{ bgcolor: primaryColor, "&:hover": { bgcolor: "#7A2FE5" } }}
+            sx={{ bgcolor: primaryColor, "&:hover": { bgcolor: primaryHover } }}
           >
             Close
           </Button>
