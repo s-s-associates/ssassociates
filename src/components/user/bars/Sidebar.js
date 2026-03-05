@@ -8,6 +8,7 @@ import { usePathname, useRouter } from "next/navigation";
 import React, { useState } from "react";
 import Swal from "sweetalert2";
 import { menuItems, projectPagesChildren, websiteChildren } from "./sidebarMenuConfig";
+import { primaryColor } from "@/components/utils/Colors";
 
 const SIDEBAR_BG = "#1A1A1A";
 const MENU_ITEM_ACTIVE_BG = "#FFFFFF";
@@ -26,7 +27,7 @@ function Sidebar() {
       text: "Are you sure you want to log out?",
       icon: "question",
       showCancelButton: true,
-      confirmButtonColor: "#8A38F5",
+      confirmButtonColor: primaryColor,
       cancelButtonColor: "#6b7280",
       confirmButtonText: "Yes, log out",
       cancelButtonText: "Cancel",
@@ -37,7 +38,7 @@ function Sidebar() {
           icon: "success",
           title: "Logged out",
           text: "You have been logged out successfully.",
-          confirmButtonColor: "#8A38F5",
+          confirmButtonColor: primaryColor,
         }).then(() => {
           router.replace("/login");
         });

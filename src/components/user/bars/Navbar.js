@@ -16,6 +16,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { FiBell, FiChevronDown, FiLogOut, FiMenu } from "react-icons/fi";
 import Swal from "sweetalert2";
 import { menuItems, projectPagesChildren, websiteChildren } from "./sidebarMenuConfig";
+import { primaryColor } from "@/components/utils/Colors";
 
 const DRAWER_WIDTH = 280;
 const SIDEBAR_BG = "#1A1A1A";
@@ -70,7 +71,7 @@ function Navbar() {
       text: "Are you sure you want to log out?",
       icon: "question",
       showCancelButton: true,
-      confirmButtonColor: "#8A38F5",
+      confirmButtonColor: primaryColor,
       cancelButtonColor: "#6b7280",
       confirmButtonText: "Yes, log out",
       cancelButtonText: "Cancel",
@@ -82,7 +83,7 @@ function Navbar() {
           icon: "success",
           title: "Logged out",
           text: "You have been logged out successfully.",
-          confirmButtonColor: "#8A38F5",
+          confirmButtonColor: primaryColor,
         }).then(() => {
           router.replace("/login");
         });
