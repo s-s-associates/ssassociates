@@ -1,6 +1,6 @@
 "use client";
 
-import { bggrayColor, bordergrayColor, grayColor, primaryColor } from "@/components/utils/Colors";
+import { bggrayColor, bordergrayColor, grayColor, primaryColor, primaryHover } from "@/components/utils/Colors";
 import { Box, Button, TextField, Typography } from "@mui/material";
 import { Formik } from "formik";
 import React from "react";
@@ -278,7 +278,7 @@ export default function ContactForm() {
                   textTransform: "none",
                   boxShadow: "none",
                   "&:hover": {
-                    bgcolor: "#7A2FE5",
+                    bgcolor: primaryHover,
                     boxShadow: "none",
                   },
                 }}

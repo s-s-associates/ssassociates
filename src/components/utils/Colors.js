@@ -4,13 +4,13 @@ export const blackColor = "rgb(0, 0, 0)"
 
 // ================= PRIMARY COLOR SYSTEM =================
 
-export const primaryColor = "rgb(239, 71, 0)"
-export const primaryLight = "rgb(255, 120, 60)"
-export const primaryDark = "rgb(190, 50, 0)"
-export const primaryHover = "rgb(210, 60, 0)"
-export const primaryBg = "rgba(239, 71, 0, 0.08)"
+export const primaryColor = "rgb(239, 139, 0)"
+export const primaryLight = "rgb(255, 195, 120)"
+export const primaryDark = "rgb(190, 100, 0)"
+export const primaryHover = "rgb(210, 100, 0)"
+export const primaryBg = "rgba(239, 139, 0, 0.08)"
 export const primaryGradient =
-  "linear-gradient(135deg, rgb(239, 71, 0), rgb(255, 120, 60))"
+  "linear-gradient(135deg, rgb(239, 139, 0), rgb(255, 195, 120))"
 
 
 // ================= SECONDARY COLOR SYSTEM =================
