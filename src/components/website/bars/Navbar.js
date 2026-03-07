@@ -122,7 +122,7 @@ function Navbar() {
             minHeight: 56,
           }}
         >
-          {/* Logo - SsAssociates */}
+      
           <Box
             component={motion.div}
             variants={container}

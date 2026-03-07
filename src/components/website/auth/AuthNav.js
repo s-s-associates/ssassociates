@@ -36,7 +36,7 @@ function AuthNav() {
           textDecoration: "none",
         }}
       >
-        SsAssociates
+        {process.env.NEXT_PUBLIC_COMPANY_NAME}
       </Box>
       <IconButton
         component={Link}

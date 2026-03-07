@@ -2,7 +2,9 @@ import {
   FiFolder,
   FiGlobe,
   FiGrid,
+  FiHelpCircle,
   FiMail,
+  FiMessageCircle,
   FiUserPlus,
   FiUsers,
 } from "react-icons/fi";
@@ -15,16 +17,12 @@ export const menuItems = [
   { label: "Contact submission", href: "/user/contact-submissions", Icon: FiMail },
   { label: "Subscribers", href: "/user/subscribers", Icon: FiUserPlus },
   { label: "Project pages", href: "/user/category", Icon: FiFolder, hasSubmenu: true },
-  { label: "Website", href: "/user/services", Icon: FiGlobe, hasSubmenu: true },
+  { label: "Services", href: "/user/services", Icon: FiGlobe },
+  { label: "Testimonials", href: "/user/testimonials", Icon: FiMessageCircle },
+  { label: "FAQs", href: "/user/faqs", Icon: FiHelpCircle },
 ];
 
 export const projectPagesChildren = [
   { label: "Category", href: "/user/category" },
   { label: "Projects", href: "/user/projects" },
-];
-
-export const websiteChildren = [
-  { label: "Services", href: "/user/services" },
-  { label: "Testimonials", href: "/user/testimonials" },
-  { label: "FAQs", href: "/user/faqs" },
 ];

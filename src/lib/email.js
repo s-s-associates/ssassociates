@@ -11,7 +11,7 @@ const transporter = nodemailer.createTransport({
 });
 
 export async function sendOtpEmail({ to, otp, type }) {
-  const subject = type === "signup" ? "Verify your SsAssociates account" : "Reset your SsAssociates password";
+  const subject = type === "signup" ? `Verify your ${process.env.NEXT_PUBLIC_COMPANY_NAME} account` : `Reset your ${process.env.NEXT_PUBLIC_COMPANY_NAME} password`;
   const text =
     type === "signup"
       ? `Your verification code is: ${otp}. It expires in 10 minutes.`
@@ -39,7 +39,7 @@ export async function sendHtmlEmail({ to, subject, html, text }) {
   await transporter.sendMail({
     from: process.env.SMTP_USER,
     to,
-    subject: subject || "Message from SsAssociates",
+    subject: subject || `Message from ${process.env.NEXT_PUBLIC_COMPANY_NAME}`,
     text: text || (typeof html === "string" ? html.replace(/<[^>]*>/g, "").trim() : ""),
     html: html || undefined,
   });

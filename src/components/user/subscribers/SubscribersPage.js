@@ -47,9 +47,9 @@ const PRESET_EMAIL_TEMPLATES = [
     title: "Welcome Email",
     category: "Onboarding",
     categoryColor: "#10b981",
-    description: "Welcome new subscribers and introduce SsAssociates services.",
-    subject: "Welcome to SsAssociates",
-    heading: "Welcome to SsAssociates!",
+    description: `Welcome new subscribers and introduce ${process.env.NEXT_PUBLIC_COMPANY_NAME} services.`,
+    subject: `Welcome to ${process.env.NEXT_PUBLIC_COMPANY_NAME}`,
+    heading: `Welcome to ${process.env.NEXT_PUBLIC_COMPANY_NAME}!`,
     body: "Hello {{name}},\n\nThank you for subscribing. We're glad to have you.\n\nExplore our services and get in touch for more information.",
     ctaText: "Explore Services",
     ctaUrl: `${APP_URL}/services`,
@@ -61,8 +61,8 @@ const PRESET_EMAIL_TEMPLATES = [
     category: "Engagement",
     categoryColor: "#3b82f6",
     description: "Monthly update on projects, services, and company news.",
-    subject: "SsAssociates – Monthly Update",
-    heading: "Your Monthly Update",
+    subject: `${process.env.NEXT_PUBLIC_COMPANY_NAME} – Monthly Update`,
+    heading: `Your Monthly Update – ${process.env.NEXT_PUBLIC_COMPANY_NAME}`,
     body: "Hello {{name}},\n\nHere's our latest update: new projects, service highlights, and news.\n\nStay connected with us.",
     ctaText: "Visit Website",
     ctaUrl: APP_URL || "/",
@@ -74,8 +74,8 @@ const PRESET_EMAIL_TEMPLATES = [
     category: "Promotion",
     categoryColor: "#f59e0b",
     description: "Special offer or update on services for subscribers.",
-    subject: "Special Offer – SsAssociates Services",
-    heading: "Limited Time Offer",
+    subject: `Special Offer – ${process.env.NEXT_PUBLIC_COMPANY_NAME} Services`,
+    heading: `Limited Time Offer – ${process.env.NEXT_PUBLIC_COMPANY_NAME} Services`,
     body: "Hello {{name}},\n\nWe have a special update on our services this month. Contact us for more details.\n\nDon't miss out.",
     ctaText: "Get in Touch",
     ctaUrl: `${APP_URL}/contact`,
@@ -87,7 +87,7 @@ const PRESET_EMAIL_TEMPLATES = [
     category: "Announcement",
     categoryColor: "#8b5cf6",
     description: "Announce a new service, project, or company milestone.",
-    subject: "New from SsAssociates",
+    subject: `New from ${process.env.NEXT_PUBLIC_COMPANY_NAME}`,
     heading: "We're Expanding Our Services",
     body: "Hello {{name}},\n\nWe're excited to share our latest updates. Reach out to learn how we can support you.",
     ctaText: "Learn More",
@@ -129,7 +129,7 @@ function buildPreviewHtml(body, ctaText, ctaUrl, heading) {
   const headingBlock = heading ? `<h1 style="margin: 0 0 16px 0; font-size: 24px; font-weight: 700; color: #1f2937;">${heading}</h1>` : "";
   const content = (body || "").replace(/\n/g, "<br>");
   const inner = `${headingBlock}<div style="color: #1f2937; font-size: 16px; line-height: 1.65;">${content}</div>${ctaBlock}`;
-  return `<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head><body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif; background-color: #f0f2f5;"><table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="background-color: #f0f2f5; padding: 24px;"><tr><td align="center"><table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px; background-color: #ffffff; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.06);"><tr><td style="padding: 40px 32px;">${inner}</td></tr><tr><td style="padding: 20px 32px; background-color: #f8fafc; border-radius: 0 0 12px 12px; text-align: center;"><p style="margin: 0; color: #64748b; font-size: 12px;">This email was sent from SsAssociates.</p></td></tr></table></td></tr></table></body></html>`;
+  return `<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head><body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif; background-color: #f0f2f5;"><table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="background-color: #f0f2f5; padding: 24px;"><tr><td align="center"><table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px; background-color: #ffffff; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.06);"><tr><td style="padding: 40px 32px;">${inner}</td></tr><tr><td style="padding: 20px 32px; background-color: #f8fafc; border-radius: 0 0 12px 12px; text-align: center;"><p style="margin: 0; color: #64748b; font-size: 12px;">This email was sent from ${process.env.NEXT_PUBLIC_COMPANY_NAME}.</p></td></tr></table></td></tr></table></body></html>`;
 }
 
 export default function SubscribersPage() {
