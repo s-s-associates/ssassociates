@@ -6,7 +6,7 @@ import OurPrinciples from "./OurPrinciples";
 function About() {
   return (
     <>
-      <Stats />
+      {/* <Stats /> */}
       <OurPrinciples />
       {/* <WhyChooseUs /> */}
     </>
