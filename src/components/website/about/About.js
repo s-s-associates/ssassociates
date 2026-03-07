@@ -8,7 +8,7 @@ function About() {
     <>
       <Stats />
       <OurPrinciples />
-      <WhyChooseUs />
+      {/* <WhyChooseUs /> */}
     </>
   );
 }
