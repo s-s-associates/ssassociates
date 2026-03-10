@@ -26,7 +26,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={`${inter.variable} ${plusJakartaSans.variable}`} style={{backgroundColor: bggrayColor}}>
+      <body className={`${inter.variable} ${plusJakartaSans.variable}`} style={{backgroundColor: bggrayColor, maxWidth: "1700px", margin: "0 auto"}}>
         <ThemeRegistry>{children}</ThemeRegistry>
       </body>
     </html>
