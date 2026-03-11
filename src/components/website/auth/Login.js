@@ -1,6 +1,6 @@
 "use client";
 
-import { grayColor, primaryColor } from "@/components/utils/Colors";
+import { grayColor, primaryColor, primaryHover } from "@/components/utils/Colors";
 import {
   Box,
   Button,
@@ -257,7 +257,7 @@ function Login() {
               py: 1.5,
               borderRadius: 2,
               textTransform: "none",
-              "&:hover": { bgcolor: "red" },
+              "&:hover": { bgcolor: primaryHover},
             }}
           >
             {loading ? <BeatLoader color="#fff" size={10} /> : "Sign In"}

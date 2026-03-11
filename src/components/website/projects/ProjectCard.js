@@ -4,7 +4,7 @@ import { whiteColor, blackColor, textGrayLight, secondaryDark, primaryColor } fr
 import { btnRadius, boxShadow, transition } from "@/components/utils/GlobalVariables";
 import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import ArrowForwardRoundedIcon from "@mui/icons-material/ArrowForwardRounded";
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Button, Grid, Typography } from "@mui/material";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
@@ -52,33 +52,26 @@ export default function ProjectCard() {
 
 
   return (
-    <Box  my={8} p={5} bgcolor={secondaryDark}borderRadius={6}
-    maxWidth={1450}
-    mx={[1,2,3,4,"auto"]}
-      sx={{
-        display: "flex",
-        flexWrap: "wrap",
-        justifyContent: "center",
-        alignItems: "flex-start",
-        gap: 5,
-      }}
+    <Box
+      my={8}
+      p={5}
+      bgcolor={secondaryDark}
+      borderRadius={6}
+      maxWidth={1450}
+      mx={[1, 2, 3, 4, "auto"]}
     >
-        {/* Project Section Title */}
-        <Box 
+      <Grid container spacing={5} alignItems="flex-start">
+        {/* First grid item: static text block */}
+        <Grid size={{xs:12,sm:6,md:4}}>
+          <Box sx={{ minWidth: 0 }}>
+        <Typography
+          component="span"
           sx={{
-            minWidth: 280,
-            maxWidth: 400,
-          }}
-        >
-          <Typography  
-            component="span"
-            sx={{
-              color: whiteColor,
-              fontWeight: 700,
-              fontSize: { xs: 25, sm: 30, md: 35, lg: 40 },
-              lineHeight: 1.25,
-              color: whiteColor,
-              backgroundImage: `linear-gradient(${whiteColor}, ${whiteColor})`,
+            color: whiteColor,
+            fontWeight: 700,
+            fontSize: { xs: 25, sm: 30, md: 35, lg: 40 },
+            lineHeight: 1.25,
+            backgroundImage: `linear-gradient(${whiteColor}, ${whiteColor})`,
             backgroundSize: "0% 2px",
             backgroundPosition: "bottom left",
             backgroundRepeat: "no-repeat",
@@ -87,64 +80,61 @@ export default function ProjectCard() {
               backgroundSize: "100% 3px",
               textDecorationColor: whiteColor,
             },
-            }}
-          >
-            Inspirational interior fit-outs and specialist joinery
-          </Typography>
-          <Typography
-            sx={{
-              color: textGrayLight,
-              fontWeight: 400,
-              fontSize: 15,
-              lineHeight: 1.65,
-              mt:2,
-              mb: 4,
-            }}
-          >
-            Discover some of our recent projects, showcasing distinct and memorable interior spaces.
-          </Typography>
-          <Button
-            component={Link}
-            href="/projects"
-            startIcon={null}
-            endIcon={<ArrowForwardRoundedIcon sx={{ fontSize: 20 }} />}
-            sx={{
-              px: 2.5,
-              py: 1.5,
-              borderRadius: 999,
-              backgroundColor: "#FAFAFA",
-              color: blackColor,
-              fontWeight: 600,
-              fontSize: 15,
-              textTransform: "none",
-              "&:hover": {
-                backgroundColor: "#F5F5F5",
-              },
-            }}
-          >
-            All Projects
-          </Button>
-        </Box>
+          }}
+        >
+          Inspirational interior fit-outs and specialist joinery
+        </Typography>
+        <Typography
+          sx={{
+            color: textGrayLight,
+            fontWeight: 400,
+            fontSize: 15,
+            lineHeight: 1.65,
+            mt: 2,
+            mb: 4,
+          }}
+        >
+          Discover some of our recent projects, showcasing distinct and memorable interior spaces.
+        </Typography>
+        <Button
+          component={Link}
+          href="/projects"
+          startIcon={null}
+          endIcon={<ArrowForwardRoundedIcon sx={{ fontSize: 20 }} />}
+          sx={{
+            px: 2.5,
+            py: 1.5,
+            borderRadius: 999,
+            backgroundColor: "#FAFAFA",
+            color: blackColor,
+            fontWeight: 600,
+            fontSize: 15,
+            textTransform: "none",
+            "&:hover": {
+              backgroundColor: "#F5F5F5",
+            },
+          }}
+        >
+          All Projects
+        </Button>
+          </Box>
+        </Grid>
 
-        {/* Project Cards */}
-    {projects.map((project) => (
-    <Box 
-      key={project.href}
+        {/* Project Cards – mapped */}
+        {projects.map((project) => (
+          <Grid size={{xs:12,sm:6,md:4}} key={project.href}>
+    <Box
       component={Link}
       href={project.href}
       sx={{
         display: "block",
         textDecoration: "none",
-        justifyContent:"flex-start",
         borderRadius: btnRadius,
         overflow: "hidden",
         backgroundColor: secondaryDark,
         boxShadow,
         transition,
-        flex: "1 1 300px",
-        minWidth: 280,
-        maxWidth: 400,
-        // height: 320,
+        minWidth: 0,
       }}
     >
         {/* Card Image */}
@@ -268,7 +258,9 @@ export default function ProjectCard() {
         )}
       </Box>
     </Box>
-    ))}
+          </Grid>
+        ))}
+      </Grid>
     </Box>
   );
 }
