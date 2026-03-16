@@ -3,15 +3,14 @@ import Navbar from "@/components/website/bars/Navbar";
 import { Box } from "@mui/material";
 
 export default function WebsiteLayout({ children }) {
-    return (
-      <>
-      <Navbar/>
-       <Box >
-       {children}
-       <Footer/>
-       </Box>
-       
-      </>
-    );
-  }
+  return (
+    <>
+      <Box sx={{ position: "relative" }}>
+        {children}
+        <Footer />
+      </Box>
+      <Navbar />
+    </>
+  );
+}
   

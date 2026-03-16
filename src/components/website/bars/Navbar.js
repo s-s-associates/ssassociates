@@ -102,10 +102,12 @@ function Navbar() {
           top: 0,
           left: 0,
           right: 0,
+          width: "100vw",
           zIndex: 1100,
-          backgroundColor: whiteColor,
-          borderBottom: `1px solid ${secondaryBg}`,
-          boxShadow: scrolled ? boxShadowHover : boxShadow,
+          backgroundColor: scrolled
+            ? whiteColor
+            : "transparent",
+         
           transition,
         }}
       >
@@ -168,8 +170,6 @@ function Navbar() {
                     component="span"
                     sx={{
                       ...underlineFromLeft,
-                      fontFamily:
-                        "var(--font-plus-jakarta), 'Plus Jakarta Sans', sans-serif",
                       fontWeight: 600,
                       fontSize: 20,
                       color: primaryColor,
@@ -186,11 +186,9 @@ function Navbar() {
                 <Box
                   component="span"
                   sx={{
-                    fontFamily:
-                      "var(--font-plus-jakarta), 'Plus Jakarta Sans', sans-serif",
                     fontWeight: 400,
                     fontSize: 12,
-                    color: textGrayDark,
+                    color: whiteColor,
                     mt: 0.25,
                   }}
                 >
@@ -243,7 +241,7 @@ function Navbar() {
                         fontSize: 16,
                         lineHeight: "24px",
                         letterSpacing: "0%",
-                        color: isActive ? primaryColor : textGrayDark,
+                        color: isActive ? primaryColor : whiteColor,
                         px: 0.5,
                         transition: "color 0.2s ease",
                         ...(isActive ? underlineFromLeftHover : {}),
@@ -277,12 +275,12 @@ function Navbar() {
               <Link
                 href="/contact"
                 style={{
-                  fontFamily: "var(--font-plus-jakarta), 'Plus Jakarta Sans', sans-serif",
                   fontWeight: 700,
                   fontSize: 16,
                   lineHeight: "24px",
                   color: whiteColor,
-                  background: primaryColor,
+                  border: `1px solid ${whiteColor}`,
+                  background: "transparent",
                   textDecoration: "none",
                   padding: "10px 24px",
                   borderRadius: btnRadius,

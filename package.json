@@ -20,6 +20,8 @@
     "cloudinary": "^2.9.0",
     "formik": "^2.4.9",
     "framer-motion": "^12.34.0",
+    "gsap": "^3.12.5",
+    "three": "^0.170.0",
     "jsonwebtoken": "^9.0.3",
     "mongoose": "^9.2.1",
     "next": "16.1.6",

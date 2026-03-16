@@ -143,7 +143,7 @@ export default function ProjectCard() {
         sx={{ 
           position: "relative",
           width: "100%",
-          height: 200,
+          height: 250,
           overflow: "hidden",
           borderBottomLeftRadius: 15,
           borderBottomRightRadius: 15,
