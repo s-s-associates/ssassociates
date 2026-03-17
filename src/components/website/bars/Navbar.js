@@ -7,12 +7,14 @@ import {
   textGrayLight,
   whiteColor,
   secondaryBg,
+  secondaryDark,
 } from "@/components/utils/Colors";
 import {
   btnRadius,
   boxShadow,
   boxShadowHover,
   transition,
+  sectionRadius,
 } from "@/components/utils/GlobalVariables";
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
@@ -97,17 +99,19 @@ function Navbar() {
     <>
       <Box
         component="header"
+        mx={1}
         sx={{
           position: "fixed",
-          top: 0,
+          top:  scrolled ? 6 : 0,
           left: 0,
           right: 0,
-          width: "100vw",
           zIndex: 1100,
           backgroundColor: scrolled
-            ? whiteColor
+            ? "rgba(8, 12, 20, 0.67)" // secondaryDark with 0.3 alpha
             : "transparent",
-         
+          backdropFilter: scrolled ? "blur(16px)" : "none",
+          WebkitBackdropFilter: scrolled ? "blur(16px)" : "none",
+          borderRadius: 3,
           transition,
         }}
       >
@@ -462,7 +466,7 @@ function Navbar() {
       </AnimatePresence>
 
       {/* Spacer so content is not under fixed navbar */}
-      <Box sx={{ height: 56 }} />
+      <Box sx={{ height: 0 }} />
     </>
   );
 }

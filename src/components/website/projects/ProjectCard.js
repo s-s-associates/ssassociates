@@ -1,7 +1,7 @@
 "use client";
 
 import { whiteColor, blackColor, textGrayLight, secondaryDark, primaryColor } from "@/components/utils/Colors";
-import { btnRadius, boxShadow, transition } from "@/components/utils/GlobalVariables";
+import { btnRadius, boxShadow, transition, sectionRadius } from "@/components/utils/GlobalVariables";
 import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import ArrowForwardRoundedIcon from "@mui/icons-material/ArrowForwardRounded";
 import { Box, Button, Grid, Typography } from "@mui/material";
@@ -56,7 +56,7 @@ export default function ProjectCard() {
       my={8}
       p={5}
       bgcolor={secondaryDark}
-      borderRadius={6}
+      borderRadius={sectionRadius}
       maxWidth={1450}
       mx={[1, 2, 3, 4, "auto"]}
     >
@@ -145,15 +145,15 @@ export default function ProjectCard() {
           width: "100%",
           height: 250,
           overflow: "hidden",
-          borderBottomLeftRadius: 15,
-          borderBottomRightRadius: 15,
-          borderTopLeftRadius: 15,
-          borderTopRightRadius: 15,
+          borderBottomLeftRadius: sectionRadius,
+          borderBottomRightRadius: sectionRadius,
+          borderTopLeftRadius: sectionRadius,
+          borderTopRightRadius: sectionRadius,
           transition: "border-radius 0.3s ease-in-out",
           "&:hover": {
-            borderBottomLeftRadius: 15,
-            borderTopLeftRadius: 15,
-            borderTopRightRadius: 15,
+            borderBottomLeftRadius: sectionRadius,
+            borderTopLeftRadius: sectionRadius,
+            borderTopRightRadius: sectionRadius,
             borderBottomRightRadius: 30,
         },
           "&:hover .card-image-inner": {

@@ -117,7 +117,7 @@ function WhyChooseUs() {
           position: "absolute",
           inset: 0,
           background:
-            "linear-gradient(120deg, rgba(16, 24, 40, 0), rgba(16,24,40,0.65))",
+            "linear-gradient(120deg, rgba(0, 0, 0, 0.72), rgba(0, 0, 0, 0.65))",
           zIndex: 0,
         }}
       />

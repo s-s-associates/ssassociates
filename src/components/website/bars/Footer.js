@@ -3,6 +3,7 @@
 import {
   primaryColor,
   secondaryColor,
+  secondaryDark,
   textGrayLight,
   whiteColor,
 } from "@/components/utils/Colors";
@@ -70,7 +71,7 @@ function Footer() {
     <Box
       component="footer"
       sx={{
-        bgcolor: secondaryColor,
+        bgcolor: secondaryDark,
         color: textGrayLight,
         pt: 6,
         pb: 0,
