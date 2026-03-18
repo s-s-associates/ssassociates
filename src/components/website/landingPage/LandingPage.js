@@ -8,6 +8,7 @@ import ContactForm from '../contact/ContactForm'
 import GsapBoxScrollAnimation from './GsapBoxScrollAnimation'
 import Projects from '../projects/Projects'
 import HomeBanner from './HomeBanner'
+import ServicesCards from '../services/ServicesCards'
 
 function LandingPage() {
   return (
@@ -16,6 +17,7 @@ function LandingPage() {
         <Stats />
       <OurPrinciples />
       <Projects/>
+      <ServicesCards/>
       {/* <GsapBoxScrollAnimation /> */}
       <WhyChooseUs />
         <OurClients/>
