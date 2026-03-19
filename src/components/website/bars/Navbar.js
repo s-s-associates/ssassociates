@@ -24,6 +24,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import React, { useState, useEffect } from "react";
+import { useWebsiteNavigationLoading } from "./WebsiteNavigationLoaderProvider";
 
 const navLinks = [
   { label: "Home", href: "/" },
@@ -80,6 +81,7 @@ const underlineFromLeftHover = {
 
 function Navbar() {
   const pathname = usePathname();
+  const { startNavigation } = useWebsiteNavigationLoading();
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
@@ -169,7 +171,7 @@ function Navbar() {
                 </Link>
               </Box>
               <Box sx={{ display: "flex", flexDirection: "column", lineHeight: 1 }}>
-                <Link href="/" style={{ textDecoration: "none" }}>
+                <Link href="/" onClick={() => startNavigation("/")} style={{ textDecoration: "none" }}>
                   <Box
                     component="span"
                     sx={{
@@ -234,7 +236,11 @@ function Navbar() {
                     gap: 0.75,
                   }}
                 >
-                  <Link href={link.href} style={{ textDecoration: "none" }}>
+                  <Link
+                    href={link.href}
+                    onClick={() => startNavigation(link.href)}
+                    style={{ textDecoration: "none" }}
+                  >
                     <Box
                       component="span"
                       sx={{
@@ -278,6 +284,7 @@ function Navbar() {
             <Box component={motion.div} variants={item}>
               <Link
                 href="/contact"
+                onClick={() => startNavigation("/contact")}
                 style={{
                   fontWeight: 700,
                   fontSize: 16,
@@ -402,7 +409,10 @@ function Navbar() {
                     <Box component={motion.div} key={link.label} variants={item}>
                       <Link
                         href={link.href}
-                        onClick={() => setDrawerOpen(false)}
+                        onClick={() => {
+                          startNavigation(link.href);
+                          setDrawerOpen(false);
+                        }}
                         style={{ textDecoration: "none", display: "block" }}
                       >
                         <Box
@@ -439,7 +449,10 @@ function Navbar() {
                 <Box component={motion.div} variants={item} sx={{ mt: 2 }}>
                   <Link
                     href="/contact"
-                    onClick={() => setDrawerOpen(false)}
+                    onClick={() => {
+                      startNavigation("/contact");
+                      setDrawerOpen(false);
+                    }}
                     style={{
                       fontFamily: "var(--font-plus-jakarta), 'Plus Jakarta Sans', sans-serif",
                       fontSize: 16,
