@@ -6,15 +6,13 @@ import { NextResponse } from "next/server";
 export async function GET(req, { params }) {
   try {
     const user = await getUserFromRequest(req);
-    if (!user) {
-      return NextResponse.json({ success: false, message: "Unauthorized" }, { status: 401 });
-    }
     const { id } = await params;
     if (!id) {
       return NextResponse.json({ success: false, message: "Project ID required" }, { status: 400 });
     }
     await connectDB();
-    const project = await Project.findOne({ _id: id, userId: user._id }).lean();
+    const query = user ? { _id: id, userId: user._id } : { _id: id };
+    const project = await Project.findOne(query).lean();
     if (!project) {
       return NextResponse.json({ success: false, message: "Project not found" }, { status: 404 });
     }

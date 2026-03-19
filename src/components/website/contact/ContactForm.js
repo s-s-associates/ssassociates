@@ -104,6 +104,7 @@ export default function ContactForm() {
         minHeight: "60vh",
       }}
     >
+      
       <Box sx={{ maxWidth: 720, mx: "auto" }}>
         <Typography
           component="h1"
