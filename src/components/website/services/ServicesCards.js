@@ -75,15 +75,17 @@ const SERVICES = [
 
 function ServicesCards() {
   const theme = useTheme();
-  const isLg = useMediaQuery(theme.breakpoints.up("lg")); // 1200+
-  const isMd = useMediaQuery(theme.breakpoints.up("md")); // 900+
+  const isLg = useMediaQuery(theme.breakpoints.up("lg")); 
+  const isMd = useMediaQuery(theme.breakpoints.up("md")); 
   const scrollRef = useRef(null);
   const containerRef = useRef(null);
+  const scrollIndexRef = useRef(0);
   const [scrollIndex, setScrollIndex] = useState(0);
   const [containerWidth, setContainerWidth] = useState(0);
 
   const cardsPerView = isLg ? 4 : isMd ? 2 : 1;
   const maxIndex = Math.max(0, SERVICES.length - cardsPerView);
+  scrollIndexRef.current = scrollIndex;
 
   useEffect(() => {
     const el = containerRef.current;
@@ -122,7 +124,16 @@ function ServicesCards() {
     setScrollIndex(Math.max(0, Math.min(index, maxIndex)));
   }, [maxIndex, step]);
 
+  useEffect(() => {
+    const id = setInterval(() => {
+      const next = scrollIndexRef.current >= maxIndex ? 0 : scrollIndexRef.current + 1;
+      scrollToIndex(next);
+    }, 3000);
+    return () => clearInterval(id);
+  }, [maxIndex, scrollToIndex]);
+
   const paginationCount = maxIndex + 1;
+  
   const activeDot = Math.min(scrollIndex, paginationCount - 1);
 
   return (
@@ -137,7 +148,6 @@ function ServicesCards() {
       }}
     >
       <Box ref={containerRef} sx={{ maxWidth: 1400, mx: "auto" }}>
-        {/* Header: title left, description right */}
         <Box
           sx={{
             display: "grid",
@@ -171,7 +181,6 @@ function ServicesCards() {
           </Typography>
         </Box>
 
-        {/* Carousel */}
         <Box
           ref={scrollRef}
           onScroll={handleScroll}
@@ -191,7 +200,6 @@ function ServicesCards() {
           ))}
         </Box>
 
-        {/* Bottom bar: pagination left, arrows right */}
         <Box
           sx={{
             display: "flex",
@@ -201,7 +209,6 @@ function ServicesCards() {
             px: 0,
           }}
         >
-          {/* Pagination lines – bottom left (one per page) */}
           <Box sx={{ display: "flex", gap: 0.75, alignItems: "center" }}>
             {Array.from({ length: paginationCount }).map((_, i) => (
               <Box
@@ -217,7 +224,6 @@ function ServicesCards() {
             ))}
           </Box>
 
-          {/* Arrow buttons – bottom right */}
           <Box sx={{ display: "flex", gap: 0.5 }}>
             <IconButton
               onClick={() => scrollToIndex(scrollIndex - 1)}
@@ -286,7 +292,6 @@ function ServiceCard({ service, cardWidth }) {
         aspectRatio: "3 / 4",
       }}
     >
-      {/* Background image */}
       <Box
         sx={{
           position: "absolute",
@@ -300,7 +305,6 @@ function ServiceCard({ service, cardWidth }) {
           sizes="(max-width: 899px) 90vw, (max-width: 1199px) 45vw, 25vw"
           style={{ objectFit: "cover" }}
         />
-        {/* Bottom gradient – always visible under image for title readability */}
         <Box
           sx={{
             position: "absolute",
@@ -314,7 +318,6 @@ function ServiceCard({ service, cardWidth }) {
         />
       </Box>
 
-      {/* Default: title at bottom-left */}
       <Box
         sx={{
           position: "absolute",
@@ -338,7 +341,6 @@ function ServiceCard({ service, cardWidth }) {
         </Typography>
       </Box>
 
-      {/* Hover overlay – slides up from bottom (Framer Motion) */}
       <AnimatePresence>
         {hovered && (
           <motion.div
