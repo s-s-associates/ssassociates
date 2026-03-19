@@ -1,12 +1,12 @@
 import React from "react";
-import ProjectsCardsSection from "./ProjectsCardsSection";
 import ProjectCard from "./ProjectCard";
+import Banner from "./Banner";
 
 function Projects() {
   return (
     <>
+    <Banner/>
     <ProjectCard />
-      {/* <ProjectsCardsSection /> */}
     </>
   );
 }

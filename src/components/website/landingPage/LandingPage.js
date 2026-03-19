@@ -14,16 +14,16 @@ import ServicesCards from '../services/ServicesCards';
 function LandingPage() {
   return (
     <div>
-        <HomeBanner/>
-<WhoWeAre/>
-        <Stats />
-      <OurPrinciples />
+      <HomeBanner/>
+      <WhoWeAre/>
+      <Stats/>
+      <OurPrinciples/>
       <ServicesCards/>
       <Projects/>
-      <WhyChooseUs />
-        <OurClients/>
-        <ContactForm/>
-        <Faqs/>
+      <WhyChooseUs/>
+      <OurClients/>
+      <ContactForm/>
+      <Faqs/>
     </div>
   )
 }
