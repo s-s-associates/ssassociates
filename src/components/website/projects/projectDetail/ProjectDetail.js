@@ -15,10 +15,10 @@ export default function ProjectDetail({ project }) {
   const featureItems = buildFeatureItems(project);
 
   return (
-    <Box sx={{ p: { xs: 2, sm: 10 }, bgcolor: bggrayColor, minHeight: "100vh" }}>
-      <Box sx={{ maxWidth: 1280, mx: "auto" }}>
-        <Banner project={project} />
+    <Box sx={{ bgcolor: bggrayColor, minHeight: "100vh" }}>
+      <Banner project={project} />
 
+      <Box sx={{ maxWidth: 1280, mx: "auto", px: { xs: 2, sm: 3, md: 4, lg: 5 }, pt: { xs: 3, sm: 4 }, pb: { xs: 4, sm: 6 } }}>
         <Grid container spacing={2.5}>
           <Grid size={{ xs: 12, lg: 8 }}>
             <Overview description={project.description} />
