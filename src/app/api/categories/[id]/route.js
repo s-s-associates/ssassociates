@@ -15,7 +15,7 @@ export async function GET(req, { params }) {
       return NextResponse.json({ success: false, message: "Category ID required" }, { status: 400 });
     }
     await connectDB();
-    const category = await Category.findOne({ _id: id, userId: user._id }).lean();
+    const category = await Category.findById(id).lean();
     if (!category) {
       return NextResponse.json({ success: false, message: "Category not found" }, { status: 404 });
     }
@@ -40,7 +40,7 @@ export async function PATCH(req, { params }) {
       return NextResponse.json({ success: false, message: "Category ID required" }, { status: 400 });
     }
     await connectDB();
-    const category = await Category.findOne({ _id: id, userId: user._id });
+    const category = await Category.findById(id);
     if (!category) {
       return NextResponse.json({ success: false, message: "Category not found" }, { status: 404 });
     }
@@ -72,12 +72,11 @@ export async function DELETE(req, { params }) {
       return NextResponse.json({ success: false, message: "Category ID required" }, { status: 400 });
     }
     await connectDB();
-    const category = await Category.findOne({ _id: id, userId: user._id }).lean();
+    const category = await Category.findById(id).lean();
     if (!category) {
       return NextResponse.json({ success: false, message: "Category not found" }, { status: 404 });
     }
     const projectCount = await Project.countDocuments({
-      userId: user._id,
       category: category.name?.trim() || "",
     });
     if (projectCount > 0) {
@@ -90,7 +89,7 @@ export async function DELETE(req, { params }) {
         { status: 400 }
       );
     }
-    await Category.findOneAndDelete({ _id: id, userId: user._id });
+    await Category.findByIdAndDelete(id);
     return NextResponse.json({ success: true, message: "Category deleted" });
   } catch (err) {
     console.error("Category DELETE error:", err);

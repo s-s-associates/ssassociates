@@ -5,14 +5,12 @@ import { NextResponse } from "next/server";
 
 export async function GET(req, { params }) {
   try {
-    const user = await getUserFromRequest(req);
     const { id } = await params;
     if (!id) {
       return NextResponse.json({ success: false, message: "Project ID required" }, { status: 400 });
     }
     await connectDB();
-    const query = user ? { _id: id, userId: user._id } : { _id: id };
-    const project = await Project.findOne(query).lean();
+    const project = await Project.findById(id).lean();
     if (!project) {
       return NextResponse.json({ success: false, message: "Project not found" }, { status: 404 });
     }
@@ -37,7 +35,7 @@ export async function PATCH(req, { params }) {
       return NextResponse.json({ success: false, message: "Project ID required" }, { status: 400 });
     }
     await connectDB();
-    const project = await Project.findOne({ _id: id, userId: user._id });
+    const project = await Project.findById(id);
     if (!project) {
       return NextResponse.json({ success: false, message: "Project not found" }, { status: 404 });
     }
@@ -74,7 +72,7 @@ export async function DELETE(req, { params }) {
       return NextResponse.json({ success: false, message: "Project ID required" }, { status: 400 });
     }
     await connectDB();
-    const project = await Project.findOneAndDelete({ _id: id, userId: user._id });
+    const project = await Project.findByIdAndDelete(id);
     if (!project) {
       return NextResponse.json({ success: false, message: "Project not found" }, { status: 404 });
     }

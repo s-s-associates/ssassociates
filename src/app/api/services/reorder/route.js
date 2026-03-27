@@ -19,7 +19,7 @@ export async function POST(req) {
       );
     }
     await connectDB();
-    const services = await Service.find({ userId: user._id })
+    const services = await Service.find({})
       .sort({ order: 1, createdAt: -1 })
       .lean();
     const index = services.findIndex((s) => String(s._id) === String(serviceId));
@@ -32,14 +32,8 @@ export async function POST(req) {
     }
     const currentOrder = services[index].order;
     const swapOrder = services[swapIndex].order;
-    await Service.updateOne(
-      { _id: services[index]._id, userId: user._id },
-      { $set: { order: swapOrder } }
-    );
-    await Service.updateOne(
-      { _id: services[swapIndex]._id, userId: user._id },
-      { $set: { order: currentOrder } }
-    );
+    await Service.updateOne({ _id: services[index]._id }, { $set: { order: swapOrder } });
+    await Service.updateOne({ _id: services[swapIndex]._id }, { $set: { order: currentOrder } });
     return NextResponse.json({ success: true });
   } catch (err) {
     console.error("Services reorder error:", err);

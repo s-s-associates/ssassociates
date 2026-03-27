@@ -5,10 +5,8 @@ import { NextResponse } from "next/server";
 
 export async function GET(req) {
   try {
-    const user = await getUserFromRequest(req);
     await connectDB();
-    const filter = user ? { userId: user._id } : {};
-    const faqs = await Faq.find(filter)
+    const faqs = await Faq.find({})
       .sort({ order: 1, createdAt: -1 })
       .lean();
     return NextResponse.json({ success: true, faqs });

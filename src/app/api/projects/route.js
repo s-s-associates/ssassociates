@@ -5,10 +5,8 @@ import { NextResponse } from "next/server";
 
 export async function GET(req) {
   try {
-    const user = await getUserFromRequest(req);
     await connectDB();
-    const filter = user ? { userId: user._id } : {};
-    const projects = await Project.find(filter)
+    const projects = await Project.find({})
       .sort({ order: 1, createdAt: -1 })
       .lean();
     return NextResponse.json({ success: true, projects });
@@ -29,7 +27,7 @@ export async function POST(req) {
     }
     await connectDB();
     const body = await req.json();
-    const count = await Project.countDocuments({ userId: user._id });
+    const count = await Project.countDocuments({});
     const project = await Project.create({
       userId: user._id,
       ...body,

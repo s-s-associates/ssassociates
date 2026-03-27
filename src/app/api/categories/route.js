@@ -6,13 +6,11 @@ import { NextResponse } from "next/server";
 
 export async function GET(req) {
   try {
-    const user = await getUserFromRequest(req);
     await connectDB();
-    const filter = user ? { userId: user._id } : {};
-    const categories = await Category.find(filter)
+    const categories = await Category.find({})
       .sort({ createdAt: -1 })
       .lean();
-    const projectMatch = user ? { userId: user._id, category: { $exists: true, $ne: "" } } : { category: { $exists: true, $ne: "" } };
+    const projectMatch = { category: { $exists: true, $ne: "" } };
     const projectCounts = await Project.aggregate([
       { $match: projectMatch },
       { $group: { _id: "$category", count: { $sum: 1 } } },

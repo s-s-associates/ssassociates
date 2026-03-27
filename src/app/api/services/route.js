@@ -6,10 +6,8 @@ import { normalizeServiceBody, validateServiceBody } from "./helpers";
 
 export async function GET(req) {
   try {
-    const user = await getUserFromRequest(req);
     await connectDB();
-    const filter = user ? { userId: user._id } : {};
-    const services = await Service.find(filter)
+    const services = await Service.find({})
       .sort({ order: 1, createdAt: -1 })
       .lean();
     return NextResponse.json({ success: true, services });
@@ -35,7 +33,7 @@ export async function POST(req) {
     if (validationError) {
       return NextResponse.json({ success: false, message: validationError }, { status: 400 });
     }
-    const count = await Service.countDocuments({ userId: user._id });
+    const count = await Service.countDocuments({});
     const service = await Service.create({
       userId: user._id,
       ...normalized,

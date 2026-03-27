@@ -19,7 +19,7 @@ export async function POST(req) {
       );
     }
     await connectDB();
-    const faqs = await Faq.find({ userId: user._id })
+    const faqs = await Faq.find({})
       .sort({ order: 1, createdAt: -1 })
       .lean();
     const index = faqs.findIndex((f) => String(f._id) === String(faqId));
@@ -32,14 +32,8 @@ export async function POST(req) {
     }
     const currentOrder = faqs[index].order;
     const swapOrder = faqs[swapIndex].order;
-    await Faq.updateOne(
-      { _id: faqs[index]._id, userId: user._id },
-      { $set: { order: swapOrder } }
-    );
-    await Faq.updateOne(
-      { _id: faqs[swapIndex]._id, userId: user._id },
-      { $set: { order: currentOrder } }
-    );
+    await Faq.updateOne({ _id: faqs[index]._id }, { $set: { order: swapOrder } });
+    await Faq.updateOne({ _id: faqs[swapIndex]._id }, { $set: { order: currentOrder } });
     return NextResponse.json({ success: true });
   } catch (err) {
     console.error("FAQs reorder error:", err);

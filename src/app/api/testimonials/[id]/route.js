@@ -14,7 +14,7 @@ export async function GET(req, { params }) {
       return NextResponse.json({ success: false, message: "Testimonial ID required" }, { status: 400 });
     }
     await connectDB();
-    const testimonial = await Testimonial.findOne({ _id: id, userId: user._id }).lean();
+    const testimonial = await Testimonial.findById(id).lean();
     if (!testimonial) {
       return NextResponse.json({ success: false, message: "Testimonial not found" }, { status: 404 });
     }
@@ -39,7 +39,7 @@ export async function PATCH(req, { params }) {
       return NextResponse.json({ success: false, message: "Testimonial ID required" }, { status: 400 });
     }
     await connectDB();
-    const testimonial = await Testimonial.findOne({ _id: id, userId: user._id });
+    const testimonial = await Testimonial.findById(id);
     if (!testimonial) {
       return NextResponse.json({ success: false, message: "Testimonial not found" }, { status: 404 });
     }
@@ -80,7 +80,7 @@ export async function DELETE(req, { params }) {
       return NextResponse.json({ success: false, message: "Testimonial ID required" }, { status: 400 });
     }
     await connectDB();
-    const testimonial = await Testimonial.findOneAndDelete({ _id: id, userId: user._id });
+    const testimonial = await Testimonial.findByIdAndDelete(id);
     if (!testimonial) {
       return NextResponse.json({ success: false, message: "Testimonial not found" }, { status: 404 });
     }

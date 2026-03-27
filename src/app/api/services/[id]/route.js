@@ -15,7 +15,7 @@ export async function GET(req, { params }) {
       return NextResponse.json({ success: false, message: "Service ID required" }, { status: 400 });
     }
     await connectDB();
-    const service = await Service.findOne({ _id: id, userId: user._id }).lean();
+    const service = await Service.findById(id).lean();
     if (!service) {
       return NextResponse.json({ success: false, message: "Service not found" }, { status: 404 });
     }
@@ -40,7 +40,7 @@ export async function PATCH(req, { params }) {
       return NextResponse.json({ success: false, message: "Service ID required" }, { status: 400 });
     }
     await connectDB();
-    const service = await Service.findOne({ _id: id, userId: user._id });
+    const service = await Service.findById(id);
     if (!service) {
       return NextResponse.json({ success: false, message: "Service not found" }, { status: 404 });
     }
@@ -81,7 +81,7 @@ export async function DELETE(req, { params }) {
       return NextResponse.json({ success: false, message: "Service ID required" }, { status: 400 });
     }
     await connectDB();
-    const service = await Service.findOneAndDelete({ _id: id, userId: user._id });
+    const service = await Service.findByIdAndDelete(id);
     if (!service) {
       return NextResponse.json({ success: false, message: "Service not found" }, { status: 404 });
     }

@@ -19,7 +19,7 @@ export async function POST(req) {
       );
     }
     await connectDB();
-    const projectList = await Project.find({ userId: user._id })
+    const projectList = await Project.find({})
       .sort({ order: 1, createdAt: -1 })
       .lean();
     const index = projectList.findIndex((p) => String(p._id) === String(projectId));
@@ -36,10 +36,7 @@ export async function POST(req) {
     reordered.splice(swapIndex, 0, moved);
     await Promise.all(
       reordered.map((p, i) =>
-        Project.updateOne(
-          { _id: p._id, userId: user._id },
-          { $set: { order: i } }
-        )
+        Project.updateOne({ _id: p._id }, { $set: { order: i } })
       )
     );
     return NextResponse.json({ success: true });

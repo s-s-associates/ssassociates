@@ -14,7 +14,7 @@ export async function GET(req, { params }) {
       return NextResponse.json({ success: false, message: "Client ID required" }, { status: 400 });
     }
     await connectDB();
-    const client = await Client.findOne({ _id: id, userId: user._id }).lean();
+    const client = await Client.findById(id).lean();
     if (!client) {
       return NextResponse.json({ success: false, message: "Client not found" }, { status: 404 });
     }
@@ -39,7 +39,7 @@ export async function PATCH(req, { params }) {
       return NextResponse.json({ success: false, message: "Client ID required" }, { status: 400 });
     }
     await connectDB();
-    const client = await Client.findOne({ _id: id, userId: user._id });
+    const client = await Client.findById(id);
     if (!client) {
       return NextResponse.json({ success: false, message: "Client not found" }, { status: 404 });
     }
@@ -70,7 +70,7 @@ export async function DELETE(req, { params }) {
       return NextResponse.json({ success: false, message: "Client ID required" }, { status: 400 });
     }
     await connectDB();
-    const client = await Client.findOneAndDelete({ _id: id, userId: user._id });
+    const client = await Client.findByIdAndDelete(id);
     if (!client) {
       return NextResponse.json({ success: false, message: "Client not found" }, { status: 404 });
     }

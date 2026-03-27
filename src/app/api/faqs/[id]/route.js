@@ -14,7 +14,7 @@ export async function GET(req, { params }) {
       return NextResponse.json({ success: false, message: "FAQ ID required" }, { status: 400 });
     }
     await connectDB();
-    const faq = await Faq.findOne({ _id: id, userId: user._id }).lean();
+    const faq = await Faq.findById(id).lean();
     if (!faq) {
       return NextResponse.json({ success: false, message: "FAQ not found" }, { status: 404 });
     }
@@ -39,7 +39,7 @@ export async function PATCH(req, { params }) {
       return NextResponse.json({ success: false, message: "FAQ ID required" }, { status: 400 });
     }
     await connectDB();
-    const faq = await Faq.findOne({ _id: id, userId: user._id });
+    const faq = await Faq.findById(id);
     if (!faq) {
       return NextResponse.json({ success: false, message: "FAQ not found" }, { status: 404 });
     }
@@ -77,7 +77,7 @@ export async function DELETE(req, { params }) {
       return NextResponse.json({ success: false, message: "FAQ ID required" }, { status: 400 });
     }
     await connectDB();
-    const faq = await Faq.findOneAndDelete({ _id: id, userId: user._id });
+    const faq = await Faq.findByIdAndDelete(id);
     if (!faq) {
       return NextResponse.json({ success: false, message: "FAQ not found" }, { status: 404 });
     }

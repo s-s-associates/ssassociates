@@ -8,12 +8,17 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  FormControl,
   IconButton,
+  InputAdornment,
+  MenuItem,
+  Select,
   Skeleton,
   Table,
   TableBody,
   TableCell,
   TableHead,
+  TablePagination,
   TableRow,
   TextField,
   Typography,
@@ -22,7 +27,7 @@ import { getAuth } from "@/lib/auth-storage";
 import React, { useCallback, useEffect, useState } from "react";
 import { BeatLoader } from "react-spinners";
 import Swal from "sweetalert2";
-import { FiEdit2, FiEye, FiPlus, FiTrash2 } from "react-icons/fi";
+import { FiEdit2, FiEye, FiPlus, FiRefreshCw, FiSearch, FiTrash2 } from "react-icons/fi";
 
 function fileToDataUri(file) {
   return new Promise((resolve, reject) => {
@@ -63,6 +68,50 @@ export default function ClientsPage() {
   const [imageError, setImageError] = useState(false);
   const [saving, setSaving] = useState(false);
   const [viewingClient, setViewingClient] = useState(null);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [dateFilter, setDateFilter] = useState("all");
+
+  const handleChangePage = (_, newPage) => setPage(newPage);
+  const handleChangeRowsPerPage = (e) => {
+    setRowsPerPage(parseInt(e.target.value, 10));
+    setPage(0);
+  };
+
+  const filteredClients = clients.filter((row) => {
+    const q = (searchQuery || "").trim().toLowerCase();
+    if (q) {
+      const title = (row.title || "").toLowerCase();
+      const desc = (row.description || "").toLowerCase();
+      const url = (row.url || "").toLowerCase();
+      if (!title.includes(q) && !desc.includes(q) && !url.includes(q)) return false;
+    }
+    if (dateFilter !== "all" && row.createdAt) {
+      const d = new Date(row.createdAt);
+      const now = new Date();
+      const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      const todayEnd = new Date(todayStart);
+      todayEnd.setHours(23, 59, 59, 999);
+      if (dateFilter === "today") {
+        if (d < todayStart || d > todayEnd) return false;
+      } else if (dateFilter === "7") {
+        const weekAgo = new Date(todayStart);
+        weekAgo.setDate(weekAgo.getDate() - 7);
+        if (d < weekAgo || d > now) return false;
+      } else if (dateFilter === "30") {
+        const monthAgo = new Date(todayStart);
+        monthAgo.setDate(monthAgo.getDate() - 30);
+        if (d < monthAgo || d > now) return false;
+      }
+    }
+    return true;
+  });
+
+  const paginatedClients = filteredClients.slice(
+    page * rowsPerPage,
+    page * rowsPerPage + rowsPerPage
+  );
 
   const fetchClients = useCallback(async () => {
     if (!token) return;
@@ -70,6 +119,7 @@ export default function ClientsPage() {
     try {
       const res = await fetch("/api/clients", {
         headers: { Authorization: `Bearer ${token}` },
+        cache: "no-store",
       });
       const data = await res.json();
       if (data.success && Array.isArray(data.clients)) setClients(data.clients);
@@ -286,25 +336,115 @@ export default function ClientsPage() {
         <Typography component="h1" sx={{ fontSize: 24, fontWeight: 700, color: "#000", m: 0 }}>
           Clients
         </Typography>
-        <Button
-          variant="contained"
-          startIcon={<FiPlus size={18} />}
-          onClick={openAddDialog}
-          sx={{
-            bgcolor: primaryColor,
-            color: "#fff",
-            fontWeight: 600,
-            fontSize: 14,
-            py: 1,
-            px: 2,
-            borderRadius: 2,
-            textTransform: "none",
-            boxShadow: "none",
-            "&:hover": { bgcolor: primaryHover, boxShadow: "none" },
+        <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
+          <Button
+            startIcon={<FiRefreshCw size={18} />}
+            onClick={() => fetchClients()}
+            disabled={loading}
+            variant="outlined"
+            size="small"
+            sx={{
+              borderColor: bordergrayColor,
+              color: "#000",
+              textTransform: "none",
+              fontWeight: 600,
+              "&:hover": {
+                borderColor: primaryColor,
+                color: primaryColor,
+                bgcolor: "rgba(138,56,245,0.06)",
+              },
+            }}
+          >
+            Refresh
+          </Button>
+          <Button
+            variant="contained"
+            startIcon={<FiPlus size={18} />}
+            onClick={openAddDialog}
+            sx={{
+              bgcolor: primaryColor,
+              color: "#fff",
+              fontWeight: 600,
+              fontSize: 14,
+              py: 1,
+              px: 2,
+              borderRadius: 2,
+              textTransform: "none",
+              boxShadow: "none",
+              "&:hover": { bgcolor: primaryHover, boxShadow: "none" },
+            }}
+          >
+            Add Client
+          </Button>
+        </Box>
+      </Box>
+
+      <Box
+        sx={{
+          display: "flex",
+          flexWrap: { xs: "wrap", sm: "nowrap" },
+          gap: 1,
+          mb: 2,
+          alignItems: "center",
+          overflow: "hidden",
+        }}
+      >
+        <TextField
+          placeholder="Search..."
+          value={searchQuery}
+          onChange={(e) => {
+            setSearchQuery(e.target.value);
+            setPage(0);
           }}
-        >
-          Add Client
-        </Button>
+          size="small"
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <FiSearch size={18} style={{ color: "rgba(0,0,0,0.5)" }} />
+              </InputAdornment>
+            ),
+          }}
+          sx={{
+            width: { xs: "100%", sm: "auto" },
+            flex: { xs: "1 1 100%", sm: "none" },
+            minWidth: 0,
+            "& .MuiOutlinedInput-input": { minWidth: 0 },
+            "& .MuiOutlinedInput-root": {
+              borderRadius: 2,
+              bgcolor: "#fff",
+              "& fieldset": { borderColor: bordergrayColor },
+              "&:hover fieldset": { borderColor: primaryColor },
+              "&.Mui-focused fieldset": { borderColor: primaryColor, borderWidth: 2 },
+            },
+          }}
+        />
+        <FormControl size="small" sx={{ flex: { xs: "1 1 0", sm: "none" }, minWidth: { xs: 0, sm: 160 }, flexShrink: 0 }}>
+          <Select
+            value={dateFilter}
+            displayEmpty
+            onChange={(e) => {
+              setDateFilter(e.target.value);
+              setPage(0);
+            }}
+            sx={{
+              borderRadius: 2,
+              bgcolor: "#fff",
+              "& .MuiOutlinedInput-notchedOutline": { borderColor: bordergrayColor },
+              "&:hover .MuiOutlinedInput-notchedOutline": { borderColor: primaryColor },
+              "&.Mui-focused .MuiOutlinedInput-notchedOutline": { borderColor: primaryColor },
+            }}
+          >
+            <MenuItem value="all">All time</MenuItem>
+            <MenuItem value="today">Today</MenuItem>
+            <MenuItem value="7">Last 7 days</MenuItem>
+            <MenuItem value="30">Last 30 days</MenuItem>
+          </Select>
+        </FormControl>
+        {(searchQuery.trim() || dateFilter !== "all") && (
+          <Typography sx={{ fontSize: 13, color: "rgba(0,0,0,0.6)", flexShrink: 0, whiteSpace: "nowrap", flexBasis: { xs: "100%", sm: "auto" } }}>
+            {filteredClients.length} result{filteredClients.length !== 1 ? "s" : ""}
+          </Typography>
+        )}
       </Box>
 
       <Box
@@ -343,8 +483,16 @@ export default function ClientsPage() {
               Add first client
             </Button>
           </Box>
+        ) : filteredClients.length === 0 ? (
+          <Box sx={{ py: 6, textAlign: "center" }}>
+            <Typography sx={{ color: "rgba(0,0,0,0.5)", fontSize: 15 }}>
+              No results match your search or filter.
+            </Typography>
+          </Box>
         ) : (
-          <Table size="medium">
+          <>
+            <Box sx={{ overflowX: "auto", width: "100%" }}>
+              <Table size="medium" sx={{ minWidth: 640 }}>
             <TableHead>
               <TableRow sx={{ bgcolor: bggrayColor }}>
                 <TableCell sx={{ fontWeight: 700, color: "#000", width: 80 }}>Image</TableCell>
@@ -356,7 +504,7 @@ export default function ClientsPage() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {clients.map((row) => {
+              {paginatedClients.map((row) => {
                 const isDeleting = deletingId === row._id;
                 return (
                   <TableRow key={row._id} sx={{ "&:hover": { bgcolor: "rgba(0,0,0,0.02)" } }}>
@@ -411,7 +559,30 @@ export default function ClientsPage() {
                 );
               })}
             </TableBody>
-          </Table>
+              </Table>
+            </Box>
+            <TablePagination
+              component="div"
+              count={filteredClients.length}
+              page={page}
+              onPageChange={handleChangePage}
+              rowsPerPage={rowsPerPage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+              rowsPerPageOptions={[5, 10, 25, 50]}
+              sx={{
+                borderTop: `1px solid ${bordergrayColor}`,
+                bgcolor: bggrayColor,
+                "& .MuiTablePagination-selectLabel": { fontSize: 14, color: "rgba(0,0,0,0.7)" },
+                "& .MuiTablePagination-displayedRows": { fontSize: 14, color: "#000", fontWeight: 500 },
+                "& .MuiTablePagination-select": { fontSize: 14 },
+                "& .MuiIconButton-root": {
+                  color: "rgba(0,0,0,0.7)",
+                  "&:hover": { bgcolor: "rgba(138,56,245,0.08)", color: primaryColor },
+                  "&.Mui-disabled": { color: "rgba(0,0,0,0.26)" },
+                },
+              }}
+            />
+          </>
         )}
       </Box>
 

@@ -10,7 +10,7 @@ export async function GET(req) {
       return NextResponse.json({ success: false, message: "Unauthorized" }, { status: 401 });
     }
     await connectDB();
-    const clients = await Client.find({ userId: user._id })
+    const clients = await Client.find({})
       .sort({ createdAt: -1 })
       .lean();
     return NextResponse.json({ success: true, clients });
