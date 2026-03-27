@@ -8,10 +8,11 @@ import ApartmentRoundedIcon from "@mui/icons-material/ApartmentRounded";
 import EngineeringRoundedIcon from "@mui/icons-material/EngineeringRounded";
 import StarRoundedIcon from "@mui/icons-material/StarRounded";
 import ArrowForwardRoundedIcon from "@mui/icons-material/ArrowForwardRounded";
-import { Box, Button, Container, Typography } from "@mui/material";
+import { Box, Breadcrumbs, Button, Container, Typography } from "@mui/material";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
+import { FiHome } from "react-icons/fi";
 
 const SUB_ICONS = [LayersRoundedIcon, HandymanRoundedIcon, ApartmentRoundedIcon, EngineeringRoundedIcon];
 
@@ -112,20 +113,63 @@ export default function ServiceDetailView({ service }) {
         </Box>
 
         <Container maxWidth="lg" sx={{ position: "relative", zIndex: 1, py: { xs: 6, md: 10 } }}>
-          <Link href="/services" style={{ textDecoration: "none" }}>
-            <Typography
-              sx={{
-                display: "inline-block",
+          <Breadcrumbs
+            aria-label="breadcrumb"
+            sx={{
+              mb: 3,
+              color: "rgba(255,255,255,0.82)",
+              "& .MuiBreadcrumbs-separator": { color: "rgba(255,255,255,0.45)" },
+              maxWidth: "100%",
+              "& a": {
+                transition: "color 0.2s ease",
+              },
+              "& a:hover": {
+                color: primaryColor,
+              },
+            }}
+          >
+            <Link
+              href="/"
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 6,
+                color: "inherit",
+                textDecoration: "none",
                 fontSize: 13,
                 fontWeight: 600,
-                color: "rgba(255,255,255,0.85)",
-                mb: 3,
-                "&:hover": { color: primaryColor },
               }}
             >
-              ← Back to Services
+              <FiHome size={14} />
+              Home
+            </Link>
+            <Link
+              href="/services"
+              style={{
+                color: "inherit",
+                textDecoration: "none",
+                fontSize: 13,
+                fontWeight: 600,
+              }}
+            >
+              Services
+            </Link>
+            <Typography
+              component="span"
+              title={service.title || "Service"}
+              sx={{
+                color: "rgba(255,255,255,0.95)",
+                fontWeight: 600,
+                fontSize: 13,
+                maxWidth: { xs: "10rem", sm: "20rem", md: "28rem" },
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
+              }}
+            >
+              {service.title || "Service"}
             </Typography>
-          </Link>
+          </Breadcrumbs>
 
           <motion.div {...fadeUp}>
             <Box
@@ -232,9 +276,25 @@ export default function ServiceDetailView({ service }) {
                       display: "flex",
                       gap: 2,
                       alignItems: "flex-start",
+                      cursor: "default",
+                      transition:
+                        "transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.35s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.35s ease, background-color 0.35s ease",
+                      "&:hover": {
+                        transform: "translateY(-5px)",
+                        bgcolor: "#fff",
+                        borderColor: "rgba(251, 134, 30, 0.32)",
+                        boxShadow:
+                          "0 16px 40px rgba(15, 23, 42, 0.1), 0 0 0 1px rgba(251, 134, 30, 0.12)",
+                      },
+                      "&:hover .wyg-check": {
+                        transform: "scale(1.08)",
+                        bgcolor: "rgb(231, 100, 0)",
+                        boxShadow: "0 6px 18px rgba(251, 134, 30, 0.45)",
+                      },
                     }}
                   >
                     <Box
+                      className="wyg-check"
                       sx={{
                         width: 40,
                         height: 40,
@@ -244,6 +304,8 @@ export default function ServiceDetailView({ service }) {
                         alignItems: "center",
                         justifyContent: "center",
                         flexShrink: 0,
+                        transition:
+                          "transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.35s ease, box-shadow 0.35s ease",
                       }}
                     >
                       <CheckRoundedIcon sx={{ color: "#fff", fontSize: 22 }} />
@@ -302,9 +364,26 @@ export default function ServiceDetailView({ service }) {
                         p: 3,
                         boxShadow: "0 12px 40px rgba(15,23,42,0.08)",
                         border: "1px solid rgba(15,23,42,0.06)",
+                        cursor: "default",
+                        transition:
+                          "transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.35s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.35s ease",
+                        "&:hover": {
+                          transform: "translateY(-6px)",
+                          borderColor: "rgba(251, 134, 30, 0.28)",
+                          boxShadow:
+                            "0 22px 50px rgba(15, 23, 42, 0.12), 0 0 0 1px rgba(251, 134, 30, 0.15)",
+                        },
+                        "&:hover .sub-icon-wrap": {
+                          bgcolor: "rgba(251, 134, 30, 0.28)",
+                          transform: "scale(1.06)",
+                        },
+                        "&:hover .sub-icon-wrap svg": {
+                          color: "rgb(231, 100, 0)",
+                        },
                       }}
                     >
                       <Box
+                        className="sub-icon-wrap"
                         sx={{
                           width: 48,
                           height: 48,
@@ -314,9 +393,11 @@ export default function ServiceDetailView({ service }) {
                           alignItems: "center",
                           justifyContent: "center",
                           mb: 2,
+                          transition:
+                            "transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.35s ease",
                         }}
                       >
-                        <Icon sx={{ color: primaryColor, fontSize: 28 }} />
+                        <Icon sx={{ color: primaryColor, fontSize: 28, transition: "color 0.35s ease" }} />
                       </Box>
                       <Typography sx={{ fontSize: 20, fontWeight: 800, color: "rgb(15, 23, 42)", mb: 1 }}>
                         {sub.title || `Phase ${i + 1}`}
@@ -410,9 +491,32 @@ export default function ServiceDetailView({ service }) {
                       borderRadius: 2,
                       bgcolor: "rgba(255,255,255,0.06)",
                       border: "1px solid rgba(255,255,255,0.1)",
+                      cursor: "default",
+                      transition:
+                        "transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease",
+                      "&:hover": {
+                        transform: "translateY(-4px)",
+                        bgcolor: "rgba(255,255,255,0.12)",
+                        borderColor: "rgba(251, 134, 30, 0.45)",
+                        boxShadow: "0 14px 36px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(251, 134, 30, 0.2)",
+                      },
+                      "&:hover .benefit-star": {
+                        transform: "scale(1.12) rotate(-6deg)",
+                        color: "rgb(255, 184, 116)",
+                        filter: "drop-shadow(0 2px 8px rgba(251, 134, 30, 0.55))",
+                      },
                     }}
                   >
-                    <StarRoundedIcon sx={{ color: primaryColor, fontSize: 26, flexShrink: 0, mt: 0.2 }} />
+                    <StarRoundedIcon
+                      className="benefit-star"
+                      sx={{
+                        color: primaryColor,
+                        fontSize: 26,
+                        flexShrink: 0,
+                        mt: 0.2,
+                        transition: "transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), color 0.35s ease, filter 0.35s ease",
+                      }}
+                    />
                     <Typography sx={{ fontSize: 15, lineHeight: 1.55, color: "rgba(255,255,255,0.92)" }}>{line}</Typography>
                   </Box>
                 </Box>
