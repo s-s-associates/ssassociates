@@ -11,13 +11,35 @@ const STEP_COLORS = [primaryColor, secondaryColor, '#f97316', '#22c55e'];
 
 const STEP_EASE = [0.22, 1, 0.36, 1];
 
-const STEP_IMAGE = '/images/about/about-banner-bg.jpg';
-
 const steps = [
-  { id: 1, label: 'Consultation & Assessment', image: STEP_IMAGE, description: 'We begin with a comprehensive consultation to understand your specific needs, assess your current infrastructure, and identify opportunities for improvement.' },
-  { id: 2, label: 'Design & Planning', image: STEP_IMAGE, description: 'Our expert team creates customized solutions tailored to your requirements, ensuring optimal integration and future scalability.' },
-  { id: 3, label: 'Installation & Implementation', image: STEP_IMAGE, description: 'Professional installation by certified technicians with minimal disruption to your operations, following industry best practices.' },
-  { id: 4, label: 'Support & Maintenance', image: STEP_IMAGE, description: 'Ongoing support, regular maintenance, and system updates to ensure peak performance and longevity of your solutions.' },
+  {
+    id: 1,
+    label: 'Consultation & Site Assessment',
+    image: "/images/about/our-process/step1.jpg",
+    description:
+      'We meet with you on site to understand your vision, budget, and timeline. We review the property, local codes, and feasibility so your project starts on solid ground.',
+  },
+  {
+    id: 2,
+    label: 'Design & Estimation',
+    image: "/images/about/our-process/step2.jpg",
+    description:
+      'Our team develops layouts, material options, and a clear scope of work. You receive transparent estimates and a phased plan before any build begins.',
+  },
+  {
+    id: 3,
+    label: 'Construction & Quality Control',
+    image: "/images/about/our-process/step3.jpg",
+    description:
+      'Skilled crews execute the build with strict safety standards and regular site inspections. We coordinate trades, manage schedules, and keep you updated at every milestone.',
+  },
+  {
+    id: 4,
+    label: 'Support & Maintenance',
+    image: "/images/about/our-process/step4.jpg",
+    description:
+      'We walk you through the finished space, address punch-list items, and provide documentation. Optional maintenance and warranty support help protect your investment.',
+  },
 ];
 
 const OurProcess = () => {
