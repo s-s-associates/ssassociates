@@ -75,6 +75,18 @@ export default function ServiceDetailView({ service }) {
     service.conclusion?.trim() ||
     "We deliver quality, transparency, and engineering rigor so your project stands on a solid foundation.";
 
+  const descText = (service.description || "").trim();
+  const descFallback = "Learn how we plan, build, and hand over with clarity at every stage.";
+  const fullDescForHero = descText || descFallback;
+  const HERO_WORD_LIMIT = 20;
+  const descWords = fullDescForHero.trim().split(/\s+/).filter(Boolean);
+  const isLongByWords = descWords.length > HERO_WORD_LIMIT;
+  const heroBannerDescription = isLongByWords
+    ? `${descWords.slice(0, HERO_WORD_LIMIT).join(" ")}…`
+    : fullDescForHero;
+  /** Full “Overview” block below when more than 20 words */
+  const showFullOverviewBelow = isLongByWords;
+
   const scrollToDeliverables = () => {
     document.getElementById("what-you-get")?.scrollIntoView({ behavior: "smooth" });
   };
@@ -205,11 +217,12 @@ export default function ServiceDetailView({ service }) {
                 fontSize: { xs: 15, sm: 17 },
                 lineHeight: 1.65,
                 color: "rgba(255,255,255,0.88)",
-                maxWidth: 640,
+                maxWidth: 720,
                 mb: 3,
+                wordBreak: "break-word",
               }}
             >
-              {service.description || "Learn how we plan, build, and hand over with clarity at every stage."}
+              {heroBannerDescription}
             </Typography>
             <Button
               onClick={scrollToDeliverables}
@@ -233,6 +246,8 @@ export default function ServiceDetailView({ service }) {
           </motion.div>
         </Container>
       </Box>
+
+   
 
       {/* What You Get */}
       {whatYouGet.length > 0 && (
@@ -320,7 +335,56 @@ export default function ServiceDetailView({ service }) {
           </Container>
         </Box>
       )}
-
+   {/* Full description — below hero when copy is long */}
+   {showFullOverviewBelow ? (
+        <Box
+          id="service-overview"
+          component="section"
+          sx={{
+            bgcolor: secondaryColor,
+            textAlign: "center",
+            py: { xs: 4, md: 5 },
+            scrollMarginTop: { xs: 10, sm: 11 },
+            color: whiteColor,
+          }}
+        >
+          <Container maxWidth="lg">
+            <Box
+              sx={{
+                // borderLeft: `4px solid ${primaryColor}`,
+                pl: { xs: 2.5, sm: 3 },
+                py: { xs: 0.5, sm: 0 },
+              }}
+            >
+              <Typography
+                component="p"
+                sx={{
+                  fontSize: 14,
+                  fontWeight: 700,
+                  letterSpacing: "0.2em",
+                  color: primaryColor,
+                  textTransform: "uppercase",
+                  mb: 1.5,
+                }}
+              >
+                Overview
+              </Typography>
+              <Typography
+                component="div"
+                sx={{
+                  color: whiteColor,
+                  fontSize: { xs: 15, sm: 16 },
+                  lineHeight: 1.8,
+                  whiteSpace: "pre-wrap",
+                  wordBreak: "break-word",
+                }}
+              >
+                {fullDescForHero}
+              </Typography>
+            </Box>
+          </Container>
+        </Box>
+      ) : null}
       {/* Sub-services */}
       {subServices.length > 0 && (
         <Box component="section" sx={{ py: { xs: 7, md: 9 }, bgcolor: "#f1f5f9" }}>
