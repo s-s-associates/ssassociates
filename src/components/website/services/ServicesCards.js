@@ -1,10 +1,11 @@
 "use client";
 
 import React, { useRef, useState, useCallback, useEffect } from "react";
-import { Box, Typography, IconButton, useTheme, useMediaQuery } from "@mui/material";
+import { Box, Typography, IconButton, useTheme, useMediaQuery, Skeleton } from "@mui/material";
 import ChevronLeftRoundedIcon from "@mui/icons-material/ChevronLeftRounded";
 import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
 import Image from "next/image";
+import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { whiteColor, primaryColor } from "@/components/utils/Colors";
 
@@ -14,78 +15,47 @@ const SECTION_TITLE = "Our Area of Expertise Space";
 const SECTION_DESCRIPTION =
   "ADM Design and Build: A trusted leader in office renovation and integrated design and build services, providing seamless.";
 
-const SERVICES = [
-  {
-    id: "1",
-    title: "Move & Migration Management",
-    description:
-      "ADM values every client and we are always ready to serve your needs from sales, renovation process, aftersales follow up and maintenance of your space.",
-    image: "/images/projects/EY-Fit-Out-Thumbnail-min.webp",
-  },
-  {
-    id: "2",
-    title: "After Sales / Facility Maintenance Services",
-    description:
-      "ADM values every client and we are always ready to serve your needs from sales, renovation process, aftersales follow up and maintenance of your space.",
-    image: "/images/projects/thumbnail-min.webp",
-  },
-  {
-    id: "3",
-    title: "Pre-Release Planning and Site Survey",
-    description:
-      "ADM values every client and we are always ready to serve your needs from sales, renovation process, aftersales follow up and maintenance of your space.",
-    image: "/images/projects/somerville-metro-small-res-108-min.webp",
-  },
-  {
-    id: "4",
-    title: "Workplace Study Strategic Facilities Planning",
-    description:
-      "ADM values every client and we are always ready to serve your needs from sales, renovation process, aftersales follow up and maintenance of your space.",
-    image: "/images/projects/Jacobs-Dublin-Office-Fit-Out-Thumbnail-min.webp",
-  },
-  {
-    id: "5",
-    title: "Office Fit-Out & Joinery",
-    description:
-      "ADM values every client and we are always ready to serve your needs from sales, renovation process, aftersales follow up and maintenance of your space.",
-    image: "/images/projects/rsm-project-supporting.webp",
-  },
-  {
-    id: "6",
-    title: "Design & Build Solutions",
-    description:
-      "ADM values every client and we are always ready to serve your needs from sales, renovation process, aftersales follow up and maintenance of your space.",
-    image: "/images/projects/EY-Fit-Out-Thumbnail-min.webp",
-  },
-  {
-    id: "7",
-    title: "Project Management",
-    description:
-      "ADM values every client and we are always ready to serve your needs from sales, renovation process, aftersales follow up and maintenance of your space.",
-    image: "/images/projects/thumbnail-min.webp",
-  },
-  {
-    id: "8",
-    title: "Interior Design Consultancy",
-    description:
-      "ADM values every client and we are always ready to serve your needs from sales, renovation process, aftersales follow up and maintenance of your space.",
-    image: "/images/projects/somerville-metro-small-res-108-min.webp",
-  },
-];
+const FALLBACK_IMAGE = "/images/projects/EY-Fit-Out-Thumbnail-min.webp";
 
 function ServicesCards() {
   const theme = useTheme();
-  const isLg = useMediaQuery(theme.breakpoints.up("lg")); 
-  const isMd = useMediaQuery(theme.breakpoints.up("md")); 
+  const isLg = useMediaQuery(theme.breakpoints.up("lg"));
+  const isMd = useMediaQuery(theme.breakpoints.up("md"));
   const scrollRef = useRef(null);
   const containerRef = useRef(null);
   const scrollIndexRef = useRef(0);
   const [scrollIndex, setScrollIndex] = useState(0);
   const [containerWidth, setContainerWidth] = useState(0);
+  const [services, setServices] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [fetchError, setFetchError] = useState(null);
 
   const cardsPerView = isLg ? 4 : isMd ? 2 : 1;
-  const maxIndex = Math.max(0, SERVICES.length - cardsPerView);
+  const maxIndex = Math.max(0, services.length - cardsPerView);
   scrollIndexRef.current = scrollIndex;
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await fetch("/api/services", { cache: "no-store" });
+        const data = await res.json();
+        if (!res.ok || !data.success) {
+          throw new Error(data.message || "Failed to load services");
+        }
+        if (!cancelled) {
+          setServices(Array.isArray(data.services) ? data.services : []);
+        }
+      } catch (e) {
+        if (!cancelled) setFetchError(e.message || "Something went wrong");
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   useEffect(() => {
     const el = containerRef.current;
@@ -100,9 +70,7 @@ function ServicesCards() {
 
   const totalGap = GAP * Math.max(0, cardsPerView - 1);
   const cardWidth =
-    containerWidth > 0
-      ? (containerWidth - totalGap) / cardsPerView
-      : isLg ? 342 : isMd ? 360 : 280;
+    containerWidth > 0 ? (containerWidth - totalGap) / cardsPerView : isLg ? 342 : isMd ? 360 : 280;
   const step = cardWidth + GAP;
 
   const scrollToIndex = useCallback(
@@ -125,16 +93,16 @@ function ServicesCards() {
   }, [maxIndex, step]);
 
   useEffect(() => {
+    if (services.length === 0 || maxIndex < 1) return;
     const id = setInterval(() => {
       const next = scrollIndexRef.current >= maxIndex ? 0 : scrollIndexRef.current + 1;
       scrollToIndex(next);
     }, 3000);
     return () => clearInterval(id);
-  }, [maxIndex, scrollToIndex]);
+  }, [maxIndex, scrollToIndex, services.length]);
 
   const paginationCount = maxIndex + 1;
-  
-  const activeDot = Math.min(scrollIndex, paginationCount - 1);
+  const activeDot = Math.min(scrollIndex, Math.max(0, paginationCount - 1));
 
   return (
     <Box
@@ -181,102 +149,142 @@ function ServicesCards() {
           </Typography>
         </Box>
 
-        <Box
-          ref={scrollRef}
-          onScroll={handleScroll}
-          sx={{
-            display: "flex",
-            gap: GAP,
-            overflowX: "auto",
-            scrollSnapType: "x mandatory",
-            scrollbarWidth: "none",
-            msOverflowStyle: "none",
-            "&::-webkit-scrollbar": { display: "none" },
-            pb: 1,
-          }}
-        >
-          {SERVICES.map((service) => (
-            <ServiceCard key={service.id} service={service} cardWidth={cardWidth} />
-          ))}
-        </Box>
+        {fetchError && (
+          <Typography sx={{ color: "rgba(255,255,255,0.75)", mb: 2 }}>{fetchError}</Typography>
+        )}
 
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            mt: 4,
-            px: 0,
-          }}
-        >
-          <Box sx={{ display: "flex", gap: 0.75, alignItems: "center" }}>
-            {Array.from({ length: paginationCount }).map((_, i) => (
-              <Box
+        {loading && (
+          <Box sx={{ display: "flex", gap: GAP, pb: 1 }}>
+            {Array.from({ length: cardsPerView }).map((_, i) => (
+              <Skeleton
                 key={i}
+                variant="rounded"
                 sx={{
-                  width: i === activeDot ? 20 : 16,
-                  height: 3,
-                  borderRadius: 0,
-                  backgroundColor: i === activeDot ? primaryColor : "rgba(255,255,255,0.25)",
-                  transition: "background-color 0.2s ease, width 0.2s ease",
+                  flex: `0 0 ${cardWidth}px`,
+                  minWidth: cardWidth,
+                  height: (cardWidth * 4) / 3,
+                  bgcolor: "rgba(255,255,255,0.08)",
                 }}
               />
             ))}
           </Box>
+        )}
 
-          <Box sx={{ display: "flex", gap: 0.5 }}>
-            <IconButton
-              onClick={() => scrollToIndex(scrollIndex - 1)}
-              disabled={scrollIndex <= 0}
+        {!loading && services.length === 0 && !fetchError && (
+          <Typography sx={{ color: "rgba(255,255,255,0.8)" }}>No services to show yet.</Typography>
+        )}
+
+        {!loading && services.length > 0 && (
+          <>
+            <Box
+              ref={scrollRef}
+              onScroll={handleScroll}
               sx={{
-                width: 44,
-                height: 44,
-                border: "1px solid rgba(255,255,255,0.6)",
-                borderRadius: "50%",
-                color: whiteColor,
-                "&:hover": {
-                  borderColor: whiteColor,
-                  backgroundColor: "rgba(255,255,255,0.08)",
-                },
-                "&.Mui-disabled": {
-                  borderColor: "rgba(255,255,255,0.2)",
-                  color: "rgba(255,255,255,0.3)",
-                },
+                display: "flex",
+                gap: GAP,
+                overflowX: "auto",
+                scrollSnapType: "x mandatory",
+                scrollbarWidth: "none",
+                msOverflowStyle: "none",
+                "&::-webkit-scrollbar": { display: "none" },
+                pb: 1,
               }}
             >
-              <ChevronLeftRoundedIcon sx={{ fontSize: 24 }} />
-            </IconButton>
-            <IconButton
-              onClick={() => scrollToIndex(scrollIndex + 1)}
-              disabled={scrollIndex >= maxIndex}
+              {services.map((service, index) => (
+                <Link
+                  key={String(service._id)}
+                  href={`/services/${service._id}`}
+                  style={{ textDecoration: "none", color: "inherit" }}
+                >
+                  <ServiceCard
+                    service={service}
+                    cardWidth={cardWidth}
+                    priority={index < cardsPerView}
+                  />
+                </Link>
+              ))}
+            </Box>
+
+            <Box
               sx={{
-                width: 44,
-                height: 44,
-                border: "1px solid rgba(255,255,255,0.6)",
-                borderRadius: "50%",
-                color: whiteColor,
-                "&:hover": {
-                  borderColor: whiteColor,
-                  backgroundColor: "rgba(255,255,255,0.08)",
-                },
-                "&.Mui-disabled": {
-                  borderColor: "rgba(255,255,255,0.2)",
-                  color: "rgba(255,255,255,0.3)",
-                },
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                mt: 4,
+                px: 0,
               }}
             >
-              <ChevronRightRoundedIcon sx={{ fontSize: 24 }} />
-            </IconButton>
-          </Box>
-        </Box>
+              <Box sx={{ display: "flex", gap: 0.75, alignItems: "center" }}>
+                {Array.from({ length: paginationCount }).map((_, i) => (
+                  <Box
+                    key={i}
+                    sx={{
+                      width: i === activeDot ? 20 : 16,
+                      height: 3,
+                      borderRadius: 0,
+                      backgroundColor: i === activeDot ? primaryColor : "rgba(255,255,255,0.25)",
+                      transition: "background-color 0.2s ease, width 0.2s ease",
+                    }}
+                  />
+                ))}
+              </Box>
+
+              <Box sx={{ display: "flex", gap: 0.5 }}>
+                <IconButton
+                  onClick={() => scrollToIndex(scrollIndex - 1)}
+                  disabled={scrollIndex <= 0}
+                  sx={{
+                    width: 44,
+                    height: 44,
+                    border: "1px solid rgba(255,255,255,0.6)",
+                    borderRadius: "50%",
+                    color: whiteColor,
+                    "&:hover": {
+                      borderColor: whiteColor,
+                      backgroundColor: "rgba(255,255,255,0.08)",
+                    },
+                    "&.Mui-disabled": {
+                      borderColor: "rgba(255,255,255,0.2)",
+                      color: "rgba(255,255,255,0.3)",
+                    },
+                  }}
+                >
+                  <ChevronLeftRoundedIcon sx={{ fontSize: 24 }} />
+                </IconButton>
+                <IconButton
+                  onClick={() => scrollToIndex(scrollIndex + 1)}
+                  disabled={scrollIndex >= maxIndex}
+                  sx={{
+                    width: 44,
+                    height: 44,
+                    border: "1px solid rgba(255,255,255,0.6)",
+                    borderRadius: "50%",
+                    color: whiteColor,
+                    "&:hover": {
+                      borderColor: whiteColor,
+                      backgroundColor: "rgba(255,255,255,0.08)",
+                    },
+                    "&.Mui-disabled": {
+                      borderColor: "rgba(255,255,255,0.2)",
+                      color: "rgba(255,255,255,0.3)",
+                    },
+                  }}
+                >
+                  <ChevronRightRoundedIcon sx={{ fontSize: 24 }} />
+                </IconButton>
+              </Box>
+            </Box>
+          </>
+        )}
       </Box>
     </Box>
   );
 }
 
-function ServiceCard({ service, cardWidth }) {
+function ServiceCard({ service, cardWidth, priority = false }) {
   const [hovered, setHovered] = useState(false);
   const width = typeof cardWidth === "number" && cardWidth > 0 ? cardWidth : 280;
+  const imageSrc = service.imageUrl?.trim() || FALLBACK_IMAGE;
 
   return (
     <Box
@@ -290,6 +298,7 @@ function ServiceCard({ service, cardWidth }) {
         overflow: "hidden",
         scrollSnapAlign: "start",
         aspectRatio: "3 / 4",
+        cursor: "pointer",
       }}
     >
       <Box
@@ -299,10 +308,12 @@ function ServiceCard({ service, cardWidth }) {
         }}
       >
         <Image
-          src={service.image}
-          alt={service.title}
+          src={imageSrc}
+          alt={service.title || "Service"}
           fill
           sizes="(max-width: 899px) 90vw, (max-width: 1199px) 45vw, 25vw"
+          priority={priority}
+          fetchPriority={priority ? "high" : "auto"}
           style={{ objectFit: "cover" }}
         />
         <Box
@@ -364,7 +375,7 @@ function ServiceCard({ service, cardWidth }) {
               sx={{
                 fontWeight: 700,
                 fontSize: 18,
-                mb:2,
+                mb: 2,
                 lineHeight: 1.3,
                 color: whiteColor,
               }}
@@ -379,7 +390,8 @@ function ServiceCard({ service, cardWidth }) {
                 color: "rgba(255,255,255,0.95)",
               }}
             >
-              {service.description}
+              {service.description ||
+                "Explore this service for full scope, deliverables, and how we support your project."}
             </Typography>
           </motion.div>
         )}

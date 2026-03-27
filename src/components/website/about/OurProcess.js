@@ -205,7 +205,15 @@ const OurProcess = () => {
             <Grid size={{ xs: 12, md: 6 }}>
               <motion.div initial={{ opacity: 0, x: 20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.75, ease: STEP_EASE, delay: 0.08 }}>
                 <Box sx={{ position: 'relative', width: '100%', height: { xs: 200, md: 280 }, borderRadius: '16px', overflow: 'hidden', border: `2px solid ${secondaryColor}30` }}>
-                  <Image src={steps[0].image} alt={steps[0].label} fill style={{ objectFit: 'cover' }} sizes="(max-width: 768px) 100vw, 50vw" />
+                  <Image
+                    src={steps[0].image}
+                    alt={steps[0].label}
+                    fill
+                    priority
+                    fetchPriority="high"
+                    style={{ objectFit: "cover" }}
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                  />
                 </Box>
               </motion.div>
             </Grid>

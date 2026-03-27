@@ -21,11 +21,12 @@ function Banner() {
         justifyContent: "center",
       }}
     >
-      {/* Background image */}
+      {/* Background image — CSS sizing matches original (cover + center) */}
       <Box
         sx={{
           position: "absolute",
           inset: 0,
+          zIndex: 0,
           backgroundImage: "url(/images/projects/rsm-project-supporting.webp)",
           backgroundSize: "cover",
           backgroundPosition: "center",

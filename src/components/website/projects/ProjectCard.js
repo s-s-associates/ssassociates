@@ -167,8 +167,9 @@ export default function ProjectCard() {
 
         {!loading &&
           !fetchError &&
-          projects.map((project) => {
+          projects.map((project, index) => {
             const showClientLocation = hasClientLocationLine(project);
+            const imagePriority = index < 6;
             return (
             <Grid size={{ xs: 12, sm: 6, md: 4 }} key={project.key}>
               <Box
@@ -228,6 +229,8 @@ export default function ProjectCard() {
                       alt={project.title}
                       fill
                       sizes="(max-width: 600px) 100vw, (max-width: 960px) 50vw, 33vw"
+                      priority={imagePriority}
+                      fetchPriority={imagePriority ? "high" : "auto"}
                       style={{ objectFit: "cover" }}
                     />
                   </Box>

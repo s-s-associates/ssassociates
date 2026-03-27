@@ -146,7 +146,7 @@ function HomeBanner() {
         })}
       </Box>
 
-      {/* Person image as background - upper layer */}
+      {/* Person image — original sizing: height 120% of banner, centered */}
       <Box
         sx={{
           position: "absolute",
@@ -389,6 +389,8 @@ function HomeBanner() {
           alt="7.5K Excellence, 90% Rating"
           width={280}
           height={100}
+          loading="lazy"
+          fetchPriority="low"
           style={{ width: "auto", height: "auto", maxHeight: 90 }}
           sizes="(max-width: 600px) 200px, 280px"
         />

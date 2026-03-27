@@ -21,11 +21,12 @@ function Banner() {
         justifyContent: "center",
       }}
     >
-      {/* Background image */}
+      {/* Background image — CSS sizing matches original (cover + center) */}
       <Box
         sx={{
           position: "absolute",
           inset: 0,
+          zIndex: 0,
           backgroundImage: "url(/images/projects/Jacobs-Dublin-Office-Fit-Out-Thumbnail-min.webp)",
           backgroundSize: "cover",
           backgroundPosition: "center",

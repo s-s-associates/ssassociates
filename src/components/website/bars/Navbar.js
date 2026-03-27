@@ -166,6 +166,8 @@ function Navbar() {
                     alt="S&S Associates"
                     width={40}
                     height={40}
+                    priority
+                    fetchPriority="high"
                     style={{ objectFit: "contain" }}
                   />
                 </Link>
