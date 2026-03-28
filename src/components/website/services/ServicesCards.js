@@ -11,9 +11,9 @@ import { whiteColor, primaryColor } from "@/components/utils/Colors";
 
 const GAP = 2;
 
-const SECTION_TITLE = "Our Area of Expertise Space";
+const SECTION_TITLE = "Our Services";
 const SECTION_DESCRIPTION =
-  "ADM Design and Build: A trusted leader in office renovation and integrated design and build services, providing seamless.";
+  "SS Associates: A trusted leader in office renovation and integrated design and build services, providing seamless.";
 
 const FALLBACK_IMAGE = "/images/projects/EY-Fit-Out-Thumbnail-min.webp";
 
