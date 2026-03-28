@@ -97,7 +97,7 @@ function CoreValues() {
         <Typography
           component="h2"
           sx={{
-            fontFamily: "var(--font-plus-jakarta), 'Plus Jakarta Sans', sans-serif",
+            fontFamily: "var(--font-app)",
             fontWeight: 800,
             fontSize: { xs: 28, sm: 34, md: 42 },
             lineHeight: 1.2,
@@ -186,7 +186,7 @@ function CoreValues() {
             <Typography
               component="h3"
               sx={{
-                fontFamily: "var(--font-plus-jakarta), 'Plus Jakarta Sans', sans-serif",
+                fontFamily: "var(--font-app)",
                 fontWeight: 700,
                 fontSize: 16,
                 color: secondaryColor,

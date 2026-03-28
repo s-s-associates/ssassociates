@@ -235,7 +235,7 @@ function HomeBanner() {
           sx={{
             color: "#fff",
             fontFamily:
-              "var(--font-plus-jakarta), 'Plus Jakarta Sans', sans-serif",
+              "var(--font-app)",
             fontWeight: 900,
             fontSize: { xs: 38, sm: 46, md: 54, lg: 62 },
             lineHeight: 1.15,
@@ -258,7 +258,7 @@ function HomeBanner() {
           sx={{
             color: "#fff",
             fontFamily:
-              "var(--font-plus-jakarta), 'Plus Jakarta Sans', sans-serif",
+              "var(--font-app)",
             fontWeight: 400,
             fontSize: { xs: 14, sm: 15, md: 16 },
             lineHeight: 1.6,
@@ -352,7 +352,7 @@ function HomeBanner() {
           sx={{
             color: primaryColor,
             fontFamily:
-              "var(--font-plus-jakarta), 'Plus Jakarta Sans', sans-serif",
+              "var(--font-app)",
             fontWeight: 900,
             fontSize: { xs: 18, sm: 20, md: 35 },
             lineHeight: 1.2,
@@ -371,7 +371,7 @@ function HomeBanner() {
           sx={{
             color: "rgba(255,255,255,0.9)",
             fontFamily:
-              "var(--font-plus-jakarta), 'Plus Jakarta Sans', sans-serif",
+              "var(--font-app)",
             fontWeight: 400,
             fontSize: { xs: 12, sm: 13, md: 18 },
             lineHeight: 1.5,

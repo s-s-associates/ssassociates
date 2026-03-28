@@ -14,36 +14,51 @@ import {
   boxShadowHover,
   transition,
 } from "@/components/utils/GlobalVariables";
-import { Box } from "@mui/material";
+import { Box, CircularProgress, Typography } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
-import React, { useState } from "react";
-
-const faqs = [
-  {
-    question: "What types of construction services do you offer?",
-    answer:
-      "We offer a comprehensive range of construction services including residential construction, commercial building, interior design, renovation and remodeling, project management, and consultation services. Our experienced team can handle projects of any size and complexity.",
-  },
-  {
-    question: "How long does a typical construction project take?",
-    answer:
-      "Project timelines vary based on scope, size, and complexity. After an initial consultation and site assessment, we provide a detailed schedule outlining each phase of the project so you know exactly what to expect.",
-  },
-  {
-    question: "Do you provide free estimates?",
-    answer:
-      "Yes. We offer free, no-obligation estimates. We review your requirements, discuss options, and provide a transparent cost breakdown so you can make informed decisions before moving forward.",
-  },
-  {
-    question: "Are you licensed and insured?",
-    answer:
-      "Absolutely. S&S Associates is fully licensed and insured. We adhere to all local building codes, safety regulations, and industry standards to ensure your project is completed to the highest quality.",
-  },
-];
+import React, { useEffect, useState } from "react";
 
 function Faqs() {
+  const [faqs, setFaqs] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [fetchError, setFetchError] = useState(null);
   const [openIndex, setOpenIndex] = useState(0);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadFaqs() {
+      setLoading(true);
+      setFetchError(null);
+      try {
+        const res = await fetch("/api/faqs");
+        const data = await res.json();
+        if (!res.ok || !data.success || !Array.isArray(data.faqs)) {
+          throw new Error(data.message || "Could not load FAQs");
+        }
+        const sorted = [...data.faqs].sort(
+          (a, b) => (a.order ?? 0) - (b.order ?? 0)
+        );
+        if (!cancelled) {
+          setFaqs(sorted);
+          setOpenIndex(sorted.length > 0 ? 0 : -1);
+        }
+      } catch (err) {
+        if (!cancelled) {
+          setFetchError(err.message || "Something went wrong");
+          setFaqs([]);
+        }
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    }
+
+    loadFaqs();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const handleToggle = (index) => {
     setOpenIndex((prev) => (prev === index ? -1 : index));
@@ -69,7 +84,7 @@ function Faqs() {
           component="h2"
           sx={{
             fontFamily:
-              "var(--font-plus-jakarta), 'Plus Jakarta Sans', sans-serif",
+              "var(--font-app)",
             fontWeight: 700,
             fontSize: { xs: 28, md: 32 },
             lineHeight: 1.2,
@@ -95,6 +110,39 @@ function Faqs() {
         </Box>
       </Box>
 
+      {loading && (
+        <Box sx={{ display: "flex", justifyContent: "center", py: 4 }}>
+          <CircularProgress size={36} sx={{ color: primaryColor }} />
+        </Box>
+      )}
+
+      {!loading && fetchError && (
+        <Typography
+          sx={{
+            textAlign: "center",
+            color: textGrayDark,
+            maxWidth: 520,
+            mx: "auto",
+            mb: 2,
+          }}
+        >
+          {fetchError}
+        </Typography>
+      )}
+
+      {!loading && !fetchError && faqs.length === 0 && (
+        <Typography
+          sx={{
+            textAlign: "center",
+            color: textGrayDark,
+            maxWidth: 520,
+            mx: "auto",
+          }}
+        >
+          No questions have been added yet.
+        </Typography>
+      )}
+
       <Box 
         sx={{
           maxWidth: 600,
@@ -104,12 +152,13 @@ function Faqs() {
           gap: 1.5,
         }}
       >
-        {faqs.map((item, index) => {
+        {!loading &&
+          faqs.map((item, index) => {
           const isOpen = openIndex === index;
 
           return (
             <Box
-              key={item.question}
+              key={item._id}
               sx={{
                 backgroundColor: whiteColor,
                 borderRadius: btnRadius,
@@ -135,7 +184,7 @@ function Faqs() {
                   sx={{
                     m: 0,
                     fontFamily:
-                      "var(--font-plus-jakarta), 'Plus Jakarta Sans', sans-serif",
+                      "var(--font-app)",
                     fontWeight: 600,
                     fontSize: { xs: 15, sm: 16 },
                     lineHeight: 1.4,
@@ -175,7 +224,7 @@ function Faqs() {
                     : `1px solid ${whiteColor}`,
                   px: { xs: 2, sm: 3 },
                   pb: isOpen ? { xs: 2, sm: 2.5 } : 0,
-                  maxHeight: isOpen ? 220 : 0,
+                  maxHeight: isOpen ? 2400 : 0,
                   opacity: isOpen ? 1 : 0,
                   overflow: "hidden",
                   transition:
@@ -187,7 +236,7 @@ function Faqs() {
                   sx={{
                     mt: 0,
                     fontFamily:
-                      "var(--font-plus-jakarta), 'Plus Jakarta Sans', sans-serif",
+                      "var(--font-app)",
                     fontWeight: 400,
                     fontSize: 14,
                     lineHeight: 1.7,

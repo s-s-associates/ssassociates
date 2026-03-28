@@ -6,21 +6,25 @@ import OurPrinciples from '../about/OurPrinciples'
 import WhyChooseUs from '../about/WhyChooseUs'
 import Faqs from './Faqs'
 import ContactForm from '../contact/ContactForm'
-import Projects from '../projects/Projects'
 import HomeBanner from './HomeBanner'
 import ServicesCards from '../services/ServicesCards';
+import ProjectCard from '../projects/ProjectCard';
+import WhoWeAre from '../about/WhoWeAre';
+import OurProcess from '../about/OurProcess';
+import CTASection from '../contact/CTASection';
 
 function LandingPage() {
   return (
     <div>
       <HomeBanner/>
       <Stats/>
-      <OurPrinciples/>
       <ServicesCards/>
-      <Projects/>
-      <WhyChooseUs/>
+      <ProjectCard/>
+      <OurProcess/>
+      <WhoWeAre/>
       <OurClients/>
       <ContactForm/>
+      <WhyChooseUs/>
       <Faqs/>
     </div>
   )

@@ -248,7 +248,7 @@ function Navbar() {
                       sx={{
                         ...underlineFromLeft,
                         fontFamily:
-                          "var(--font-plus-jakarta), 'Plus Jakarta Sans', sans-serif",
+                          "var(--font-app)",
                         fontWeight: 400,
                         fontSize: 16,
                         lineHeight: "24px",
@@ -423,7 +423,7 @@ function Navbar() {
                             ...underlineFromLeft,
                             display: "block",
                             fontFamily:
-                              "var(--font-plus-jakarta), 'Plus Jakarta Sans', sans-serif",
+                              "var(--font-app)",
                             fontWeight: 400,
                             fontSize: 16,
                             lineHeight: "24px",
@@ -456,7 +456,7 @@ function Navbar() {
                       setDrawerOpen(false);
                     }}
                     style={{
-                      fontFamily: "var(--font-plus-jakarta), 'Plus Jakarta Sans', sans-serif",
+                      fontFamily: "var(--font-app)",
                       fontSize: 16,
                       color: whiteColor,
                       fontWeight: 700,

@@ -120,7 +120,7 @@ function OurPrinciples() {
               backgroundColor: secondaryBg,
               color: secondaryColor,
               fontFamily:
-                "var(--font-plus-jakarta), 'Plus Jakarta Sans', sans-serif",
+                "var(--font-app)",
               fontWeight: 600,
               fontSize: 12,
             }}
@@ -131,7 +131,7 @@ function OurPrinciples() {
             component="h2"
             sx={{
               fontFamily:
-                "var(--font-plus-jakarta), 'Plus Jakarta Sans', sans-serif",
+                "var(--font-app)",
               fontWeight: 700,
               fontSize: { xs: 26, md: 30 },
               color: secondaryColor,
@@ -144,7 +144,7 @@ function OurPrinciples() {
             component="p"
             sx={{
               fontFamily:
-                "var(--font-plus-jakarta), 'Plus Jakarta Sans', sans-serif",
+                "var(--font-app)",
               fontWeight: 400,
               fontSize: 14,
               lineHeight: 1.7,
@@ -294,7 +294,7 @@ function OurPrinciples() {
                       component="span"
                       sx={{
                         fontFamily:
-                          "var(--font-plus-jakarta), 'Plus Jakarta Sans', sans-serif",
+                          "var(--font-app)",
                         fontWeight: 600,
                         fontSize: 13,
                         textTransform: "uppercase",
@@ -309,7 +309,7 @@ function OurPrinciples() {
                     component="h3"
                     sx={{
                       fontFamily:
-                        "var(--font-plus-jakarta), 'Plus Jakarta Sans', sans-serif",
+                        "var(--font-app)",
                       fontWeight: 600,
                       fontSize: 16,
                       color: secondaryColor,
@@ -321,7 +321,7 @@ function OurPrinciples() {
                     component="p"
                     sx={{
                       fontFamily:
-                        "var(--font-plus-jakarta), 'Plus Jakarta Sans', sans-serif",
+                        "var(--font-app)",
                       fontWeight: 400,
                       fontSize: 14,
                       lineHeight: 1.7,

@@ -123,7 +123,7 @@ function Footer() {
                 href="/"
                 sx={{
                   ...underlineFromLeft,
-                  fontFamily: "var(--font-plus-jakarta), 'Plus Jakarta Sans', sans-serif",
+                  fontFamily: "var(--font-app)",
                   fontWeight: 600,
                   fontSize: 20,
                   color: whiteColor,
@@ -140,7 +140,7 @@ function Footer() {
               <Box
                 component="span"
                 sx={{
-                  fontFamily: "var(--font-plus-jakarta), 'Plus Jakarta Sans', sans-serif",
+                  fontFamily: "var(--font-app)",
                   fontWeight: 400,
                   fontSize: 14,
                   color: textGrayLight,
@@ -151,7 +151,7 @@ function Footer() {
           </Box>
           <Box
             sx={{
-              fontFamily: "var(--font-plus-jakarta), 'Plus Jakarta Sans', sans-serif",
+              fontFamily: "var(--font-app)",
               fontWeight: 400,
               fontSize: 14,
               lineHeight: 1.6,
@@ -200,7 +200,7 @@ function Footer() {
         <Box>
           <Box
             sx={{
-              fontFamily: "var(--font-plus-jakarta), 'Plus Jakarta Sans', sans-serif",
+              fontFamily: "var(--font-app)",
               fontWeight: 600,
               fontSize: 18,
               color: whiteColor,
@@ -229,7 +229,7 @@ function Footer() {
                     component="span"
                     sx={{
                       ...underlineFromLeft,
-                      fontFamily: "var(--font-plus-jakarta), 'Plus Jakarta Sans', sans-serif",
+                      fontFamily: "var(--font-app)",
                       fontWeight: 400,
                       fontSize: 14,
                       color: textGrayLight,
@@ -248,7 +248,7 @@ function Footer() {
         <Box>
           <Box
             sx={{
-              fontFamily: "var(--font-plus-jakarta), 'Plus Jakarta Sans', sans-serif",
+              fontFamily: "var(--font-app)",
               fontWeight: 600,
               fontSize: 18,
               color: whiteColor,
@@ -277,7 +277,7 @@ function Footer() {
                     component="span"
                     sx={{
                       ...underlineFromLeft,
-                      fontFamily: "var(--font-plus-jakarta), 'Plus Jakarta Sans', sans-serif",
+                      fontFamily: "var(--font-app)",
                       fontWeight: 400,
                       fontSize: 14,
                       color: textGrayLight,
@@ -296,7 +296,7 @@ function Footer() {
         <Box>
           <Box
             sx={{
-              fontFamily: "var(--font-plus-jakarta), 'Plus Jakarta Sans', sans-serif",
+              fontFamily: "var(--font-app)",
               fontWeight: 600,
               fontSize: 18,
               color: whiteColor,
@@ -323,7 +323,7 @@ function Footer() {
                 className="contact-text"
                 sx={{
                   ...underlineFromLeft,
-                  fontFamily: "var(--font-plus-jakarta), 'Plus Jakarta Sans', sans-serif",
+                  fontFamily: "var(--font-app)",
                   fontWeight: 400,
                   fontSize: 14,
                   color: textGrayLight,
@@ -351,7 +351,7 @@ function Footer() {
                 className="contact-text"
                 sx={{
                   ...underlineFromLeft,
-                  fontFamily: "var(--font-plus-jakarta), 'Plus Jakarta Sans', sans-serif",
+                  fontFamily: "var(--font-app)",
                   fontWeight: 400,
                   fontSize: 14,
                   color: textGrayLight,
@@ -378,7 +378,7 @@ function Footer() {
                 className="contact-text"
                 sx={{
                   ...underlineFromLeft,
-                  fontFamily: "var(--font-plus-jakarta), 'Plus Jakarta Sans', sans-serif",
+                  fontFamily: "var(--font-app)",
                   fontWeight: 400,
                   fontSize: 14,
                   color: textGrayLight,
@@ -405,7 +405,7 @@ function Footer() {
                 className="contact-text"
                 sx={{
                   ...underlineFromLeft,
-                  fontFamily: "var(--font-plus-jakarta), 'Plus Jakarta Sans', sans-serif",
+                  fontFamily: "var(--font-app)",
                   fontWeight: 400,
                   fontSize: 14,
                   color: textGrayLight,
@@ -432,7 +432,7 @@ function Footer() {
                 className="contact-text"
                 sx={{
                   ...underlineFromLeft,
-                  fontFamily: "var(--font-plus-jakarta), 'Plus Jakarta Sans', sans-serif",
+                  fontFamily: "var(--font-app)",
                   fontWeight: 400,
                   fontSize: 14,
                   color: textGrayLight,
@@ -467,7 +467,7 @@ function Footer() {
         >
           <Box
             sx={{
-              fontFamily: "var(--font-plus-jakarta), 'Plus Jakarta Sans', sans-serif",
+              fontFamily: "var(--font-app)",
               fontWeight: 400,
               fontSize: 14,
               color: textGrayLight,
@@ -491,7 +491,7 @@ function Footer() {
                 component="span"
                 sx={{
                   ...underlineFromLeft,
-                  fontFamily: "var(--font-plus-jakarta), 'Plus Jakarta Sans', sans-serif",
+                  fontFamily: "var(--font-app)",
                   fontWeight: 400,
                   fontSize: 14,
                   color: textGrayLight,
@@ -513,7 +513,7 @@ function Footer() {
                 component="span"
                 sx={{
                   ...underlineFromLeft,
-                  fontFamily: "var(--font-plus-jakarta), 'Plus Jakarta Sans', sans-serif",
+                  fontFamily: "var(--font-app)",
                   fontWeight: 400,
                   fontSize: 14,
                   color: textGrayLight,

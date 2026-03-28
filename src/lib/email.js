@@ -35,10 +35,11 @@ export async function sendOtpEmail({ to, otp, type }) {
 }
 
 /** Send a single HTML email (e.g. bulk campaign). */
-export async function sendHtmlEmail({ to, subject, html, text }) {
+export async function sendHtmlEmail({ to, subject, html, text, replyTo, from }) {
   await transporter.sendMail({
-    from: process.env.SMTP_USER,
+    from: from || process.env.SMTP_USER,
     to,
+    replyTo: replyTo || undefined,
     subject: subject || `Message from ${process.env.NEXT_PUBLIC_COMPANY_NAME}`,
     text: text || (typeof html === "string" ? html.replace(/<[^>]*>/g, "").trim() : ""),
     html: html || undefined,

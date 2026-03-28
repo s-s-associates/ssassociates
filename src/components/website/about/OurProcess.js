@@ -4,12 +4,14 @@ import React, { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import { Box, Typography, Grid } from '@mui/material';
 import { motion } from 'framer-motion';
-import { whiteColor, secondaryColor, primaryColor, textGrayDark } from '@/components/utils/Colors';
+import { whiteColor, secondaryColor, primaryColor, textGrayLight } from '@/components/utils/Colors';
 import { mainHeadingSize, mainSubHeadingSize } from '@/components/utils/Sizes';
 
 const STEP_COLORS = [primaryColor, secondaryColor, '#f97316', '#22c55e'];
 
 const STEP_EASE = [0.22, 1, 0.36, 1];
+
+const PROCESS_BG_IMAGE = '/images/about/our-process/process-bg.png';
 
 const steps = [
   {
@@ -92,12 +94,49 @@ const OurProcess = () => {
     <Box
       ref={sectionRef}
       sx={{
-        backgroundColor: whiteColor,
-        py: { xs: 6, md: 10 },
-        px: { xs: 2, md: 4 },
+        position: 'relative',
+        minHeight: '100vh',
+        overflow: 'hidden',
+        isolation: 'isolate',
       }}
     >
-      <Box mx="auto" sx={{ maxWidth: '1200px' }}>
+      {/* Full-height background image (section grows with content) */}
+      <Box
+        aria-hidden
+        sx={{
+          position: 'absolute',
+          inset: 0,
+          zIndex: 0,
+          overflow: 'hidden',
+          pointerEvents: 'none',
+          bgcolor: '#0c0e12',
+          backgroundImage: `url(${PROCESS_BG_IMAGE})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center center',
+          backgroundRepeat: 'no-repeat',
+          backgroundAttachment: 'fixed',
+        }}
+      />
+
+      <Box
+        sx={{
+          position: 'absolute',
+          inset: 0,
+          zIndex: 1,
+          pointerEvents: 'none',
+        }}
+      />
+
+      <Box
+        sx={{
+          position: 'relative',
+          zIndex: 2,
+          minHeight: '100vh',
+          py: { xs: 6, md: 10 },
+          px: { xs: 2, md: 4 },
+        }}
+      >
+        <Box mx="auto" sx={{ maxWidth: '1200px' }}>
         {/* Header */}
         <Box sx={{ textAlign: 'center', mb: { xs: 6, md: 8 } }}>
           <motion.div
@@ -109,7 +148,7 @@ const OurProcess = () => {
             <Typography
               variant="h2"
               sx={{
-                color: secondaryColor,
+                color: whiteColor,
                 fontSize: mainHeadingSize.fontSize,
                 fontWeight: mainHeadingSize.fontWeight,
                 lineHeight: mainHeadingSize.lineHeight,
@@ -122,7 +161,7 @@ const OurProcess = () => {
             </Typography>
             <Typography
               sx={{
-                color: textGrayDark,
+                color: textGrayLight,
                 fontSize: mainSubHeadingSize.fontSize,
                 fontWeight: mainSubHeadingSize.fontWeight,
                 lineHeight: mainSubHeadingSize.lineHeight,
@@ -194,10 +233,10 @@ const OurProcess = () => {
           <Grid container spacing={{ xs: 3, md: 6 }} data-step="0" sx={{ mb: { xs: 6, md: 8 }, position: 'relative', zIndex: 2 }}>
             <Grid size={{ xs: 12, md: 6 }}>
               <motion.div initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.75, ease: STEP_EASE }}>
-                <Typography variant="h3" sx={{ color: secondaryColor, fontSize: { xs: '22px', md: '26px', lg: '28px' }, fontWeight: 600, mb: 2, lineHeight: 1.3 }}>
+                <Typography variant="h3" sx={{ color: primaryColor, fontSize: { xs: '22px', md: '26px', lg: '28px' }, fontWeight: 600, mb: 2, lineHeight: 1.3 }}>
                   {steps[0].label}
                 </Typography>
-                <Typography sx={{ color: textGrayDark, fontSize: { xs: '15px', md: '16px' }, lineHeight: 1.8, fontWeight: 400 }}>
+                <Typography sx={{ color: textGrayLight, fontSize: { xs: '15px', md: '16px' }, lineHeight: 1.8, fontWeight: 400 }}>
                   {steps[0].description}
                 </Typography>
               </motion.div>
@@ -230,10 +269,10 @@ const OurProcess = () => {
             </Grid>
             <Grid size={{ xs: 12, md: 6 }}>
               <motion.div initial={{ opacity: 0, x: 20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.75, ease: STEP_EASE, delay: 0.08 }}>
-                <Typography variant="h3" sx={{ color: secondaryColor, fontSize: { xs: '22px', md: '26px', lg: '28px' }, fontWeight: 600, mb: 2, lineHeight: 1.3 }}>
+                <Typography variant="h3" sx={{ color: primaryColor, fontSize: { xs: '22px', md: '26px', lg: '28px' }, fontWeight: 600, mb: 2, lineHeight: 1.3 }}>
                   {steps[1].label}
                 </Typography>
-                <Typography sx={{ color: textGrayDark, fontSize: { xs: '15px', md: '16px' }, lineHeight: 1.8, fontWeight: 400 }}>
+                <Typography sx={{ color: textGrayLight, fontSize: { xs: '15px', md: '16px' }, lineHeight: 1.8, fontWeight: 400 }}>
                   {steps[1].description}
                 </Typography>
               </motion.div>
@@ -244,10 +283,10 @@ const OurProcess = () => {
           <Grid container spacing={{ xs: 3, md: 6 }} data-step="2" sx={{ mb: { xs: 6, md: 8 }, position: 'relative', zIndex: 2 }}>
             <Grid size={{ xs: 12, md: 6 }}>
               <motion.div initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.75, ease: STEP_EASE }}>
-                <Typography variant="h3" sx={{ color: secondaryColor, fontSize: { xs: '22px', md: '26px', lg: '28px' }, fontWeight: 600, mb: 2, lineHeight: 1.3 }}>
+                <Typography variant="h3" sx={{ color: primaryColor, fontSize: { xs: '22px', md: '26px', lg: '28px' }, fontWeight: 600, mb: 2, lineHeight: 1.3 }}>
                   {steps[2].label}
                 </Typography>
-                <Typography sx={{ color: textGrayDark, fontSize: { xs: '15px', md: '16px' }, lineHeight: 1.8, fontWeight: 400 }}>
+                <Typography sx={{ color: textGrayLight, fontSize: { xs: '15px', md: '16px' }, lineHeight: 1.8, fontWeight: 400 }}>
                   {steps[2].description}
                 </Typography>
               </motion.div>
@@ -272,15 +311,16 @@ const OurProcess = () => {
             </Grid>
             <Grid size={{ xs: 12, md: 6 }}>
               <motion.div initial={{ opacity: 0, x: 20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.75, ease: STEP_EASE, delay: 0.08 }}>
-                <Typography variant="h3" sx={{ color: secondaryColor, fontSize: { xs: '22px', md: '26px', lg: '28px' }, fontWeight: 600, mb: 2, lineHeight: 1.3 }}>
+                <Typography variant="h3" sx={{ color: primaryColor, fontSize: { xs: '22px', md: '26px', lg: '28px' }, fontWeight: 600, mb: 2, lineHeight: 1.3 }}>
                   {steps[3].label}
                 </Typography>
-                <Typography sx={{ color: textGrayDark, fontSize: { xs: '15px', md: '16px' }, lineHeight: 1.8, fontWeight: 400 }}>
+                <Typography sx={{ color: textGrayLight, fontSize: { xs: '15px', md: '16px' }, lineHeight: 1.8, fontWeight: 400 }}>
                   {steps[3].description}
                 </Typography>
               </motion.div>
             </Grid>
           </Grid>
+        </Box>
         </Box>
       </Box>
     </Box>

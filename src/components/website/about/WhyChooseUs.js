@@ -156,7 +156,7 @@ function WhyChooseUs() {
               backdropFilter: "blur(14px)",
               WebkitBackdropFilter: "blur(14px)",
               fontFamily:
-                "var(--font-plus-jakarta), 'Plus Jakarta Sans', sans-serif",
+                "var(--font-app)",
               fontWeight: 600,
               fontSize: 12,
             }}
@@ -168,7 +168,7 @@ function WhyChooseUs() {
             component="h2"
             sx={{
               fontFamily:
-                "var(--font-plus-jakarta), 'Plus Jakarta Sans', sans-serif",
+                "var(--font-app)",
               fontWeight: 700,
               fontSize: { xs: 28, md: 32 },
               lineHeight: 1.2,
@@ -183,7 +183,7 @@ function WhyChooseUs() {
             component="p"
             sx={{
               fontFamily:
-                "var(--font-plus-jakarta), 'Plus Jakarta Sans', sans-serif",
+                "var(--font-app)",
               fontWeight: 400,
               fontSize: 15,
               lineHeight: 1.7,
@@ -221,7 +221,7 @@ function WhyChooseUs() {
                 component="div"
                 sx={{
                   fontFamily:
-                    "var(--font-plus-jakarta), 'Plus Jakarta Sans', sans-serif",
+                    "var(--font-app)",
                   fontWeight: 700,
                   fontSize: 20,
                   mb: 0.5,
@@ -233,7 +233,7 @@ function WhyChooseUs() {
                 component="div"
                 sx={{
                   fontFamily:
-                    "var(--font-plus-jakarta), 'Plus Jakarta Sans', sans-serif",
+                    "var(--font-app)",
                   fontWeight: 400,
                   fontSize: 13,
                 }}
@@ -258,7 +258,7 @@ function WhyChooseUs() {
                 component="div"
                 sx={{
                   fontFamily:
-                    "var(--font-plus-jakarta), 'Plus Jakarta Sans', sans-serif",
+                    "var(--font-app)",
                   fontWeight: 700,
                   fontSize: 20,
                   mb: 0.5,
@@ -271,7 +271,7 @@ function WhyChooseUs() {
                 component="div"
                 sx={{
                   fontFamily:
-                    "var(--font-plus-jakarta), 'Plus Jakarta Sans', sans-serif",
+                    "var(--font-app)",
                   fontWeight: 400,
                   fontSize: 13,
                   color: textGrayLight,
@@ -342,7 +342,7 @@ function WhyChooseUs() {
                   component="h3"
                   sx={{
                     fontFamily:
-                      "var(--font-plus-jakarta), 'Plus Jakarta Sans', sans-serif",
+                      "var(--font-app)",
                     fontWeight: 600,
                     fontSize: 16,
                     color: whiteColor,
@@ -354,7 +354,7 @@ function WhyChooseUs() {
                   component="p"
                   sx={{
                     fontFamily:
-                      "var(--font-plus-jakarta), 'Plus Jakarta Sans', sans-serif",
+                      "var(--font-app)",
                     fontWeight: 400,
                     fontSize: 14,
                     lineHeight: 1.6,

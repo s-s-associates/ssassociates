@@ -126,7 +126,7 @@ function Stats() {
             component="h2"
             sx={{
               fontFamily:
-                "var(--font-plus-jakarta), 'Plus Jakarta Sans', sans-serif",
+                "var(--font-app)",
               fontWeight: 700,
               fontSize: { xs: 24, md: 28 },
               color: secondaryColor,
@@ -139,7 +139,7 @@ function Stats() {
             component="p"
             sx={{
               fontFamily:
-                "var(--font-plus-jakarta), 'Plus Jakarta Sans', sans-serif",
+                "var(--font-app)",
               fontWeight: 400,
               fontSize: 14,
               lineHeight: 1.6,
@@ -241,7 +241,7 @@ function Stats() {
                   component="div"
                   sx={{
                     fontFamily:
-                      "var(--font-plus-jakarta), 'Plus Jakarta Sans', sans-serif",
+                      "var(--font-app)",
                     fontWeight: 500,
                     fontSize: 14,
                     color: secondaryColor,
@@ -254,7 +254,7 @@ function Stats() {
                   component="div"
                   sx={{
                     fontFamily:
-                      "var(--font-plus-jakarta), 'Plus Jakarta Sans', sans-serif",
+                      "var(--font-app)",
                     fontWeight: 400,
                     fontSize: 12,
                     color: textGrayDark,

@@ -30,7 +30,7 @@ export default function CubeSlider() {
                 component="h2"
                 sx={{
                   fontFamily:
-                    "var(--font-plus-jakarta), 'Plus Jakarta Sans', sans-serif",
+                    "var(--font-app)",
                   fontWeight: 900,
                   color: secondaryColor,
                   fontSize: { xs: 30, sm: 34, md: 40 },
