@@ -176,7 +176,7 @@ export default function SubscribersPage() {
   const fetchSubscribers = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await fetch(API_SUBSCRIBERS, { headers: getAuthHeaders() });
+      const res = await fetch(API_SUBSCRIBERS, { cache: "no-store" });
       if (!res.ok) throw new Error("Failed to fetch");
       const data = await res.json();
       const subs = (data.subscribers || []).map((s) => ({ ...s, id: s._id || s.id }));

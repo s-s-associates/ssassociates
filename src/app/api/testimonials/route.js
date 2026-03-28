@@ -2,6 +2,10 @@ import { connectDB } from "@/lib/db";
 import { getUserFromRequest } from "@/lib/get-user-from-request";
 import Testimonial from "@/models/Testimonial";
 import { NextResponse } from "next/server";
+import {
+  normalizeTestimonialBody,
+  validateRequiredTestimonialFields,
+} from "./helpers";
 
 export async function GET(req) {
   try {
@@ -27,23 +31,19 @@ export async function POST(req) {
     }
     await connectDB();
     const body = await req.json();
-    const clientName = (body.clientName || "").trim();
-    const content = (body.content || "").trim();
-    if (!clientName) {
-      return NextResponse.json({ success: false, message: "Client name is required" }, { status: 400 });
+    const normalized = normalizeTestimonialBody(body);
+    const validationError = validateRequiredTestimonialFields(normalized);
+    if (validationError) {
+      return NextResponse.json({ success: false, message: validationError }, { status: 400 });
     }
-    if (!content) {
-      return NextResponse.json({ success: false, message: "Content/quote is required" }, { status: 400 });
-    }
-    const rating = Math.min(5, Math.max(0, Number(body.rating) || 0));
     const testimonial = await Testimonial.create({
       userId: user._id,
-      clientName,
-      role: (body.role || "").trim(),
-      companyName: (body.companyName || "").trim(),
-      content,
-      imageUrl: (body.imageUrl || "").trim(),
-      rating,
+      clientName: normalized.clientName,
+      role: normalized.role,
+      companyName: normalized.companyName,
+      content: normalized.content,
+      imageUrl: normalized.imageUrl,
+      rating: normalized.rating,
     });
     return NextResponse.json({ success: true, testimonial });
   } catch (err) {

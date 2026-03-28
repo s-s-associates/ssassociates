@@ -2,6 +2,11 @@ import { connectDB } from "@/lib/db";
 import { getUserFromRequest } from "@/lib/get-user-from-request";
 import Testimonial from "@/models/Testimonial";
 import { NextResponse } from "next/server";
+import {
+  clampRating,
+  normalizeTestimonialBody,
+  validateRequiredTestimonialFields,
+} from "../helpers";
 
 export async function GET(req, { params }) {
   try {
@@ -44,20 +49,17 @@ export async function PATCH(req, { params }) {
       return NextResponse.json({ success: false, message: "Testimonial not found" }, { status: 404 });
     }
     const body = await req.json();
-    const clientName = (body.clientName || "").trim();
-    const content = (body.content || "").trim();
-    if (!clientName) {
-      return NextResponse.json({ success: false, message: "Client name is required" }, { status: 400 });
+    const normalized = normalizeTestimonialBody(body);
+    const validationError = validateRequiredTestimonialFields(normalized);
+    if (validationError) {
+      return NextResponse.json({ success: false, message: validationError }, { status: 400 });
     }
-    if (!content) {
-      return NextResponse.json({ success: false, message: "Content/quote is required" }, { status: 400 });
-    }
-    testimonial.clientName = clientName;
-    testimonial.content = content;
-    if (body.role !== undefined) testimonial.role = (body.role || "").trim();
-    if (body.companyName !== undefined) testimonial.companyName = (body.companyName || "").trim();
-    if (body.imageUrl !== undefined) testimonial.imageUrl = (body.imageUrl || "").trim();
-    if (body.rating !== undefined) testimonial.rating = Math.min(5, Math.max(0, Number(body.rating) || 0));
+    testimonial.clientName = normalized.clientName;
+    testimonial.content = normalized.content;
+    if (body.role !== undefined) testimonial.role = normalized.role;
+    if (body.companyName !== undefined) testimonial.companyName = normalized.companyName;
+    if (body.imageUrl !== undefined) testimonial.imageUrl = normalized.imageUrl;
+    if (body.rating !== undefined) testimonial.rating = clampRating(body.rating);
     await testimonial.save();
     return NextResponse.json({ success: true, testimonial });
   } catch (err) {

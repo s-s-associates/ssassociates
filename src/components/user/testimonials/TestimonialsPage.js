@@ -21,13 +21,47 @@ import {
   Typography,
 } from "@mui/material";
 import { getAuth } from "@/lib/auth-storage";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { BeatLoader } from "react-spinners";
 import Swal from "sweetalert2";
-import { FiEdit2, FiEye, FiPlus, FiRefreshCw, FiSearch, FiTrash2 } from "react-icons/fi";
+import { FiEdit2, FiEye, FiPlus, FiRefreshCw, FiSearch, FiTrash2, FiUploadCloud } from "react-icons/fi";
+
+const ACCEPT_IMAGES = "image/jpeg,image/png,image/webp,image/gif";
+const CLOUDINARY_FOLDER = "ssassociates/testimonials";
+
+function fileToDataUri(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+async function uploadImageToCloudinary(token, file, folder = CLOUDINARY_FOLDER) {
+  const dataUri = await fileToDataUri(file);
+  const res = await fetch("/api/upload/cloudinary", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ image: dataUri, folder }),
+  });
+  const data = await res.json();
+  if (!data.success) throw new Error(data.message || "Upload failed");
+  return data.url;
+}
+
+function revokeIfBlobUrl(url) {
+  if (url && typeof url === "string" && url.startsWith("blob:")) {
+    URL.revokeObjectURL(url);
+  }
+}
 
 export default function TestimonialsPage() {
   const { token } = getAuth();
+  const fileInputRef = useRef(null);
   const [testimonials, setTestimonials] = useState([]);
   const [loading, setLoading] = useState(true);
   const [deletingId, setDeletingId] = useState(null);
@@ -38,6 +72,9 @@ export default function TestimonialsPage() {
   const [companyName, setCompanyName] = useState("");
   const [content, setContent] = useState("");
   const [rating, setRating] = useState(0);
+  const [imageFile, setImageFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState("");
+  const [imageRemoved, setImageRemoved] = useState(false);
   const [saving, setSaving] = useState(false);
   const [viewingItem, setViewingItem] = useState(null);
   const [page, setPage] = useState(0);
@@ -91,6 +128,9 @@ export default function TestimonialsPage() {
     setCompanyName("");
     setContent("");
     setRating(0);
+    setImageFile(null);
+    setImagePreview("");
+    setImageRemoved(false);
     setDialogOpen(true);
   };
 
@@ -101,10 +141,14 @@ export default function TestimonialsPage() {
     setCompanyName(item.companyName || "");
     setContent(item.content || "");
     setRating(Math.min(5, Math.max(0, Number(item.rating) || 0)));
+    setImageFile(null);
+    setImagePreview((item.imageUrl || "").trim());
+    setImageRemoved(false);
     setDialogOpen(true);
   };
 
   const closeDialog = () => {
+    revokeIfBlobUrl(imagePreview);
     setDialogOpen(false);
     setEditingItem(null);
     setClientName("");
@@ -112,6 +156,38 @@ export default function TestimonialsPage() {
     setCompanyName("");
     setContent("");
     setRating(0);
+    setImageFile(null);
+    setImagePreview("");
+    setImageRemoved(false);
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  };
+
+  const handleImageSelect = async (event) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    if (!file.type.startsWith("image/")) {
+      await Swal.fire({
+        icon: "warning",
+        title: "Invalid file",
+        text: "Please choose an image (JPEG, PNG, WebP, or GIF).",
+        confirmButtonColor: primaryColor,
+      });
+      event.target.value = "";
+      return;
+    }
+    revokeIfBlobUrl(imagePreview);
+    setImageFile(file);
+    setImageRemoved(false);
+    setImagePreview(URL.createObjectURL(file));
+    event.target.value = "";
+  };
+
+  const clearSelectedImage = () => {
+    revokeIfBlobUrl(imagePreview);
+    setImageFile(null);
+    setImagePreview("");
+    setImageRemoved(true);
+    if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
   const handleSave = async () => {
@@ -127,15 +203,21 @@ export default function TestimonialsPage() {
     }
     setSaving(true);
     try {
+      let imageUrl = "";
+      if (imageFile) {
+        imageUrl = await uploadImageToCloudinary(token, imageFile);
+      } else if (!imageRemoved) {
+        imageUrl = (editingItem?.imageUrl || "").trim();
+      }
       const payload = {
         clientName: trimmedName,
         role: (role || "").trim(),
         companyName: (companyName || "").trim(),
         content: trimmedContent,
+        imageUrl,
         rating: Math.min(5, Math.max(0, Number(rating) || 0)),
       };
       if (editingItem) {
-        if (editingItem.imageUrl) payload.imageUrl = editingItem.imageUrl;
         const res = await fetch(`/api/testimonials/${editingItem._id}`, {
           method: "PATCH",
           headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
@@ -363,10 +445,76 @@ export default function TestimonialsPage() {
       <Dialog open={dialogOpen} onClose={closeDialog} maxWidth="sm" fullWidth>
         <DialogTitle>{editingItem ? "Edit Testimonial" : "Add Testimonial"}</DialogTitle>
         <DialogContent>
-          <TextField autoFocus fullWidth label="Client name *" value={clientName} onChange={(e) => setClientName(e.target.value)} placeholder="Name of the person" required sx={{ mt: 1, mb: 2 }} />
+          <Typography sx={{ fontSize: 14, fontWeight: 600, color: "rgba(0,0,0,0.72)", mb: 1.2, mt: 1 }}>
+            Client image (optional)
+          </Typography>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept={ACCEPT_IMAGES}
+            onChange={handleImageSelect}
+            style={{ display: "none" }}
+          />
+          {imagePreview ? (
+            <Box
+              sx={{
+                position: "relative",
+                width: 110,
+                height: 110,
+                borderRadius: 2,
+                overflow: "hidden",
+                border: `1px solid ${bordergrayColor}`,
+                mb: 2,
+              }}
+            >
+              <Box component="img" src={imagePreview} alt="Client preview" sx={{ width: "100%", height: "100%", objectFit: "cover" }} />
+              <IconButton
+                size="small"
+                onClick={clearSelectedImage}
+                sx={{
+                  position: "absolute",
+                  top: 6,
+                  right: 6,
+                  bgcolor: "rgba(0,0,0,0.6)",
+                  color: "#fff",
+                  "&:hover": { bgcolor: "rgba(0,0,0,0.82)" },
+                }}
+                aria-label="Remove selected image"
+              >
+                <FiTrash2 size={16} />
+              </IconButton>
+            </Box>
+          ) : (
+            <Box
+              onClick={() => fileInputRef.current?.click()}
+              sx={{
+                border: `2px dashed ${bordergrayColor}`,
+                borderRadius: 2,
+                py: 2.2,
+                px: 2,
+                mb: 2,
+                textAlign: "center",
+                cursor: "pointer",
+                transition: "border-color 0.2s, background-color 0.2s",
+                "&:hover": {
+                  borderColor: primaryColor,
+                  bgcolor: "rgba(138,56,245,0.06)",
+                },
+              }}
+            >
+              <FiUploadCloud size={28} style={{ color: primaryColor, marginBottom: 8 }} />
+              <Typography variant="body2" sx={{ color: "rgba(0,0,0,0.68)" }}>
+                Drop image here or click to browse
+              </Typography>
+              <Typography variant="caption" sx={{ color: "rgba(0,0,0,0.5)" }}>
+                JPEG, PNG, WebP or GIF
+              </Typography>
+            </Box>
+          )}
+          <TextField autoFocus fullWidth label="Client name" value={clientName} onChange={(e) => setClientName(e.target.value)} placeholder="Name of the person" required sx={{ mt: 1, mb: 2 }} />
           <TextField fullWidth label="Role / Designation" value={role} onChange={(e) => setRole(e.target.value)} placeholder="e.g. CEO, Manager" sx={{ mb: 2 }} />
           <TextField fullWidth label="Company name (optional)" value={companyName} onChange={(e) => setCompanyName(e.target.value)} placeholder="Company name" sx={{ mb: 2 }} />
-          <TextField fullWidth label="Quote / Content *" value={content} onChange={(e) => setContent(e.target.value)} placeholder="Testimonial text" required multiline rows={4} sx={{ mb: 2 }} />
+          <TextField fullWidth label="Quote / Content" value={content} onChange={(e) => setContent(e.target.value)} placeholder="Testimonial text" required multiline rows={4} sx={{ mb: 2 }} />
           <Typography sx={{ fontSize: 14, fontWeight: 600, color: "rgba(0,0,0,0.7)", mb: 1 }}>Rating (choose stars)</Typography>
           <Box sx={{ display: "flex", gap: 0.5, alignItems: "center", mb: 2 }}>
             {[1, 2, 3, 4, 5].map((star) => (

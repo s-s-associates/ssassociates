@@ -1,37 +1,29 @@
-import { connectDB } from "@/lib/db";
-import Subscriber from "@/models/Subscriber";
+import { subscribeWithNotifications } from "@/lib/subscriber-signup";
 import { NextResponse } from "next/server";
 
 export async function POST(req) {
   try {
     const body = await req.json();
-    const email = (body.email || "").trim().toLowerCase();
-    if (!email) {
-      return NextResponse.json({ success: false, message: "Email is required" }, { status: 400 });
-    }
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      return NextResponse.json({ success: false, message: "Please enter a valid email" }, { status: 400 });
-    }
-    await connectDB();
-    const existing = await Subscriber.findOne({ email });
-    if (existing) {
+    const result = await subscribeWithNotifications(body?.email);
+
+    if (result.ok) {
       return NextResponse.json({
-        success: false,
-        alreadySubscribed: true,
-        message: "This email is already subscribed.",
-      }, { status: 200 });
+        success: true,
+        message: result.message,
+        subscriber: result.subscriber,
+      });
     }
-    await Subscriber.create({ email });
-    return NextResponse.json({ success: true, message: "Subscribed successfully" });
+
+    const status = result.status ?? (result.alreadySubscribed ? 200 : 400);
+    return NextResponse.json(
+      {
+        success: false,
+        ...(result.alreadySubscribed ? { alreadySubscribed: true } : {}),
+        message: result.message,
+      },
+      { status }
+    );
   } catch (err) {
-    if (err.code === 11000) {
-      return NextResponse.json({
-        success: false,
-        alreadySubscribed: true,
-        message: "This email is already subscribed.",
-      }, { status: 200 });
-    }
     console.error("Subscribe POST error:", err);
     return NextResponse.json(
       { success: false, message: err.message || "Failed to subscribe" },

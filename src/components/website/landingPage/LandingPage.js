@@ -12,6 +12,7 @@ import ProjectCard from '../projects/ProjectCard';
 import WhoWeAre from '../about/WhoWeAre';
 import OurProcess from '../about/OurProcess';
 import CTASection from '../contact/CTASection';
+import Testimonials from './Testimonials';
 
 function LandingPage() {
   return (
@@ -25,6 +26,7 @@ function LandingPage() {
       <OurClients/>
       <ContactForm/>
       <WhyChooseUs/>
+      <Testimonials/>
       <Faqs/>
     </div>
   )

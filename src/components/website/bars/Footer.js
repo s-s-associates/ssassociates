@@ -2,7 +2,6 @@
 
 import {
   primaryColor,
-  secondaryColor,
   secondaryDark,
   textGrayLight,
   whiteColor,
@@ -12,6 +11,7 @@ import Phone from "@mui/icons-material/Phone";
 import Email from "@mui/icons-material/Email";
 import AccessTime from "@mui/icons-material/AccessTime";
 import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
+import SubscriberForm from "@/components/website/subscriber/SubscriberForm";
 import { Box } from "@mui/material";
 import Image from "next/image";
 import Link from "next/link";
@@ -102,16 +102,15 @@ function Footer() {
                 width: 70,
                 height: 70,
                 flexShrink: 0,
-                borderRadius: 1.5,
+                borderRadius: 100,
                 overflow: "hidden",
-                bgcolor: primaryColor,
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
               }}
             >
               <Image
-                src="/ss-logo.png"
+                src="/logo.png"
                 alt="S&S Associates"
                 width={70}
                 height={70}
@@ -373,33 +372,6 @@ function Footer() {
                 },
               }}
             >
-              <Phone sx={{ color: primaryColor, fontSize: 20, flexShrink: 0 }} />
-              <Box
-                className="contact-text"
-                sx={{
-                  ...underlineFromLeft,
-                  fontFamily: "var(--font-app)",
-                  fontWeight: 400,
-                  fontSize: 14,
-                  color: textGrayLight,
-                  transition: "color 0.2s",
-                }}
-              >
-                +1 (234) 567-891
-              </Box>
-            </Box>
-            <Box
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                gap: 1.5,
-                cursor: "default",
-                "&:hover .contact-text": {
-                  color: primaryColor,
-                  ...underlineFromLeftHover,
-                },
-              }}
-            >
               <Email sx={{ color: primaryColor, fontSize: 20, flexShrink: 0 }} />
               <Box
                 className="contact-text"
@@ -443,6 +415,8 @@ function Footer() {
               </Box>
             </Box>
           </Box>
+
+          <SubscriberForm />
         </Box>
       </Box>
 

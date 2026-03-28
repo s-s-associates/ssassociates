@@ -49,10 +49,10 @@ export function getContactAutoReply({ fullName }) {
     <td align="center" style="padding:40px 16px;">
       <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:560px;">
         <tr>
-          <td style="background:linear-gradient(145deg,${C.headerSub} 0%,${C.headerDark} 100%);border-radius:20px 20px 0 0;padding:0;">
-            <table role="presentation" width="100%" cellspacing="0" cellpadding="0">
+          <td style="background:linear-gradient(145deg,${C.headerSub} 0%,${C.headerDark} 100%);border-radius:20px 20px 0 0;padding:0;overflow:hidden;">
+            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="border-collapse:collapse;border-spacing:0;">
               <tr>
-                <td style="height:5px;background:linear-gradient(90deg,${C.accent} 0%,#ffb366 55%,${C.accent} 100%);border-radius:20px 20px 0 0;"></td>
+                <td style="height:5px;line-height:5px;font-size:0;background:linear-gradient(90deg,${C.accent} 0%,#ffb366 55%,${C.accent} 100%);border-top-left-radius:20px;border-top-right-radius:20px;"></td>
               </tr>
               <tr>
                 <td style="padding:36px 32px 32px;text-align:center;">

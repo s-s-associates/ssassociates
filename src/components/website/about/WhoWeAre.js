@@ -2,8 +2,17 @@
 "use client";
 
 import React from "react";
-import { secondaryColor, textGrayDark } from "@/components/utils/Colors";
-import { Box, Stack, Typography } from "@mui/material";
+import {
+  primaryColor,
+  primaryLight,
+  secondaryColor,
+  secondaryBg,
+  textGrayDark,
+  whiteColor,
+  primaryBg,
+} from "@/components/utils/Colors";
+import { sectionRadius } from "@/components/utils/GlobalVariables";
+import { Box, Container, Stack, Typography } from "@mui/material";
 import { motion } from "framer-motion";
 
 const FACE_FRONT_URL =
@@ -15,83 +24,178 @@ const FACE_TOP_URL =
 const FACE_BOTTOM_URL =
   "https://st2.depositphotos.com/1092019/10107/i/450/depositphotos_101075562-stock-photo-who-we-are-question-through.jpg";
 
+const highlights = [
+  { label: "25+", sub: "Years experience" },
+  { label: "2001", sub: "Founded" },
+  { label: "360°", sub: "Delivery focus" },
+];
+
 export default function WhoWeAre() {
   return (
     <>
- <Stack direction={'row'}  p={5} justifyContent={'center'} alignItems={'center'} gap={5}>
-          <Box  maxWidth={700}>
-          <motion.div
-              initial={{ opacity: 0, y: 18 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.25 }}
-              transition={{ duration: 0.6, ease: "easeOut" }}
-            >
-              <Typography
-                component="h2"
-                sx={{
-                  fontFamily:
-                    "var(--font-app)",
-                  fontWeight: 900,
-                  color: secondaryColor,
-                  fontSize: { xs: 30, sm: 34, md: 40 },
-                  lineHeight: 1.15,
-                  mb: 3,
-                }}
+      <Box
+        component="section"
+        sx={{
+          position: "relative",
+          overflow: "hidden",
+          py: { xs: 6, md: 9 },
+          background: `linear-gradient(165deg, ${whiteColor} 0%, rgba(244, 246, 250, 1) 42%, ${secondaryBg} 100%)`,
+        }}
+      >
+        <Box
+          sx={{
+            position: "absolute",
+            top: "-12%",
+            right: "-8%",
+            width: { xs: 280, md: 420 },
+            height: { xs: 280, md: 420 },
+            borderRadius: "50%",
+            background: `radial-gradient(circle at center, rgba(251, 134, 30, 0.14), transparent 68%)`,
+            pointerEvents: "none",
+          }}
+        />
+        <Box
+          sx={{
+            position: "absolute",
+            bottom: "-18%",
+            left: "-10%",
+            width: { xs: 320, md: 480 },
+            height: { xs: 320, md: 480 },
+            borderRadius: "50%",
+            background: `radial-gradient(circle at center, rgba(16, 24, 40, 0.06), transparent 70%)`,
+            pointerEvents: "none",
+          }}
+        />
+
+        <Container maxWidth="lg" sx={{ position: "relative", zIndex: 1 }}>
+          <Stack
+            direction={{ xs: "column", lg: "row" }}
+            justifyContent="center"
+            alignItems="flex-end"
+            spacing={{ xs: 5, lg: 6 }}
+            sx={{ px: { xs: 0, sm: 1 } }}
+          >
+            <Box sx={{ width: "100%", maxWidth: { xs: "100%", lg: 640 }, flex: { lg: "1 1 0" } }}>
+              <motion.div
+                initial={{ opacity: 0, y: 22 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.25 }}
+                transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
               >
-                Who We Are
-              </Typography>
+                <Typography
+                  sx={{
+                    fontSize: 11,
+                    fontWeight: 800,
+                    letterSpacing: "0.22em",
+                    textTransform: "uppercase",
+                    color: primaryColor,
+                    mb: 1.5,
+                  }}
+                >
+                  About us
+                </Typography>
 
-              <Typography
-                component="p"
-                sx={{
-                  color: textGrayDark,
-                  fontSize: { xs: 14, sm: 15, md: 15 },
-                  lineHeight: 1.85,
-                  fontWeight: 400,
-                  mb: 3,
-                }}
-              >
-                S&amp;S Associates is a premier construction company with over 25
-                years of experience in delivering exceptional building solutions.
-                Founded in 2001, we have grown from a small local contractor to
-                one of the most trusted names in the construction industry.
-              </Typography>
+                <Typography
+                  component="h2"
+                  sx={{
+                    fontFamily: "var(--font-app)",
+                    fontWeight: 800,
+                    color: secondaryColor,
+                    fontSize: { xs: 32, sm: 38, md: 44 },
+                    lineHeight: 1.08,
+                    letterSpacing: "-0.03em",
+                    mb: 2,
+                  }}
+                >
+                  Who We Are
+                </Typography>
 
-              <Typography
-                component="p"
-                sx={{
-                  color: textGrayDark,
-                  fontSize: { xs: 14, sm: 15, md: 15 },
-                  lineHeight: 1.85,
-                  fontWeight: 400,
-                  mb: 3,
-                }}
-              >
-                Our commitment to quality, innovation, and customer satisfaction
-                has earned us a reputation for excellence. We specialize in
-                residential, commercial, and industrial construction, as well as
-                renovation and interior design services.
-              </Typography>
+                <Box
+                  sx={{
+                    width: 56,
+                    height: 4,
+                    borderRadius: 2,
+                    mb: 2.5,
+                    background: `linear-gradient(90deg, ${primaryColor}, ${primaryLight})`,
+                  }}
+                />
 
-              <Typography
-                component="p"
-                sx={{
-                  color: textGrayDark,
-                  fontSize: { xs: 14, sm: 15, md: 15 },
-                  lineHeight: 1.85,
-                  fontWeight: 400,
-                }}
-              >
-                With a team of skilled professionals and state-of-the-art
-                equipment, we bring your vision to life while maintaining the
-                highest standards of safety and sustainability.
-              </Typography>
-            </motion.div>
-          </Box>
+                <Stack direction="row" flexWrap="wrap" gap={1.25} sx={{ mb: 3 }}>
+                  {highlights.map((h) => (
+                    <Box
+                      key={h.label}
+                      sx={{
+                        px: 2,
+                        py: 1,
+                        borderRadius: 2,
+                        border: "1px solid rgba(16, 24, 40, 0.08)",
+                        background: primaryBg,
+                        boxShadow: "0 8px 28px rgba(8, 12, 20, 0.06)",
+                      }}
+                    >
+                      <Typography
+                        sx={{
+                          fontFamily: "var(--font-app)",
+                          fontWeight: 800,
+                          fontSize: 16,
+                          lineHeight: 1,
+                          color: primaryColor,
+                          letterSpacing: "-0.02em",
+                        }}
+                      >
+                        {h.label}
+                      </Typography>
+                      <Typography sx={{ fontSize: 11, color: textGrayDark, opacity: 0.85, mt: 0.35 }}>
+                        {h.sub}
+                      </Typography>
+                    </Box>
+                  ))}
+                </Stack>
 
+                <Box
+                  sx={{
+                    p: { xs: 2.5, sm: 3 },
+                    borderRadius: sectionRadius,
+                    bgcolor: "rgba(255, 255, 255, 0.72)",
+                    border: "1px solid rgba(16, 24, 40, 0.06)",
+                    boxShadow: "0 16px 48px rgba(8, 12, 20, 0.06)",
+                    backdropFilter: "blur(10px)",
+                  }}
+                >
+                  <Typography
+                    component="p"
+                    sx={{
+                      color: textGrayDark,
+                      fontSize: { xs: 15, sm: 16 },
+                      lineHeight: 1.88,
+                      fontWeight: 400,
+                      mb: 2.5,
+                    }}
+                  >
+                    S&amp;S Associates is a premier construction company with over 25 years of experience in delivering
+                    exceptional building solutions. Founded in 2001, we have grown from a small local contractor to one
+                    of the most trusted names in the construction industry.
+                  </Typography>
 
-     <Box p={5} m={1}>
+                  <Typography
+                    component="p"
+                    sx={{
+                      color: textGrayDark,
+                      fontSize: { xs: 15, sm: 16 },
+                      lineHeight: 1.88,
+                      fontWeight: 400,
+                      mb: 2.5,
+                    }}
+                  >
+                    Our commitment to quality, innovation, and customer satisfaction has earned us a reputation for
+                    excellence. We specialize in residential, commercial, and industrial construction, as well as
+                    renovation and interior design services.
+                  </Typography>
+                </Box>
+              </motion.div>
+            </Box>
 
+            <Box p={5} pb={2} m={1}>
       <div id="viewStage">
         <div id="cube1" className="cube">
           <div className="facefront fb" />
@@ -122,8 +226,9 @@ export default function WhoWeAre() {
       </div>
       
      </Box>
-
-     </Stack>
+          </Stack>
+        </Container>
+      </Box>
 
       <style jsx global>{`
         /*** View Stage ***/

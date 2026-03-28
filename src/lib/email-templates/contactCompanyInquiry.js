@@ -70,9 +70,9 @@ export function getCompanyInquiryEmail(payload) {
       <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:600px;">
         <tr>
           <td style="background:linear-gradient(145deg,${C.headerSub} 0%,${C.headerDark} 100%);border-radius:18px 18px 0 0;padding:0;overflow:hidden;">
-            <table role="presentation" width="100%" cellspacing="0" cellpadding="0">
+            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="border-collapse:collapse;border-spacing:0;">
               <tr>
-                <td style="height:5px;background:linear-gradient(90deg,${C.accent} 0%,#ffb366 50%,${C.accent} 100%);"></td>
+                <td style="height:5px;line-height:5px;font-size:0;background:linear-gradient(90deg,${C.accent} 0%,#ffb366 50%,${C.accent} 100%);border-top-left-radius:18px;border-top-right-radius:18px;"></td>
               </tr>
               <tr>
                 <td style="padding:28px 28px 24px 28px;text-align:left;">

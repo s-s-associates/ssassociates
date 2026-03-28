@@ -162,7 +162,7 @@ function Navbar() {
               >
                 <Link href="/" style={{ display: "inline-flex" }}>
                   <Image
-                    src="/ss-logo.png"
+                    src="/logo.png"
                     alt="S&S Associates"
                     width={40}
                     height={40}

@@ -29,13 +29,18 @@ const cardSx = {
   background:
     "linear-gradient(145deg, rgba(18, 22, 32, 0.96) 0%, rgba(12, 16, 24, 0.98) 50%, rgba(22, 18, 14, 0.94) 100%)",
   borderRadius: 3,
-  border: "1px solid rgba(255, 255, 255, 0.12)",
+  border: "2px solid rgba(255, 255, 255, 0.1)",
   overflow: "hidden",
   boxShadow: "0 14px 40px rgba(0, 0, 0, 0.45)",
   transition: "box-shadow 0.35s ease, transform 0.35s ease, border-color 0.35s ease",
   "&:hover": {
-    borderColor: "rgba(251, 134, 30, 0.45)",
-    boxShadow: "0 22px 50px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(251, 134, 30, 0.12)",
+    border: `2px solid ${primaryColor}`,
+    boxShadow: [
+      "0 22px 50px rgba(0, 0, 0, 0.55)",
+      "0 12px 36px rgba(251, 134, 30, 0.35)",
+      "0 0 48px rgba(251, 134, 30, 0.4)",
+      "0 0 88px rgba(251, 134, 30, 0.18)",
+    ].join(", "),
     transform: "translateY(-6px)",
   },
 };
