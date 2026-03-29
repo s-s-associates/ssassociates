@@ -1,6 +1,12 @@
 "use client";
 
 import { bggrayColor, primaryColor, primaryHover } from "@/components/utils/Colors";
+
+/** Light upload zone tint (primary orange, not legacy purple). */
+const UPLOAD_ZONE_BG = "rgba(251, 134, 30, 0.05)";
+const UPLOAD_ZONE_BG_HOVER = "rgba(251, 134, 30, 0.1)";
+const PRIMARY_SHADOW = "0 4px 14px rgba(251, 134, 30, 0.35)";
+const PRIMARY_SHADOW_HOVER = "0 6px 20px rgba(251, 134, 30, 0.42)";
 import {
   Box,
   Button,
@@ -446,9 +452,9 @@ export default function ProjectForm({ projectId, initialData, onSuccess }) {
                     p: 4,
                     textAlign: "center",
                     cursor: "pointer",
-                    bgcolor: coverError ? "rgba(211,47,47,0.04)" : "rgba(138,56,245,0.02)",
+                    bgcolor: coverError ? "rgba(211,47,47,0.04)" : UPLOAD_ZONE_BG,
                     transition: "border-color 0.2s, background-color 0.2s",
-                    "&:hover": { borderColor: primaryColor, bgcolor: "rgba(138,56,245,0.06)" },
+                    "&:hover": { borderColor: primaryColor, bgcolor: UPLOAD_ZONE_BG_HOVER },
                   }}
                 >
                   <input
@@ -787,9 +793,9 @@ export default function ProjectForm({ projectId, initialData, onSuccess }) {
                   p: 4,
                   textAlign: "center",
                   cursor: canAddMore ? "pointer" : "not-allowed",
-                  bgcolor: canAddMore ? "rgba(138,56,245,0.02)" : "rgba(0,0,0,0.02)",
+                  bgcolor: canAddMore ? UPLOAD_ZONE_BG : "rgba(0,0,0,0.02)",
                   transition: "border-color 0.2s, background-color 0.2s",
-                  "&:hover": canAddMore ? { borderColor: primaryColor, bgcolor: "rgba(138,56,245,0.06)" } : {},
+                  "&:hover": canAddMore ? { borderColor: primaryColor, bgcolor: UPLOAD_ZONE_BG_HOVER } : {},
                 }}
               >
                 <input
@@ -970,8 +976,8 @@ export default function ProjectForm({ projectId, initialData, onSuccess }) {
                   py: 1.5,
                   borderRadius: 2.5,
                   textTransform: "none",
-                  boxShadow: "0 4px 14px rgba(138,56,245,0.4)",
-                  "&:hover": { bgcolor: primaryHover, boxShadow: "0 6px 20px rgba(138,56,245,0.45)" },
+                  boxShadow: PRIMARY_SHADOW,
+                  "&:hover": { bgcolor: primaryHover, boxShadow: PRIMARY_SHADOW_HOVER },
                 }}
               >
                 {isSubmitting ? <BeatLoader color="#fff" size={12} /> : projectId ? "Update Project" : "Add Project"}

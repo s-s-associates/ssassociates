@@ -121,7 +121,7 @@ function Navbar() {
 
       {/* Right: Notifications + Profile */}
       <Box sx={{ display: "flex", alignItems: "center", gap: { xs: 0.5, sm: 1.5 }, flexShrink: 0 }}>
-        <IconButton
+        {/* <IconButton
           size="medium"
           aria-label="Notifications"
           sx={{
@@ -151,7 +151,7 @@ function Navbar() {
           >
             2
           </Box>
-        </IconButton>
+        </IconButton> */}
 
         <Box
           onClick={openMenu}
