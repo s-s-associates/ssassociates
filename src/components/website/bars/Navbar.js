@@ -123,7 +123,7 @@ function Navbar() {
             // maxWidth: 1200,
             margin: "0 auto",
             px: { xs: 2, sm: 3 },
-            py: 1.5,
+            py: 1.6,
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
