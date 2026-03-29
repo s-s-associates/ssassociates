@@ -10,7 +10,7 @@ import React, {
   useEffect,
   useState,
 } from "react";
-import { BarLoader, BeatLoader } from "react-spinners";
+import { BarLoader } from "react-spinners";
 
 function normalizePath(path) {
   if (!path || typeof path !== "string") return "/";

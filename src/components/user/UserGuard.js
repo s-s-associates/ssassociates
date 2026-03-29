@@ -72,7 +72,7 @@ export default function UserGuard({ children }) {
           bgcolor: "#fafafa",
         }}
       >
-        <BeatLoader color="#8A38F5" size={14} />
+        <BeatLoader color={primaryColor} size={14} />
       </Box>
     );
   }

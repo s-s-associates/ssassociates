@@ -1,6 +1,6 @@
 "use client";
 
-import { bggrayColor } from "@/components/utils/Colors";
+import { bggrayColor, primaryColor } from "@/components/utils/Colors";
 import ProjectForm from "@/components/user/projects/ProjectForm";
 import { getAuth } from "@/lib/auth-storage";
 import { Box, Skeleton, Typography } from "@mui/material";
@@ -56,7 +56,7 @@ export default function EditProjectPage({ params }) {
   if (!id && params && typeof params.then === "function") {
     return (
       <Box sx={{ p: 3, display: "flex", justifyContent: "center", alignItems: "center", minHeight: 200 }}>
-        <BeatLoader color="#8A38F5" size={14} />
+        <BeatLoader color={primaryColor} size={14} />
       </Box>
     );
   }
