@@ -1,6 +1,9 @@
 import { connectDB } from "@/lib/db";
 import { getUserFromRequest } from "@/lib/get-user-from-request";
-import { normalizeProjectChallengesSolutions, toStringArray } from "@/lib/project-challenges-solutions";
+import {
+  normalizeProjectChallengesSolutions,
+  toStoredProjectListValue,
+} from "@/lib/project-challenges-solutions";
 import Project from "@/models/Project";
 import { NextResponse } from "next/server";
 
@@ -41,6 +44,8 @@ export async function PATCH(req, { params }) {
       return NextResponse.json({ success: false, message: "Project not found" }, { status: 404 });
     }
     const body = await req.json();
+    const challengesPathInstance = Project?.schema?.path("challengesFaced")?.instance;
+    const solutionsPathInstance = Project?.schema?.path("solutionsImplemented")?.instance;
     const allowed = [
       "bannerUrl", "title", "tagline", "location", "status", "year", "ctaType", "ctaLink",
       "description", "clientName", "category", "projectArea", "projectAreaUnit", "budget", "durationStart", "durationEnd",
@@ -51,11 +56,11 @@ export async function PATCH(req, { params }) {
     allowed.forEach((key) => {
       if (body[key] === undefined) return;
       if (key === "challengesFaced") {
-        project.challengesFaced = toStringArray(body.challengesFaced);
+        project.challengesFaced = toStoredProjectListValue(body.challengesFaced, challengesPathInstance);
         return;
       }
       if (key === "solutionsImplemented") {
-        project.solutionsImplemented = toStringArray(body.solutionsImplemented);
+        project.solutionsImplemented = toStoredProjectListValue(body.solutionsImplemented, solutionsPathInstance);
         return;
       }
       project[key] = body[key];

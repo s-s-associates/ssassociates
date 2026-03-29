@@ -3,7 +3,12 @@ import { Box, Grid, Paper, Typography } from "@mui/material";
 
 export default function ImagesGallery({ title, images = [] }) {
   return (
-    <Paper elevation={0} sx={{ p: { xs: 2, md: 3 }, borderRadius: 3, border: `1px solid ${bordergrayColor}` }}>
+    <Paper elevation={0} sx={{
+        my: {xs: 2, sm: 3, md:4,lg:5,xl:6},
+        mx: {xs: 1, sm: 5, md:10,lg:15,xl:20},
+        px: { xs: 2, md: 3 },
+        py: {xs: 5, md: 8},
+        px: { xs: 2, md: 3 }, borderRadius: 3, border: `1px solid ${bordergrayColor}` }}>
       <Typography sx={{ fontSize: 20, fontWeight: 700, mb: 1.5 }}>Image Gallery</Typography>
       <Grid container spacing={1.5}>
         {images.map((url, index) => (

@@ -18,14 +18,14 @@ function LandingPage() {
   return (
     <div>
       <HomeBanner/>
-      <Stats/>
       <ServicesCards/>
       <ProjectCard/>
-      <OurProcess/>
-      <WhoWeAre/>
       <OurClients/>
-      <ContactForm/>
+      <WhoWeAre/>
+      <OurProcess/>
+      <Stats/>
       <WhyChooseUs/>
+      <ContactForm/>
       <Testimonials/>
       <Faqs/>
     </div>
