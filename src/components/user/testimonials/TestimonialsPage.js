@@ -404,12 +404,64 @@ export default function TestimonialsPage() {
                       )}
                     </TableCell>
                     <TableCell sx={{ color: "rgba(0,0,0,0.7)", maxWidth: 280 }}>{row.content ? (row.content.length > 50 ? row.content.slice(0, 50) + "…" : row.content) : "—"}</TableCell>
-                    <TableCell align="right">
-                      <IconButton size="small" onClick={() => setViewingItem(row)} sx={{ color: "#64748b", "&:hover": { bgcolor: "rgba(0,0,0,0.06)" } }} aria-label="View"><FiEye size={18} /></IconButton>
-                      <IconButton size="small" onClick={() => openEditDialog(row)} sx={{ color: primaryColor, "&:hover": { bgcolor: "rgba(138,56,245,0.08)" } }} aria-label="Edit"><FiEdit2 size={18} /></IconButton>
-                      <IconButton size="small" disabled={isDeleting} onClick={() => handleDelete(row)} sx={{ color: "#dc2626", "&:hover": { bgcolor: "rgba(220,38,38,0.08)" } }} aria-label="Delete">
-                        {isDeleting ? <BeatLoader color="#dc2626" size={10} /> : <FiTrash2 size={18} />}
-                      </IconButton>
+                    <TableCell
+                      align="right"
+                      sx={{
+                        verticalAlign: "middle",
+                        whiteSpace: "nowrap",
+                        width: "1%",
+                      }}
+                    >
+                      <Box
+                        sx={{
+                          display: "inline-flex",
+                          alignItems: "center",
+                          justifyContent: "flex-end",
+                          flexWrap: "nowrap",
+                          gap: { xs: 0, sm: 0.25 },
+                        }}
+                      >
+                        <IconButton
+                          size="small"
+                          onClick={() => setViewingItem(row)}
+                          sx={{
+                            color: "#64748b",
+                            flexShrink: 0,
+                            p: { xs: "4px", sm: "8px" },
+                            "&:hover": { bgcolor: "rgba(0,0,0,0.06)" },
+                          }}
+                          aria-label="View"
+                        >
+                          <FiEye size={18} />
+                        </IconButton>
+                        <IconButton
+                          size="small"
+                          onClick={() => openEditDialog(row)}
+                          sx={{
+                            color: primaryColor,
+                            flexShrink: 0,
+                            p: { xs: "4px", sm: "8px" },
+                            "&:hover": { bgcolor: "rgba(138,56,245,0.08)" },
+                          }}
+                          aria-label="Edit"
+                        >
+                          <FiEdit2 size={18} />
+                        </IconButton>
+                        <IconButton
+                          size="small"
+                          disabled={isDeleting}
+                          onClick={() => handleDelete(row)}
+                          sx={{
+                            color: "#dc2626",
+                            flexShrink: 0,
+                            p: { xs: "4px", sm: "8px" },
+                            "&:hover": { bgcolor: "rgba(220,38,38,0.08)" },
+                          }}
+                          aria-label="Delete"
+                        >
+                          {isDeleting ? <BeatLoader color="#dc2626" size={10} /> : <FiTrash2 size={18} />}
+                        </IconButton>
+                      </Box>
                     </TableCell>
                   </TableRow>
                 );

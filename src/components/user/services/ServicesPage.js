@@ -311,7 +311,14 @@ export default function ServicesPage() {
                   return (
                     <TableRow key={row._id} sx={{ "&:hover": { bgcolor: "rgba(0,0,0,0.02)" } }}>
                       <TableCell sx={{ color: "rgba(0,0,0,0.7)", verticalAlign: "middle" }}>
-                        <Box sx={{ display: "flex", alignItems: "center", gap: 0.25 }}>
+                        <Box
+                          sx={{
+                            display: "flex",
+                            alignItems: "center",
+                            flexWrap: "nowrap",
+                            gap: 0.25,
+                          }}
+                        >
                           <IconButton
                             size="small"
                             disabled={!canMoveUp || isReordering}
@@ -381,33 +388,65 @@ export default function ServicesPage() {
                       <TableCell sx={{ color: "rgba(0,0,0,0.7)", maxWidth: 320 }}>
                         {row.description ? (row.description.length > 60 ? row.description.slice(0, 60) + "…" : row.description) : "—"}
                       </TableCell>
-                      <TableCell align="right">
-                        <IconButton
-                          size="small"
-                          onClick={() => setViewService(row)}
-                          sx={{ color: "rgba(0,0,0,0.6)", "&:hover": { bgcolor: "rgba(0,0,0,0.06)" } }}
-                          aria-label="View"
+                      <TableCell
+                        align="right"
+                        sx={{
+                          verticalAlign: "middle",
+                          whiteSpace: "nowrap",
+                          width: "1%",
+                        }}
+                      >
+                        <Box
+                          sx={{
+                            display: "inline-flex",
+                            alignItems: "center",
+                            justifyContent: "flex-end",
+                            flexWrap: "nowrap",
+                            gap: { xs: 0, sm: 0.25 },
+                          }}
                         >
-                          <FiEye size={18} />
-                        </IconButton>
-                        <IconButton
-                          component={Link}
-                          href={`/user/services/${row._id}/edit`}
-                          size="small"
-                          sx={{ color: primaryColor, "&:hover": { bgcolor: "rgba(138,56,245,0.08)" } }}
-                          aria-label="Edit"
-                        >
-                          <FiEdit2 size={18} />
-                        </IconButton>
-                        <IconButton
-                          size="small"
-                          disabled={isDeleting}
-                          onClick={() => handleDelete(row)}
-                          sx={{ color: "#dc2626", "&:hover": { bgcolor: "rgba(220,38,38,0.08)" } }}
-                          aria-label="Delete"
-                        >
-                          {isDeleting ? <BeatLoader color="#dc2626" size={10} /> : <FiTrash2 size={18} />}
-                        </IconButton>
+                          <IconButton
+                            size="small"
+                            onClick={() => setViewService(row)}
+                            sx={{
+                              color: "rgba(0,0,0,0.6)",
+                              flexShrink: 0,
+                              p: { xs: "4px", sm: "8px" },
+                              "&:hover": { bgcolor: "rgba(0,0,0,0.06)" },
+                            }}
+                            aria-label="View"
+                          >
+                            <FiEye size={18} />
+                          </IconButton>
+                          <IconButton
+                            component={Link}
+                            href={`/user/services/${row._id}/edit`}
+                            size="small"
+                            sx={{
+                              color: primaryColor,
+                              flexShrink: 0,
+                              p: { xs: "4px", sm: "8px" },
+                              "&:hover": { bgcolor: "rgba(138,56,245,0.08)" },
+                            }}
+                            aria-label="Edit"
+                          >
+                            <FiEdit2 size={18} />
+                          </IconButton>
+                          <IconButton
+                            size="small"
+                            disabled={isDeleting}
+                            onClick={() => handleDelete(row)}
+                            sx={{
+                              color: "#dc2626",
+                              flexShrink: 0,
+                              p: { xs: "4px", sm: "8px" },
+                              "&:hover": { bgcolor: "rgba(220,38,38,0.08)" },
+                            }}
+                            aria-label="Delete"
+                          >
+                            {isDeleting ? <BeatLoader color="#dc2626" size={10} /> : <FiTrash2 size={18} />}
+                          </IconButton>
+                        </Box>
                       </TableCell>
                     </TableRow>
                   );
