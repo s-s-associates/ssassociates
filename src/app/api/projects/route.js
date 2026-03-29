@@ -1,5 +1,6 @@
 import { connectDB } from "@/lib/db";
 import { getUserFromRequest } from "@/lib/get-user-from-request";
+import { normalizeProjectChallengesSolutions, toStringArray } from "@/lib/project-challenges-solutions";
 import Project from "@/models/Project";
 import { NextResponse } from "next/server";
 
@@ -9,7 +10,8 @@ export async function GET(req) {
     const projects = await Project.find({})
       .sort({ order: 1, createdAt: -1 })
       .lean();
-    return NextResponse.json({ success: true, projects });
+    const normalized = projects.map((p) => normalizeProjectChallengesSolutions(p));
+    return NextResponse.json({ success: true, projects: normalized });
   } catch (err) {
     console.error("Projects GET error:", err);
     return NextResponse.json(
@@ -31,6 +33,8 @@ export async function POST(req) {
     const project = await Project.create({
       userId: user._id,
       ...body,
+      challengesFaced: toStringArray(body.challengesFaced),
+      solutionsImplemented: toStringArray(body.solutionsImplemented),
       order: typeof body.order === "number" ? body.order : count,
     });
     return NextResponse.json({

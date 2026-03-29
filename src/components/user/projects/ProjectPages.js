@@ -19,9 +19,11 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  Divider,
   FormControl,
   IconButton,
   InputAdornment,
+  Link as MuiLink,
   MenuItem,
   Select,
   Skeleton,
@@ -35,12 +37,41 @@ import {
   Typography,
 } from "@mui/material";
 import { getAuth } from "@/lib/auth-storage";
+import { toStringArray } from "@/lib/project-challenges-solutions";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { BeatLoader } from "react-spinners";
 import Swal from "sweetalert2";
 import { FiChevronDown, FiChevronUp, FiEdit2, FiEye, FiPlus, FiRefreshCw, FiSearch, FiTrash2 } from "react-icons/fi";
+
+function formatDetailDate(value) {
+  if (!value) return "—";
+  const d = new Date(value);
+  if (Number.isNaN(d.getTime())) return "—";
+  return d.toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" });
+}
+
+function DetailRow({ label, value, href }) {
+  const empty = value === undefined || value === null || String(value).trim() === "";
+  const text = empty ? "—" : String(value);
+  return (
+    <Box sx={{ py: 1, display: "flex", flexDirection: { xs: "column", sm: "row" }, gap: { xs: 0.25, sm: 2 } }}>
+      <Typography sx={{ fontSize: 12, fontWeight: 600, color: "rgba(0,0,0,0.45)", minWidth: { sm: 160 }, flexShrink: 0 }}>
+        {label}
+      </Typography>
+      {href && !empty ? (
+        <MuiLink href={href} target="_blank" rel="noopener noreferrer" sx={{ fontSize: 14, fontWeight: 500, wordBreak: "break-word" }}>
+          {text}
+        </MuiLink>
+      ) : (
+        <Typography sx={{ fontSize: 14, color: "rgba(0,0,0,0.85)", fontWeight: 500, whiteSpace: "pre-wrap", wordBreak: "break-word" }}>
+          {text}
+        </Typography>
+      )}
+    </Box>
+  );
+}
 
 function getStatusStyle(status) {
   switch (status) {
@@ -577,14 +608,22 @@ export default function ProjectPages() {
       <Dialog
         open={!!viewingProject || !!viewLoadingId}
         onClose={closeViewDialog}
-        maxWidth="sm"
+        maxWidth="md"
         fullWidth
-        PaperProps={{ sx: { borderRadius: 2.5 } }}
+        scroll="paper"
+        PaperProps={{ sx: { borderRadius: 2.5, maxHeight: "min(92vh, 900px)" } }}
       >
-        <DialogTitle sx={{ fontWeight: 700, fontSize: 18, pb: 0 }}>
+        <DialogTitle sx={{ fontWeight: 700, fontSize: 18, pb: 0, pr: 6 }}>
           Project details
         </DialogTitle>
-        <DialogContent sx={{ pt: 2 }}>
+        <DialogContent
+          dividers
+          sx={{
+            pt: 2,
+            maxHeight: { xs: "calc(92vh - 140px)", sm: "min(78vh, 760px)" },
+            overflowY: "auto",
+          }}
+        >
           {viewLoadingId ? (
             <Box sx={{ py: 4, display: "flex", justifyContent: "center" }}>
               <BeatLoader color={primaryColor} size={14} />
@@ -609,71 +648,177 @@ export default function ProjectPages() {
               ) : (
                 <Box sx={{ width: "100%", height: 160, bgcolor: bordergrayColor, borderRadius: 2, mb: 2 }} />
               )}
-              <Typography sx={{ fontSize: 12, fontWeight: 600, color: "rgba(0,0,0,0.5)", textTransform: "uppercase", letterSpacing: "0.06em", mb: 0.5 }}>
-                Title
-              </Typography>
-              <Typography sx={{ fontSize: 18, fontWeight: 700, color: "#000", mb: 1.5 }}>
+
+              <Typography sx={{ fontSize: 20, fontWeight: 700, color: "#000", mb: 0.5 }}>
                 {viewingProject.title || "—"}
               </Typography>
-              <Box sx={{ display: "flex", gap: 1.5, flexWrap: "wrap", mb: 1.5 }}>
-                <Box component="span" sx={{ px: 1.25, py: 0.5, borderRadius: 1, fontSize: 12, fontWeight: 600, ...getStatusStyle(viewingProject.status) }}>
+              {viewingProject.tagline ? (
+                <Typography sx={{ fontSize: 15, color: "rgba(0,0,0,0.65)", mb: 1.5 }}>{viewingProject.tagline}</Typography>
+              ) : null}
+
+              <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap", alignItems: "center", mb: 2 }}>
+                <Box
+                  component="span"
+                  sx={{
+                    px: 1.25,
+                    py: 0.5,
+                    borderRadius: 1,
+                    fontSize: 12,
+                    fontWeight: 600,
+                    ...getStatusStyle(viewingProject.status),
+                  }}
+                >
                   {viewingProject.status || "—"}
                 </Box>
-                {viewingProject.category && (
-                  <Typography component="span" sx={{ fontSize: 13, color: "rgba(0,0,0,0.7)" }}>
+                {viewingProject.category ? (
+                  <Typography component="span" sx={{ fontSize: 13, color: "rgba(0,0,0,0.75)" }}>
                     {viewingProject.category}
                   </Typography>
-                )}
-                {viewingProject.year && (
-                  <Typography component="span" sx={{ fontSize: 13, color: "rgba(0,0,0,0.6)" }}>
-                    {viewingProject.year}
+                ) : null}
+                {viewingProject.year ? (
+                  <Typography component="span" sx={{ fontSize: 13, color: "rgba(0,0,0,0.55)" }}>
+                    Year: {viewingProject.year}
                   </Typography>
+                ) : null}
+              </Box>
+
+              <Typography sx={{ fontSize: 12, fontWeight: 700, color: primaryColor, letterSpacing: "0.06em", mb: 1 }}>
+                Overview
+              </Typography>
+              <DetailRow label="Client" value={viewingProject.clientName} />
+              <DetailRow label="Location" value={viewingProject.location} />
+              <DetailRow label="Description" value={viewingProject.description} />
+              <Divider sx={{ my: 2 }} />
+
+              <Typography sx={{ fontSize: 12, fontWeight: 700, color: primaryColor, letterSpacing: "0.06em", mb: 1 }}>
+                Project facts
+              </Typography>
+              <DetailRow
+                label="Area"
+                value={
+                  viewingProject.projectArea
+                    ? `${viewingProject.projectArea} ${viewingProject.projectAreaUnit || ""}`.trim()
+                    : ""
+                }
+              />
+              <DetailRow label="Budget" value={viewingProject.budget} />
+              <DetailRow label="Duration start" value={formatDetailDate(viewingProject.durationStart)} />
+              <DetailRow label="Duration end" value={formatDetailDate(viewingProject.durationEnd)} />
+              <Divider sx={{ my: 2 }} />
+
+              <Typography sx={{ fontSize: 12, fontWeight: 700, color: primaryColor, letterSpacing: "0.06em", mb: 1 }}>
+                Call to action
+              </Typography>
+              <DetailRow label="CTA type" value={viewingProject.ctaType} />
+              <DetailRow
+                label="CTA link"
+                value={viewingProject.ctaLink}
+                href={viewingProject.ctaLink && String(viewingProject.ctaLink).trim().startsWith("http") ? viewingProject.ctaLink : undefined}
+              />
+              <Divider sx={{ my: 2 }} />
+
+              <Typography sx={{ fontSize: 12, fontWeight: 700, color: primaryColor, letterSpacing: "0.06em", mb: 1 }}>
+                Video
+              </Typography>
+              <DetailRow
+                label="Video URL"
+                value={viewingProject.videoUrl}
+                href={viewingProject.videoUrl && String(viewingProject.videoUrl).trim().startsWith("http") ? viewingProject.videoUrl : undefined}
+              />
+              <Divider sx={{ my: 2 }} />
+
+              <Typography sx={{ fontSize: 12, fontWeight: 700, color: primaryColor, letterSpacing: "0.06em", mb: 1 }}>
+                Specifications
+              </Typography>
+              <DetailRow label="Structure type" value={viewingProject.structureType} />
+              <DetailRow label="Floors" value={viewingProject.floors} />
+              <DetailRow label="Materials used" value={viewingProject.materialsUsed} />
+              <DetailRow label="Foundation type" value={viewingProject.foundationType} />
+              <DetailRow label="Safety standards" value={viewingProject.safetyStandards} />
+              <DetailRow label="Sustainability" value={viewingProject.sustainabilityFeatures} />
+              <DetailRow label="Certifications" value={viewingProject.certifications} />
+              <Divider sx={{ my: 2 }} />
+
+              <Typography sx={{ fontSize: 12, fontWeight: 700, color: primaryColor, letterSpacing: "0.06em", mb: 1 }}>
+                Challenges &amp; solutions
+              </Typography>
+              <Box sx={{ mb: 1.5 }}>
+                <Typography sx={{ fontSize: 12, fontWeight: 600, color: "rgba(0,0,0,0.5)", mb: 0.75 }}>Challenges faced</Typography>
+                {toStringArray(viewingProject.challengesFaced).length ? (
+                  <Box component="ul" sx={{ m: 0, pl: 2.25, color: "rgba(0,0,0,0.82)" }}>
+                    {toStringArray(viewingProject.challengesFaced).map((line, i) => (
+                      <Typography key={i} component="li" sx={{ mb: 0.5, fontSize: 14, whiteSpace: "pre-wrap" }}>
+                        {line}
+                      </Typography>
+                    ))}
+                  </Box>
+                ) : (
+                  <Typography sx={{ fontSize: 14, color: "rgba(0,0,0,0.45)" }}>—</Typography>
                 )}
               </Box>
-              {viewingProject.description ? (
-                <>
-                  <Typography sx={{ fontSize: 12, fontWeight: 600, color: "rgba(0,0,0,0.5)", textTransform: "uppercase", letterSpacing: "0.06em", mb: 0.5 }}>
-                    Description
-                  </Typography>
-                  <Typography sx={{ fontSize: 14, color: "rgba(0,0,0,0.8)", lineHeight: 1.6, whiteSpace: "pre-wrap", mb: 2 }}>
-                    {viewingProject.description}
-                  </Typography>
-                </>
-              ) : null}
+              <Box sx={{ mb: 1 }}>
+                <Typography sx={{ fontSize: 12, fontWeight: 600, color: "rgba(0,0,0,0.5)", mb: 0.75 }}>Solutions implemented</Typography>
+                {toStringArray(viewingProject.solutionsImplemented).length ? (
+                  <Box component="ul" sx={{ m: 0, pl: 2.25, color: "rgba(0,0,0,0.82)" }}>
+                    {toStringArray(viewingProject.solutionsImplemented).map((line, i) => (
+                      <Typography key={i} component="li" sx={{ mb: 0.5, fontSize: 14, whiteSpace: "pre-wrap" }}>
+                        {line}
+                      </Typography>
+                    ))}
+                  </Box>
+                ) : (
+                  <Typography sx={{ fontSize: 14, color: "rgba(0,0,0,0.45)" }}>—</Typography>
+                )}
+              </Box>
+              <DetailRow label="Unique engineering approach" value={viewingProject.uniqueApproach} />
+              <Divider sx={{ my: 2 }} />
+
               {viewingProject.imageGallery?.length > 0 ? (
                 <>
-                  <Typography sx={{ fontSize: 12, fontWeight: 600, color: "rgba(0,0,0,0.5)", textTransform: "uppercase", letterSpacing: "0.06em", mb: 1 }}>
-                    Gallery
+                  <Typography sx={{ fontSize: 12, fontWeight: 700, color: primaryColor, letterSpacing: "0.06em", mb: 1 }}>
+                    Image gallery
                   </Typography>
-                  <Box sx={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 1 }}>
-                    {viewingProject.imageGallery.slice(0, 8).map((url, i) => (
+                  <Box
+                    sx={{
+                      display: "grid",
+                      gridTemplateColumns: { xs: "repeat(2, 1fr)", sm: "repeat(4, 1fr)" },
+                      gap: 1,
+                    }}
+                  >
+                    {viewingProject.imageGallery.map((url, i) => (
                       <Box
-                        key={i}
+                        key={`${url}-${i}`}
                         component="img"
                         src={url}
                         alt=""
-                        sx={{ width: "100%", aspectRatio: 1, borderRadius: 1, objectFit: "cover", boxShadow: "0 1px 4px rgba(0,0,0,0.08)" }}
+                        sx={{
+                          width: "100%",
+                          aspectRatio: 1,
+                          borderRadius: 1,
+                          objectFit: "cover",
+                          boxShadow: "0 1px 4px rgba(0,0,0,0.08)",
+                        }}
                       />
                     ))}
-                    {viewingProject.imageGallery.length > 8 && (
-                      <Box sx={{ aspectRatio: 1, borderRadius: 1, bgcolor: bggrayColor, display: "flex", alignItems: "center", justifyContent: "center" }}>
-                        <Typography sx={{ fontSize: 12, color: "rgba(0,0,0,0.5)" }}>
-                          +{viewingProject.imageGallery.length - 8}
-                        </Typography>
-                      </Box>
-                    )}
                   </Box>
                 </>
               ) : null}
             </Box>
           ) : null}
         </DialogContent>
-        <DialogActions sx={{ px: 3, pb: 2, pt: 1 }}>
-          <Button
-            variant="contained"
-            onClick={closeViewDialog}
-            sx={{ bgcolor: primaryColor, "&:hover": { bgcolor: primaryHover } }}
-          >
+        <DialogActions sx={{ px: 3, pb: 2, pt: 1, flexWrap: "wrap", gap: 1 }}>
+          {viewingProject?._id ? (
+            <Button
+              component={Link}
+              href={`/user/projects/${viewingProject._id}/edit`}
+              onClick={closeViewDialog}
+              variant="outlined"
+              sx={{ textTransform: "none", fontWeight: 600, borderColor: bordergrayColor, color: "#000" }}
+            >
+              Edit project
+            </Button>
+          ) : null}
+          <Button variant="contained" onClick={closeViewDialog} sx={{ bgcolor: primaryColor, "&:hover": { bgcolor: primaryHover } }}>
             Close
           </Button>
         </DialogActions>

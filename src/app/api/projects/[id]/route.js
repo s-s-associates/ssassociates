@@ -1,5 +1,6 @@
 import { connectDB } from "@/lib/db";
 import { getUserFromRequest } from "@/lib/get-user-from-request";
+import { normalizeProjectChallengesSolutions, toStringArray } from "@/lib/project-challenges-solutions";
 import Project from "@/models/Project";
 import { NextResponse } from "next/server";
 
@@ -14,7 +15,7 @@ export async function GET(req, { params }) {
     if (!project) {
       return NextResponse.json({ success: false, message: "Project not found" }, { status: 404 });
     }
-    return NextResponse.json({ success: true, project });
+    return NextResponse.json({ success: true, project: normalizeProjectChallengesSolutions(project) });
   } catch (err) {
     console.error("Project GET error:", err);
     return NextResponse.json(
@@ -48,7 +49,16 @@ export async function PATCH(req, { params }) {
       "challengesFaced", "solutionsImplemented", "uniqueApproach",
     ];
     allowed.forEach((key) => {
-      if (body[key] !== undefined) project[key] = body[key];
+      if (body[key] === undefined) return;
+      if (key === "challengesFaced") {
+        project.challengesFaced = toStringArray(body.challengesFaced);
+        return;
+      }
+      if (key === "solutionsImplemented") {
+        project.solutionsImplemented = toStringArray(body.solutionsImplemented);
+        return;
+      }
+      project[key] = body[key];
     });
     await project.save();
     return NextResponse.json({ success: true, project });

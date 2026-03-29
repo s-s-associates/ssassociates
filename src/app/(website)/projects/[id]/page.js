@@ -1,6 +1,7 @@
 import { bggrayColor, bordergrayColor, primaryColor, primaryHover } from "@/components/utils/Colors";
 import ProjectDetail from "@/components/website/projects/projectDetail/ProjectDetail";
 import { connectDB } from "@/lib/db";
+import { normalizeProjectChallengesSolutions } from "@/lib/project-challenges-solutions";
 import Project from "@/models/Project";
 import { Box, Button, Paper, Typography } from "@mui/material";
 import Link from "next/link";
@@ -50,5 +51,5 @@ export default async function ProjectDetailsPage({ params }) {
     );
   }
 
-  return <ProjectDetail project={project} />;
+  return <ProjectDetail project={normalizeProjectChallengesSolutions(project)} />;
 }

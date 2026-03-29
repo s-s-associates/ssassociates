@@ -1,14 +1,37 @@
 import { bordergrayColor, primaryColor } from "@/components/utils/Colors";
+import { toStringArray } from "@/lib/project-challenges-solutions";
 import { Box, Divider, Paper, Typography } from "@mui/material";
 
-function Block({ title, body }) {
-  const text = String(body || "").trim();
+function Block({ title, body, plain }) {
+  if (plain) {
+    const text = String(body || "").trim();
+    return (
+      <Box sx={{ mb: 2.5, "&:last-of-type": { mb: 0 } }}>
+        <Typography sx={{ fontSize: 15, fontWeight: 700, color: primaryColor, mb: 1 }}>{title}</Typography>
+        <Typography sx={{ color: "rgba(0,0,0,0.72)", lineHeight: 1.75 }}>
+          {text || "No information provided."}
+        </Typography>
+      </Box>
+    );
+  }
+
+  const items = toStringArray(body);
+  const showList = items.length > 0;
+
   return (
     <Box sx={{ mb: 2.5, "&:last-of-type": { mb: 0 } }}>
       <Typography sx={{ fontSize: 15, fontWeight: 700, color: primaryColor, mb: 1 }}>{title}</Typography>
-      <Typography sx={{ color: "rgba(0,0,0,0.72)", lineHeight: 1.75 }}>
-        {text || "No information provided."}
-      </Typography>
+      {showList ? (
+        <Box component="ul" sx={{ m: 0, pl: 2.25, color: "rgba(0,0,0,0.72)", lineHeight: 1.75 }}>
+          {items.map((line, i) => (
+            <Typography key={i} component="li" sx={{ mb: 0.75, "&:last-of-type": { mb: 0 } }}>
+              {line}
+            </Typography>
+          ))}
+        </Box>
+      ) : (
+        <Typography sx={{ color: "rgba(0,0,0,0.72)", lineHeight: 1.75 }}>No information provided.</Typography>
+      )}
     </Box>
   );
 }
@@ -26,7 +49,7 @@ export default function ChallengesAndSolutions({ project }) {
       <Divider sx={{ my: 2 }} />
       <Block title="Solutions implemented" body={solutions} />
       <Divider sx={{ my: 2 }} />
-      <Block title="Unique approach" body={approach} />
+      <Block title="Unique approach" body={approach} plain />
     </Paper>
   );
 }

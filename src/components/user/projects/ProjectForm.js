@@ -12,6 +12,7 @@ import {
   Button,
   FormControl,
   FormHelperText,
+  IconButton,
   InputLabel,
   MenuItem,
   Select,
@@ -19,11 +20,12 @@ import {
   Typography,
 } from "@mui/material";
 import { getAuth } from "@/lib/auth-storage";
-import { Formik } from "formik";
+import { toStringArray } from "@/lib/project-challenges-solutions";
+import { FieldArray, Formik } from "formik";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useCallback, useEffect, useState } from "react";
-import { FiArrowLeft } from "react-icons/fi";
+import { FiArrowLeft, FiPlus, FiTrash2 } from "react-icons/fi";
 import { BeatLoader } from "react-spinners";
 import Swal from "sweetalert2";
 import * as Yup from "yup";
@@ -80,8 +82,8 @@ const projectSchema = Yup.object().shape({
   sustainabilityFeatures: Yup.string().trim(),
   certifications: Yup.string().trim(),
   videoUrl: Yup.string().trim().transform((v) => v || null).url("Enter a valid URL").nullable(),
-  challengesFaced: Yup.string().trim(),
-  solutionsImplemented: Yup.string().trim(),
+  challengesFaced: Yup.array().of(Yup.string()),
+  solutionsImplemented: Yup.array().of(Yup.string()),
   uniqueApproach: Yup.string().trim(),
 });
 
@@ -109,8 +111,8 @@ const defaultValues = {
   sustainabilityFeatures: "",
   certifications: "",
   videoUrl: "",
-  challengesFaced: "",
-  solutionsImplemented: "",
+  challengesFaced: [""],
+  solutionsImplemented: [""],
   uniqueApproach: "",
 };
 
@@ -200,6 +202,8 @@ export default function ProjectForm({ projectId, initialData, onSuccess }) {
         ...initialData,
         durationStart: initialData.durationStart ? initialData.durationStart.slice(0, 10) : "",
         durationEnd: initialData.durationEnd ? initialData.durationEnd.slice(0, 10) : "",
+        challengesFaced: toStringArray(initialData.challengesFaced),
+        solutionsImplemented: toStringArray(initialData.solutionsImplemented),
       }
     : defaultValues;
 
@@ -254,6 +258,8 @@ export default function ProjectForm({ projectId, initialData, onSuccess }) {
         durationEnd: values.durationEnd || null,
         ctaLink: values.ctaLink || "",
         videoUrl: values.videoUrl || "",
+        challengesFaced: toStringArray(values.challengesFaced),
+        solutionsImplemented: toStringArray(values.solutionsImplemented),
       };
       if (projectId) {
         const res = await fetch(`/api/projects/${projectId}`, {
@@ -926,29 +932,127 @@ export default function ProjectForm({ projectId, initialData, onSuccess }) {
               <Typography sx={{ fontWeight: 700, fontSize: 16, color: "#000", mb: 2.5, letterSpacing: "0.02em", textTransform: "uppercase" }}>
                 Challenges & solutions
               </Typography>
-              <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-                <TextField
-                  fullWidth
-                  multiline
-                  rows={3}
-                  label="Challenges Faced"
-                  name="challengesFaced"
-                  value={values.challengesFaced}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  sx={inputSx}
-                />
-                <TextField
-                  fullWidth
-                  multiline
-                  rows={3}
-                  label="Solutions Implemented"
-                  name="solutionsImplemented"
-                  value={values.solutionsImplemented}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  sx={inputSx}
-                />
+              <Box sx={{ display: "flex", flexDirection: "column", gap: 2.5 }}>
+                <Box>
+                  <Typography sx={{ fontSize: 14, fontWeight: 600, color: "rgba(0,0,0,0.75)", mb: 1.5 }}>
+                    Challenges faced
+                  </Typography>
+                  <FieldArray name="challengesFaced">
+                    {(arrHelpers) => (
+                      <Box sx={{ display: "flex", flexDirection: "column", gap: 1.5 }}>
+                        {values.challengesFaced.map((_, index) => (
+                          <Box
+                            key={`ch-${index}`}
+                            sx={{ display: "flex", gap: 1, alignItems: "flex-start" }}
+                          >
+                            <TextField
+                              fullWidth
+                              multiline
+                              minRows={2}
+                              label={`Challenge ${index + 1}`}
+                              name={`challengesFaced.${index}`}
+                              value={values.challengesFaced[index] ?? ""}
+                              onChange={handleChange}
+                              onBlur={handleBlur}
+                              sx={inputSx}
+                            />
+                            <IconButton
+                              type="button"
+                              size="small"
+                              onClick={() => arrHelpers.remove(index)}
+                              aria-label="Remove challenge"
+                              sx={{
+                                mt: 0.5,
+                                color: "rgba(0,0,0,0.45)",
+                                "&:hover": { color: "#dc2626", bgcolor: "rgba(220,38,38,0.08)" },
+                              }}
+                            >
+                              <FiTrash2 size={18} />
+                            </IconButton>
+                          </Box>
+                        ))}
+                        <Button
+                          type="button"
+                          variant="outlined"
+                          size="small"
+                          startIcon={<FiPlus size={18} />}
+                          onClick={() => arrHelpers.push("")}
+                          sx={{
+                            alignSelf: "flex-start",
+                            textTransform: "none",
+                            fontWeight: 600,
+                            borderColor: "rgba(0,0,0,0.2)",
+                            color: "#000",
+                            "&:hover": { borderColor: primaryColor, color: primaryColor, bgcolor: "rgba(251,134,30,0.06)" },
+                          }}
+                        >
+                          Add challenge
+                        </Button>
+                      </Box>
+                    )}
+                  </FieldArray>
+                </Box>
+
+                <Box>
+                  <Typography sx={{ fontSize: 14, fontWeight: 600, color: "rgba(0,0,0,0.75)", mb: 1.5 }}>
+                    Solutions implemented
+                  </Typography>
+                  <FieldArray name="solutionsImplemented">
+                    {(arrHelpers) => (
+                      <Box sx={{ display: "flex", flexDirection: "column", gap: 1.5 }}>
+                        {values.solutionsImplemented.map((_, index) => (
+                          <Box
+                            key={`sol-${index}`}
+                            sx={{ display: "flex", gap: 1, alignItems: "flex-start" }}
+                          >
+                            <TextField
+                              fullWidth
+                              multiline
+                              minRows={2}
+                              label={`Solution ${index + 1}`}
+                              name={`solutionsImplemented.${index}`}
+                              value={values.solutionsImplemented[index] ?? ""}
+                              onChange={handleChange}
+                              onBlur={handleBlur}
+                              sx={inputSx}
+                            />
+                            <IconButton
+                              type="button"
+                              size="small"
+                              onClick={() => arrHelpers.remove(index)}
+                              aria-label="Remove solution"
+                              sx={{
+                                mt: 0.5,
+                                color: "rgba(0,0,0,0.45)",
+                                "&:hover": { color: "#dc2626", bgcolor: "rgba(220,38,38,0.08)" },
+                              }}
+                            >
+                              <FiTrash2 size={18} />
+                            </IconButton>
+                          </Box>
+                        ))}
+                        <Button
+                          type="button"
+                          variant="outlined"
+                          size="small"
+                          startIcon={<FiPlus size={18} />}
+                          onClick={() => arrHelpers.push("")}
+                          sx={{
+                            alignSelf: "flex-start",
+                            textTransform: "none",
+                            fontWeight: 600,
+                            borderColor: "rgba(0,0,0,0.2)",
+                            color: "#000",
+                            "&:hover": { borderColor: primaryColor, color: primaryColor, bgcolor: "rgba(251,134,30,0.06)" },
+                          }}
+                        >
+                          Add solution
+                        </Button>
+                      </Box>
+                    )}
+                  </FieldArray>
+                </Box>
+
                 <TextField
                   fullWidth
                   multiline

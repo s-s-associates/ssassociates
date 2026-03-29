@@ -35,9 +35,9 @@ const projectSchema = new mongoose.Schema(
     imageGallery: [{ type: String, trim: true }],
     videoUrl: { type: String, trim: true, default: "" },
 
-    // Challenges & Solutions
-    challengesFaced: { type: String, trim: true, default: "" },
-    solutionsImplemented: { type: String, trim: true, default: "" },
+    // Challenges & Solutions (array of strings; Mixed keeps legacy single-string docs working)
+    challengesFaced: { type: mongoose.Schema.Types.Mixed, default: [] },
+    solutionsImplemented: { type: mongoose.Schema.Types.Mixed, default: [] },
     uniqueApproach: { type: String, trim: true, default: "" },
 
     order: { type: Number, default: 0 },
