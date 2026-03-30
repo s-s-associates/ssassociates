@@ -226,7 +226,17 @@ export default function AdminsPage() {
     : { name: "", email: "", password: "", isEdit: false };
 
   return (
-    <Box sx={{ p: { xs: 2, sm: 3 }, mx: "auto", bgcolor: bggrayColor, minHeight: "100vh" }}>
+    <Box
+      sx={{
+        p: { xs: 2, sm: 3 },
+        mx: "auto",
+        bgcolor: bggrayColor,
+        minHeight: "100vh",
+        minWidth: 0,
+        width: "100%",
+        maxWidth: "100%",
+      }}
+    >
       <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 2, mb: 3 }}>
         <Typography
           component="h1"
@@ -262,6 +272,8 @@ export default function AdminsPage() {
           boxShadow: "0 1px 3px rgba(0,0,0,0.06)",
           overflow: "hidden",
           border: `1px solid ${bordergrayColor}`,
+          minWidth: 0,
+          maxWidth: "100%",
         }}
       >
         {loading ? (
@@ -292,12 +304,16 @@ export default function AdminsPage() {
             </Button>
           </Box>
         ) : (
-          <Table size="medium">
+          <Box sx={{ overflowX: "auto", width: "100%", minWidth: 0, WebkitOverflowScrolling: "touch" }}>
+            <Table size="medium" sx={{ minWidth: 520 }}>
             <TableHead>
               <TableRow sx={{ bgcolor: bggrayColor }}>
                 <TableCell sx={{ fontWeight: 700, color: "#000" }}>Name</TableCell>
                 <TableCell sx={{ fontWeight: 700, color: "#000" }}>Email</TableCell>
-                <TableCell align="right" sx={{ fontWeight: 700, color: "#000" }}>
+                <TableCell
+                  align="right"
+                  sx={{ fontWeight: 700, color: "#000", whiteSpace: "nowrap", width: "1%" }}
+                >
                   Actions
                 </TableCell>
               </TableRow>
@@ -316,34 +332,62 @@ export default function AdminsPage() {
                       </Typography>
                     </TableCell>
                     <TableCell sx={{ color: "rgba(0,0,0,0.7)" }}>{row.email || "—"}</TableCell>
-                    <TableCell align="right">
-                      <IconButton
-                        size="small"
-                        onClick={() => openEditDialog(row)}
-                        sx={{ color: primaryColor, "&:hover": { bgcolor: "rgba(138,56,245,0.08)" } }}
-                        aria-label="Edit"
+                    <TableCell
+                      align="right"
+                      sx={{
+                        verticalAlign: "middle",
+                        whiteSpace: "nowrap",
+                        width: "1%",
+                      }}
+                    >
+                      <Box
+                        sx={{
+                          display: "inline-flex",
+                          alignItems: "center",
+                          justifyContent: "flex-end",
+                          flexWrap: "nowrap",
+                          gap: { xs: 0, sm: 0.25 },
+                        }}
                       >
-                        <FiEdit2 size={18} />
-                      </IconButton>
-                      <IconButton
-                        size="small"
-                        disabled={isDeleting}
-                        onClick={() => handleDelete(row)}
-                        sx={{ color: "#dc2626", "&:hover": { bgcolor: "rgba(220,38,38,0.08)" } }}
-                        aria-label="Delete"
-                      >
-                        {isDeleting ? (
-                          <BeatLoader color="#dc2626" size={10} />
-                        ) : (
-                          <FiTrash2 size={18} />
-                        )}
-                      </IconButton>
+                        <IconButton
+                          size="small"
+                          onClick={() => openEditDialog(row)}
+                          sx={{
+                            color: primaryColor,
+                            flexShrink: 0,
+                            p: { xs: "4px", sm: "8px" },
+                            "&:hover": { bgcolor: "rgba(138,56,245,0.08)" },
+                          }}
+                          aria-label="Edit"
+                        >
+                          <FiEdit2 size={18} />
+                        </IconButton>
+                        <IconButton
+                          size="small"
+                          disabled={isDeleting}
+                          onClick={() => handleDelete(row)}
+                          sx={{
+                            color: "#dc2626",
+                            flexShrink: 0,
+                            p: { xs: "4px", sm: "8px" },
+                            "&:hover": { bgcolor: "rgba(220,38,38,0.08)" },
+                          }}
+                          aria-label="Delete"
+                        >
+                          {isDeleting ? (
+                            <BeatLoader color="#dc2626" size={10} />
+                          ) : (
+                            <FiTrash2 size={18} />
+                          )}
+                        </IconButton>
+                      </Box>
                     </TableCell>
                   </TableRow>
                 );
               })}
             </TableBody>
           </Table>
+          </Box>
         )}
       </Box>
 
