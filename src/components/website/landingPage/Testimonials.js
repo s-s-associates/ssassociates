@@ -143,13 +143,19 @@ const Testimonials = () => {
       sx={{
         position: "relative",
         overflow: "hidden",
-        py: 10,
+        py: 20,
         px: { xs: 3, sm: 3, md: 40 },
-        background: `linear-gradient(165deg, ${secondaryDark} 0%, rgb(12, 16, 26) 42%, rgb(20, 14, 10) 100%)`,
+        backgroundColor: secondaryDark,
+        backgroundImage:
+          "linear-gradient(165deg, rgba(0, 0, 0, 0.56) 0%, rgba(0, 0, 0, 0.56) 45%, rgba(0, 0, 0, 0.61) 100%), url('/images/home/interior.jpg')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+        backgroundAttachment: "fixed",
         color: "rgba(255,255,255,0.92)",
       }}
     >
-      <Box
+      {/* <Box
         aria-hidden
         sx={{
           position: "absolute",
@@ -177,14 +183,29 @@ const Testimonials = () => {
           filter: "blur(3px)",
           pointerEvents: "none",
         }}
-      />
+      /> */}
 
       <Stack
         direction={["column-reverse", "column-reverse", "row"]}
         justifyContent={"center"}
         alignItems={"center"}
         gap={[1, 1, 8]}
-        sx={{ position: "relative", zIndex: 1 }}
+        sx={{
+          position: "relative",
+          zIndex: 1,
+          width: "100%",
+          maxWidth: 980,
+          mx: "auto",
+          px: { xs: 2, sm: 3, md: 4 },
+          py: { xs: 2.5, sm: 3, md: 3.5 },
+          borderRadius: { xs: 3, md: 4 },
+          border: "1px solid rgba(255,255,255,0.16)",
+          background: "linear-gradient(135deg, rgba(13,18,30,0.54) 0%, rgba(13,18,30,0.38) 100%)",
+          backdropFilter: "blur(10px)",
+          WebkitBackdropFilter: "blur(10px)",
+          boxShadow:
+            "0 18px 36px rgba(0,0,0,0.34), inset 0 1px 0 rgba(255,255,255,0.08)",
+        }}
       >
       <Stack gap={2}>
         <Box
@@ -257,7 +278,7 @@ const Testimonials = () => {
         </Stack>
       </Stack>
 
-      <Stack maxWidth={400} minWidth={400} maxHeight={[400, 400, "auto"]} overflow={"hidden"}>
+      <Stack maxWidth={500} minWidth={400} maxHeight={[400, 400, "auto"]} overflow={"hidden"}>
         {loading ? (
           <Stack minHeight={280} alignItems="center" justifyContent="center" p={3}>
             <CircularProgress sx={{ color: primaryColor }} />
@@ -285,7 +306,6 @@ const Testimonials = () => {
                     width={50}
                   />
                   <Typography
-                    variant="h6"
                     maxHeight={150}
                     sx={{
                       overflowY: "auto",

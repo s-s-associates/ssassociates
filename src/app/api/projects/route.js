@@ -1,6 +1,9 @@
 import { connectDB } from "@/lib/db";
 import { getUserFromRequest } from "@/lib/get-user-from-request";
-import { normalizeProjectChallengesSolutions, toStringArray } from "@/lib/project-challenges-solutions";
+import {
+  normalizeProjectChallengesSolutions,
+  toStoredProjectListValue,
+} from "@/lib/project-challenges-solutions";
 import Project from "@/models/Project";
 import { NextResponse } from "next/server";
 
@@ -30,11 +33,13 @@ export async function POST(req) {
     await connectDB();
     const body = await req.json();
     const count = await Project.countDocuments({});
+    const challengesPathInstance = Project?.schema?.path("challengesFaced")?.instance;
+    const solutionsPathInstance = Project?.schema?.path("solutionsImplemented")?.instance;
     const project = await Project.create({
       userId: user._id,
       ...body,
-      challengesFaced: toStringArray(body.challengesFaced),
-      solutionsImplemented: toStringArray(body.solutionsImplemented),
+      challengesFaced: toStoredProjectListValue(body.challengesFaced, challengesPathInstance),
+      solutionsImplemented: toStoredProjectListValue(body.solutionsImplemented, solutionsPathInstance),
       order: typeof body.order === "number" ? body.order : count,
     });
     return NextResponse.json({

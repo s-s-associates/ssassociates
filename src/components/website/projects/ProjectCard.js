@@ -12,20 +12,8 @@ import React, { useEffect, useState } from "react";
 const FALLBACK_IMAGE = "/images/projects/thumbnail-min.webp";
 const SKELETON_COUNT = 6;
 
-function mapProjectToCard(p) {
-  const id = p?._id != null ? String(p._id) : "";
-  return {
-    key: id || p?.title || Math.random().toString(36),
-    href: id ? `/projects/${id}` : "/projects",
-    image: p?.bannerUrl && (p.bannerUrl.startsWith("http") || p.bannerUrl.startsWith("/")) ? p.bannerUrl : FALLBACK_IMAGE,
-    title: p?.title || "Untitled project",
-    companyName: (p?.clientName || "").trim(),
-    address: (p?.location || p?.category || "").trim(),
-  };
-}
-
 function hasClientLocationLine(project) {
-  return Boolean(project?.companyName && project?.address);
+  return Boolean((project?.clientName || "").trim() && ((project?.location || project?.category || "").trim()));
 }
 
 function ProjectCardSkeleton() {
@@ -75,9 +63,7 @@ export default function ProjectCard() {
         if (!data.success || !Array.isArray(data.projects)) {
           throw new Error(data.message || "Failed to load projects");
         }
-        if (!cancelled) {
-          setProjects(data.projects.map(mapProjectToCard));
-        }
+        if (!cancelled) setProjects(data.projects);
       } catch (e) {
         if (!cancelled) {
           setFetchError(e?.message || "Failed to load projects");
@@ -168,13 +154,23 @@ export default function ProjectCard() {
         {!loading &&
           !fetchError &&
           projects.map((project, index) => {
+            const id = project?._id != null ? String(project._id) : "";
+            const href = id ? `/projects/${id}` : "/projects";
+            const image =
+              project?.bannerUrl &&
+              (String(project.bannerUrl).startsWith("http") || String(project.bannerUrl).startsWith("/"))
+                ? project.bannerUrl
+                : FALLBACK_IMAGE;
+            const title = project?.title || "Untitled project";
+            const companyName = (project?.clientName || "").trim();
+            const address = (project?.location || project?.category || "").trim();
             const showClientLocation = hasClientLocationLine(project);
             const imagePriority = index < 6;
             return (
-            <Grid size={{ xs: 12, sm: 6, md: 4 }} key={project.key}>
+            <Grid size={{ xs: 12, sm: 6, md: 4 }} key={id || `${title}-${index}`}>
               <Box
                 component={Link}
-                href={project.href}
+                href={href}
                 sx={{
                   display: "block",
                   textDecoration: "none",
@@ -225,8 +221,8 @@ export default function ProjectCard() {
                     }}
                   >
                     <Image
-                      src={project.image}
-                      alt={project.title}
+                      src={image}
+                      alt={title}
                       fill
                       sizes="(max-width: 600px) 100vw, (max-width: 960px) 50vw, 33vw"
                       priority={imagePriority}
@@ -288,7 +284,7 @@ export default function ProjectCard() {
                         },
                       }}
                     >
-                      {project.title}
+                      {title}
                     </Typography>
                   </Box>
                   {showClientLocation ? (
@@ -302,8 +298,8 @@ export default function ProjectCard() {
                         display: "block",
                       }}
                     >
-                      {project.companyName} {" | "}
-                      {project.address}
+                      {companyName} {" | "}
+                      {address}
                     </Box>
                   ) : null}
                 </Box>
