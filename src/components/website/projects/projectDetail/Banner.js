@@ -3,6 +3,8 @@ import Link from "next/link";
 import { FiHome } from "react-icons/fi";
 import { FiCalendar, FiMapPin } from "react-icons/fi";
 import { getStatusColor } from "./projectDetailHelpers";
+import { primaryBg, primaryColor } from "@/components/utils/Colors";
+import { bannerHeadingSize, bannerSubHeadingSize } from "@/components/utils/Sizes";
 
 /** Top padding so breadcrumbs sit below the fixed navbar (see Navbar ~minHeight 56 + py). */
 const NAV_OFFSET = { xs: 9, sm: 10 };
@@ -148,9 +150,9 @@ export default function Banner({ project }) {
                 label={project.category || "Uncategorized"}
                 size="small"
                 sx={{
-                  bgcolor: "rgba(255,142,46,0.18)",
-                  color: "#ffc98f",
-                  border: "1px solid rgba(255,142,46,0.32)",
+                  bgcolor: primaryBg,
+                  color: primaryColor,
+                  border: `1px solid ${primaryColor}`,
                   textTransform: "uppercase",
                   fontWeight: 700,
                   letterSpacing: "0.06em",
@@ -163,7 +165,7 @@ export default function Banner({ project }) {
                   bgcolor: statusStyle.bg,
                   color: statusStyle.color,
                   fontWeight: 700,
-                  border: "1px solid rgba(16,185,129,0.26)",
+                  border: `1px solid ${statusStyle.color}`,
                 }}
               />
             </Stack>
@@ -171,9 +173,9 @@ export default function Banner({ project }) {
               component="h1"
               sx={{
                 fontFamily: '"Times New Roman", Georgia, serif',
-                fontSize: { xs: 46, sm: 58, md: 76 },
-                fontWeight: 700,
-                lineHeight: 0.95,
+                fontSize: bannerHeadingSize.fontSize,
+                fontWeight: bannerHeadingSize.fontWeight,
+                lineHeight: bannerHeadingSize.lineHeight,
                 letterSpacing: "-0.02em",
                 textWrap: "balance",
               }}
@@ -183,10 +185,11 @@ export default function Banner({ project }) {
             {subtitle ? (
               <Typography
                 sx={{
-                  fontSize: { xs: 16, md: 22 },
+                  fontSize: bannerSubHeadingSize.fontSize,
+                  fontWeight: bannerSubHeadingSize.fontWeight,
+                  lineHeight: bannerSubHeadingSize.lineHeight,
                   opacity: 0.94,
                   mt: 1.8,
-                  lineHeight: 1.45,
                   fontStyle: "italic",
                   color: "rgba(230,238,255,0.85)",
                 }}
