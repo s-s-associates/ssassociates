@@ -1,10 +1,15 @@
 "use client";
 
-import { bggrayColor, bordergrayColor, primaryColor } from "@/components/utils/Colors";
+import { bggrayColor, bordergrayColor, primaryColor, primaryHover } from "@/components/utils/Colors";
 import {
   Box,
   Button,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  Divider,
   FormControl,
+  IconButton,
   InputAdornment,
   MenuItem,
   Select,
@@ -20,7 +25,7 @@ import {
 } from "@mui/material";
 import { getAuth } from "@/lib/auth-storage";
 import React, { useCallback, useEffect, useState } from "react";
-import { FiRefreshCw, FiSearch } from "react-icons/fi";
+import { FiEye, FiRefreshCw, FiSearch, FiX } from "react-icons/fi";
 
 export default function ContactSubmissionPage() {
   const { token } = getAuth();
@@ -30,6 +35,7 @@ export default function ContactSubmissionPage() {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [searchQuery, setSearchQuery] = useState("");
   const [dateFilter, setDateFilter] = useState("all");
+  const [viewingSubmission, setViewingSubmission] = useState(null);
 
   const handleChangePage = (_, newPage) => setPage(newPage);
   const handleChangeRowsPerPage = (e) => {
@@ -94,6 +100,19 @@ export default function ContactSubmissionPage() {
   useEffect(() => {
     fetchSubmissions();
   }, [fetchSubmissions]);
+
+  function formatDateTime(value) {
+    if (!value) return "—";
+    const d = new Date(value);
+    if (Number.isNaN(d.getTime())) return "—";
+    return d.toLocaleString("en-GB", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  }
 
   return (
     <Box sx={{ p: { xs: 2, sm: 3 }, mx: "auto", bgcolor: bggrayColor, minHeight: "100vh" }}>
@@ -221,7 +240,7 @@ export default function ContactSubmissionPage() {
         ) : (
           <>
             <Box sx={{ overflowX: "auto", width: "100%" }}>
-              <Table size="medium" sx={{ minWidth: 720 }}>
+              <Table size="medium" sx={{ minWidth: 800 }}>
               <TableHead>
                 <TableRow sx={{ bgcolor: bggrayColor }}>
                   <TableCell sx={{ fontWeight: 700, color: "#000", whiteSpace: "nowrap", minWidth: 120 }}>Name</TableCell>
@@ -229,6 +248,9 @@ export default function ContactSubmissionPage() {
                   <TableCell sx={{ fontWeight: 700, color: "#000", whiteSpace: "nowrap", minWidth: 100 }}>Phone</TableCell>
                   <TableCell sx={{ fontWeight: 700, color: "#000", whiteSpace: "nowrap", minWidth: 140 }}>Message</TableCell>
                   <TableCell sx={{ fontWeight: 700, color: "#000", whiteSpace: "nowrap", minWidth: 100 }}>Date</TableCell>
+                  <TableCell align="right" sx={{ fontWeight: 700, color: "#000", whiteSpace: "nowrap", width: "1%" }}>
+                    Actions
+                  </TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -249,6 +271,37 @@ export default function ContactSubmissionPage() {
                     </TableCell>
                     <TableCell sx={{ color: "rgba(0,0,0,0.6)", fontSize: 13 }}>
                       {row.createdAt ? new Date(row.createdAt).toLocaleDateString() : "—"}
+                    </TableCell>
+                    <TableCell
+                      align="right"
+                      sx={{
+                        verticalAlign: "middle",
+                        whiteSpace: "nowrap",
+                        width: "1%",
+                      }}
+                    >
+                      <Box
+                        sx={{
+                          display: "inline-flex",
+                          alignItems: "center",
+                          justifyContent: "flex-end",
+                          flexWrap: "nowrap",
+                        }}
+                      >
+                        <IconButton
+                          size="small"
+                          onClick={() => setViewingSubmission(row)}
+                          sx={{
+                            color: "#64748b",
+                            flexShrink: 0,
+                            p: { xs: "4px", sm: "8px" },
+                            "&:hover": { bgcolor: "rgba(0,0,0,0.06)" },
+                          }}
+                          aria-label="View submission details"
+                        >
+                          <FiEye size={18} />
+                        </IconButton>
+                      </Box>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -279,6 +332,150 @@ export default function ContactSubmissionPage() {
           </>
         )}
       </Box>
+
+      <Dialog
+        open={Boolean(viewingSubmission)}
+        onClose={() => setViewingSubmission(null)}
+        maxWidth="sm"
+        fullWidth
+        PaperProps={{
+          sx: {
+            borderRadius: 2,
+            border: `1px solid ${bordergrayColor}`,
+          },
+        }}
+      >
+        <DialogTitle
+          sx={{
+            fontWeight: 700,
+            fontSize: 18,
+            borderBottom: `1px solid ${bordergrayColor}`,
+            py: 2,
+            pr: 6,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
+          <span>Submission details</span>
+          <IconButton
+            size="small"
+            onClick={() => setViewingSubmission(null)}
+            sx={{
+              position: "absolute",
+              right: 8,
+              top: 12,
+              color: "rgba(0,0,0,0.6)",
+              "&:hover": { bgcolor: "rgba(0,0,0,0.06)", color: "#000" },
+            }}
+            aria-label="Close"
+          >
+            <FiX size={22} />
+          </IconButton>
+        </DialogTitle>
+        <DialogContent dividers sx={{ p: 0 }}>
+          {viewingSubmission && (
+            <Box sx={{ p: 2.5 }}>
+           
+
+              {/* <DetailBlock label="MongoDB _id" value={viewingSubmission._id != null ? String(viewingSubmission._id) : "—"} mono /> */}
+              <DetailBlock label="fullName" value={viewingSubmission.fullName} />
+              <DetailBlock label="email" value={viewingSubmission.email} href={viewingSubmission.email ? `mailto:${viewingSubmission.email}` : null} />
+              <DetailBlock label="companyName" value={viewingSubmission.companyName} />
+              <DetailBlock label="phone" value={viewingSubmission.phone} href={viewingSubmission.phone ? `tel:${String(viewingSubmission.phone).replace(/\s/g, "")}` : null} />
+              <DetailBlock label="address" value={viewingSubmission.address} multiline />
+              <DetailBlock label="message" value={viewingSubmission.message} multiline />
+
+              <Divider sx={{ my: 2 }} />
+
+              <Typography sx={{ fontSize: 11, fontWeight: 700, color: primaryColor, letterSpacing: "0.08em", mb: 1.5 }}>
+                SUBMISSION TIMESTAMPS
+              </Typography>
+              <DetailBlock label="createdAt" value={formatDateTime(viewingSubmission.createdAt)} />
+              {/* <DetailBlock label="updatedAt" value={formatDateTime(viewingSubmission.updatedAt)} /> */}
+
+              {Object.keys(viewingSubmission).some((k) => !KNOWN_KEYS.has(k)) && (
+                <>
+                  <Divider sx={{ my: 2 }} />
+                  <Typography sx={{ fontSize: 11, fontWeight: 700, color: "rgba(0,0,0,0.5)", mb: 1 }}>
+                    OTHER SUBMISSION FIELDS
+                  </Typography>
+                  {Object.entries(viewingSubmission)
+                    .filter(([k]) => !KNOWN_KEYS.has(k))
+                    .map(([k, v]) => (
+                      <DetailBlock key={k} label={k} value={typeof v === "object" ? JSON.stringify(v) : String(v ?? "—")} mono={typeof v !== "string"} />
+                    ))}
+                </>
+              )}
+
+              <Box sx={{ mt: 2.5, display: "flex", justifyContent: "flex-end" }}>
+                <Button
+                  variant="contained"
+                  onClick={() => setViewingSubmission(null)}
+                  sx={{ textTransform: "none", fontWeight: 600, bgcolor: primaryColor, "&:hover": { bgcolor: primaryHover } }}
+                >
+                  Close
+                </Button>
+              </Box>
+            </Box>
+          )}
+        </DialogContent>
+      </Dialog>
+    </Box>
+  );
+}
+
+const KNOWN_KEYS = new Set([
+  "_id",
+  "fullName",
+  "email",
+  "companyName",
+  "phone",
+  "address",
+  "message",
+  "createdAt",
+  "updatedAt",
+  "__v",
+]);
+
+function DetailBlock({ label, value, multiline, mono, href }) {
+  const display = value === undefined || value === null || String(value).trim() === "" ? "—" : String(value);
+  return (
+    <Box sx={{ mb: 2 }}>
+      <Typography sx={{ fontSize: 11, fontWeight: 600, color: "rgba(0,0,0,0.45)", textTransform: "none", mb: 0.5 }}>
+        {label}
+      </Typography>
+      {href && display !== "—" ? (
+        <Typography
+          component="a"
+          href={href}
+          sx={{
+            fontSize: 14,
+            color: primaryColor,
+            fontWeight: 500,
+            wordBreak: "break-word",
+            textDecoration: "none",
+            "&:hover": { textDecoration: "underline" },
+            ...(multiline ? { whiteSpace: "pre-wrap", display: "block" } : {}),
+            ...(mono ? { fontFamily: "ui-monospace, monospace", fontSize: 13 } : {}),
+          }}
+        >
+          {display}
+        </Typography>
+      ) : (
+        <Typography
+          sx={{
+            fontSize: 14,
+            color: "rgba(0,0,0,0.88)",
+            fontWeight: 500,
+            whiteSpace: multiline ? "pre-wrap" : "normal",
+            wordBreak: "break-word",
+            ...(mono ? { fontFamily: "ui-monospace, monospace", fontSize: 13 } : {}),
+          }}
+        >
+          {display}
+        </Typography>
+      )}
     </Box>
   );
 }
