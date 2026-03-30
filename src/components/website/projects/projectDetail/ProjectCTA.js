@@ -14,7 +14,7 @@ export default function ProjectCTA() {
         textAlign: "center",
       }}
     >
-      <Box sx={{ maxWidth: 720, mx: "auto" }}>
+      <Box sx={{ maxWidth: 900, mx: "auto" }}>
         <Typography
           component="h2"
           sx={{

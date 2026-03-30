@@ -73,19 +73,18 @@ export default function Banner({ project }) {
           pointerEvents: "none",
           zIndex: 1,
           background:
-            "linear-gradient(to top, rgba(0,0,0,0.78) 0%, rgba(0,0,0,0.42) 46%, rgba(0,0,0,0.18) 72%, transparent 100%)",
+          "linear-gradient(to top, rgba(0,0,0,0.78) 0%, rgba(0,0,0,0.42) 46%, rgba(0,0,0,0.18) 72%, transparent 100%)",
         }}
-      />
+        />
 
       <Box
         sx={{
           position: "relative",
           zIndex: 2,
-          minHeight: "80vh",
+          mt: 10,
           maxHeight: { xs: "74vh", md: "80vh" },
           display: "flex",
           flexDirection: "column",
-          maxWidth: 1280,
           mx: "auto",
           px: { xs: 2.5, sm: 4, md: 7, lg: 9 },
         }}
@@ -144,7 +143,7 @@ export default function Banner({ project }) {
         </Stack>
 
         <Box sx={{ flex: 1, display: "flex", alignItems: "flex-end", pb: { xs: 5, md: 7 } }}>
-          <Box sx={{ color: "#fff", maxWidth: { xs: "100%", md: 760 } }}>
+          <Box sx={{ color: "#fff" }}>
             <Stack direction="row" spacing={1} sx={{ mb: 2, flexWrap: "wrap", gap: 1 }}>
               <Chip
                 label={project.category || "Uncategorized"}

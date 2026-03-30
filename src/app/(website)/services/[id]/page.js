@@ -1,8 +1,6 @@
-import { ServicePageJsonLd } from "@/components/seo/SEO";
-import ServiceDetailView from "@/components/website/services/ServiceDetailView";
 import { bggrayColor, bordergrayColor, primaryColor, primaryHover } from "@/components/utils/Colors";
+import ServiceDetail from "@/components/website/services/servicesDetail/ServiceDetail";
 import { connectDB } from "@/lib/db";
-import { getSiteUrl, truncateMetaDescription } from "@/lib/site-config";
 import Service from "@/models/Service";
 import { Box, Button, Paper, Typography } from "@mui/material";
 import Link from "next/link";
@@ -11,33 +9,14 @@ import { FiArrowLeft } from "react-icons/fi";
 export async function generateMetadata({ params }) {
   const resolved = await params;
   const id = decodeURIComponent(resolved?.id || "");
-  const base = getSiteUrl();
-  const path = `/services/${id}`;
   await connectDB();
-  const service = await Service.findById(id).select("title description imageUrl").lean();
+  const service = await Service.findById(id).select("title description").lean();
   if (!service) {
-    return { title: "Service not found", robots: { index: false, follow: false } };
+    return { title: "Service | S&S Associates" };
   }
-  const desc = truncateMetaDescription(service.description || service.title || "");
-  const canonical = `${base}${path}`;
   return {
-    title: `${service.title} | Services`,
-    description: desc || undefined,
-    alternates: { canonical: path },
-    robots: { index: true, follow: true },
-    openGraph: {
-      title: service.title || "Service",
-      description: desc || undefined,
-      url: canonical,
-      type: "website",
-      images: service.imageUrl ? [{ url: service.imageUrl, alt: service.title || "Service" }] : undefined,
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: service.title || "Service",
-      description: desc || undefined,
-      images: service.imageUrl ? [service.imageUrl] : undefined,
-    },
+    title: `${service.title} | Services | S&S Associates`,
+    description: (service.description || "").slice(0, 160) || undefined,
   };
 }
 
@@ -86,12 +65,5 @@ export default async function ServiceDetailPage({ params }) {
   }
 
   const service = JSON.parse(JSON.stringify(raw));
-  const base = getSiteUrl();
-  const path = `/services/${id}`;
-  return (
-    <>
-      <ServicePageJsonLd service={service} baseUrl={base} path={path} />
-      <ServiceDetailView service={service} />
-    </>
-  );
+  return <ServiceDetail service={service} />;
 }

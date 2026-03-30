@@ -105,7 +105,7 @@ export default function ProjectFactsPanel({ project }) {
   const tagline = (p.tagline || "").trim();
 
   return (
-    <Box my={10} mx={10}>
+    <Box mb={10} mx={{ xs: 2, sm: 3, md: 4, lg: 5, xl: 10 }}>
       <Stack alignItems="center" spacing={1.5} sx={{ mb: 3, width: "100%", textAlign: "center" }}>
         <Chip
           label="Project facts"

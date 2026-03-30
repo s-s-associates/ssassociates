@@ -20,16 +20,6 @@ export default function ProjectDetail({ project }) {
   return (
     <>
       <Banner project={projectData} />
-        <ProjectFactsPanel project={projectData} />
-        <ProjectSpecifications project={projectData} />
-
-
-
-            <Features items={featureItems} />
-            <ChallengesAndSolutions project={projectData} />
-            <Technologies items={technologyItems} />
-            <ImagesGallery title={projectData.title} images={projectData.imageGallery || []} />
-
       <Box sx={{ maxWidth: 1280, mx: "auto", px: { xs: 2, sm: 3, md: 4, lg: 5 }, pt: { xs: 3, sm: 4 }, pb: { xs: 4, sm: 6 } }}>
         <Grid container spacing={2.5}>
           <Grid size={{ xs: 12, lg: 8 }}>
@@ -41,6 +31,16 @@ export default function ProjectDetail({ project }) {
           </Grid>
         </Grid>
       </Box>
+
+      
+        <ProjectFactsPanel project={projectData} />
+        <ProjectSpecifications project={projectData} />
+
+            <Features items={featureItems} />
+            <ChallengesAndSolutions project={projectData} />
+            {/* <Technologies items={technologyItems} /> */}
+            <ImagesGallery title={projectData.title} images={projectData.imageGallery || []} />
+
       <ProjectCTA />
     </>
   );
