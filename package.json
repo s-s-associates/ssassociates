@@ -4,6 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "seo": "node scripts/generate-seo.js",
+    "prebuild": "node scripts/generate-seo.js",
     "build": "next build",
     "start": "next start",
     "lint": "eslint"

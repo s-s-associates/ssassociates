@@ -17,6 +17,9 @@
 /.next/
 /out/
 
+# SEO script output (mirrors only; live URLs use app/sitemap.js + app/robots.js)
+/seo-static/
+
 # production
 /build
 

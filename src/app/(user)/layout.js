@@ -3,6 +3,11 @@ import Navbar from "@/components/user/bars/Navbar";
 import Sidebar from "@/components/user/bars/Sidebar";
 import { Box } from "@mui/material";
 
+export const metadata = {
+  title: { absolute: "Admin dashboard | S&S Associates" },
+  robots: { index: false, follow: false, googleBot: { index: false, follow: false } },
+};
+
 export default function UserLayout({ children }) {
   return (
     <UserGuard>
