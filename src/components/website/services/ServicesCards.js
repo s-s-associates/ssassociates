@@ -211,7 +211,7 @@ function ServicesCards() {
                 px: 0,
               }}
             >
-              <Box sx={{ display: "flex", gap: 0.75, alignItems: "center" }}>
+              <Box sx={{ display: "flex", gap: 0.76, alignItems: "center" }}>
                 {Array.from({ length: paginationCount }).map((_, i) => (
                   <Box
                     key={i}
