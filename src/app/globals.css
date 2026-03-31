@@ -1,4 +1,10 @@
-
+/* ─── App font — change only here to update the whole project ─────────────── */
+/* Font is loaded via next/font/google in layout.js as --font-quicksand.       */
+/* To swap fonts: update layout.js import + change --font-app below.           */
+:root {
+  --font-app: var(--font-quicksand), "Quicksand", sans-serif;
+}
+/* ──────────────────────────────────────────────────────────────────────────── */
 
 html,
 body {
@@ -9,15 +15,18 @@ body {
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: var(--font-plus-jakarta), "Plus Jakarta Sans", sans-serif;
+  font-family: var(--font-app) !important;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-* {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
   padding: 0;
   margin: 0;
+  font-family: var(--font-app) !important;
 }
 
 a {
@@ -32,4 +41,3 @@ a {
 .swal2-popup {
   z-index: 10000 !important;
 }
-

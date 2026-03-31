@@ -1,19 +1,13 @@
-import { Inter, Plus_Jakarta_Sans } from "next/font/google";
+import { Quicksand } from "next/font/google";
 import "./globals.css";
 import ThemeRegistry from "./ThemeRegistry";
 import { bggrayColor } from "@/components/utils/Colors";
 import { getSiteUrl, SITE_NAME, truncateMetaDescription } from "@/lib/site-config";
 
-const inter = Inter({
-  variable: "--font-inter",
+const quicksand = Quicksand({
+  variable: "--font-quicksand",
   subsets: ["latin"],
-  weight: ["600"],
-});
-
-const plusJakartaSans = Plus_Jakarta_Sans({
-  variable: "--font-plus-jakarta",
-  subsets: ["latin"],
-  weight: ["400", "600", "700"],
+  weight: ["300", "400", "500", "600", "700"],
 });
 
 export const metadata = {
@@ -36,7 +30,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={`${inter.variable} ${plusJakartaSans.variable}`} style={{backgroundColor: bggrayColor, maxWidth: "1700px", margin: "0 auto"}}>
+      <body className={quicksand.variable} style={{ backgroundColor: bggrayColor, maxWidth: "1700px", margin: "0 auto" }}>
         <ThemeRegistry>{children}</ThemeRegistry>
       </body>
     </html>

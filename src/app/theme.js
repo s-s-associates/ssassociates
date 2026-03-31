@@ -2,7 +2,8 @@ import { createTheme } from "@mui/material/styles";
 
 const theme = createTheme({
   typography: {
-    fontFamily: 'var(--font-plus-jakarta), "Plus Jakarta Sans", sans-serif',
+    // Mirrors the --font-app variable in globals.css
+    fontFamily: 'var(--font-app), "Quicksand", sans-serif',
   },
 });
 
