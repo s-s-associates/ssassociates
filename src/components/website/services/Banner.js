@@ -27,7 +27,7 @@ function Banner() {
           position: "absolute",
           inset: 0,
           zIndex: 0,
-          backgroundImage: "url(/images/projects/Jacobs-Dublin-Office-Fit-Out-Thumbnail-min.webp)",
+          backgroundImage: "url(/images/services/services-banner.jpg)",
           backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
@@ -40,7 +40,7 @@ function Banner() {
           position: "absolute",
           inset: 0,
           background:
-            "linear-gradient(135deg, rgba(8,12,20,0.82) 0%, rgba(8,12,20,0.55) 60%, rgba(8, 12, 20, 0.55) 100%)",
+          "linear-gradient(135deg, rgba(8,12,20,0.82) 0%, rgba(8,12,20,0.55) 60%, rgba(8, 12, 20, 0.55) 100%)",
         }}
       />
 

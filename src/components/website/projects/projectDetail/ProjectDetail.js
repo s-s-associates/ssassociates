@@ -21,15 +21,7 @@ export default function ProjectDetail({ project }) {
     <>
       <Banner project={projectData} />
       <Box sx={{ maxWidth: 1280, mx: "auto", px: { xs: 2, sm: 3, md: 4, lg: 5 }, pt: { xs: 3, sm: 4 }, pb: { xs: 4, sm: 6 } }}>
-        <Grid container spacing={2.5}>
-          <Grid size={{ xs: 12, lg: 8 }}>
             <Overview description={projectData.description} />
-          </Grid>
-
-          <Grid size={{ xs: 12, lg: 4 }}>
-            <ProjectActionsPanel project={projectData} />
-          </Grid>
-        </Grid>
       </Box>
 
       

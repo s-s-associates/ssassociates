@@ -26,7 +26,7 @@ function Banner() {
         sx={{
           position: "absolute",
           inset: 0,
-          backgroundImage: "url(/images/about/about-banner.jpg)",
+          backgroundImage: "url(/images/contact/contact-bg.jpg)",
           backgroundSize: "cover",
           backgroundPosition: "bottom",
           backgroundRepeat: "no-repeat",
@@ -88,7 +88,7 @@ function Banner() {
             mb: 2,
           }}
         >
-          About S&S Associates
+          Get In Touch
         </Typography>
 
         {/* Heading */}
@@ -105,7 +105,7 @@ function Banner() {
             maxWidth: 800
           }}
         >
-          Building Tomorrow, One Foundation  at a Time.
+          Let&apos;s Build Something Great Together.
          
         </Typography>
 
@@ -120,10 +120,9 @@ function Banner() {
             maxWidth: 800,
           }}
         >
-          For over a decade, S&S Associates has been delivering high-performance
-          construction and engineering projects across the region. We combine
-          deep technical expertise with a genuine commitment to quality,
-          sustainability, and client satisfaction.
+          Have a project in mind or need expert guidance? Contact S&amp;S Associates
+          today. Our team is ready to discuss your requirements, answer your
+          questions, and help you move from idea to execution with confidence.
         </Typography>
       </Box>
     </Box>

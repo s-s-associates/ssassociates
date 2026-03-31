@@ -8,6 +8,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { FiHome } from "react-icons/fi";
 import { fadeUp } from "./serviceDetailShared";
+import { bannerHeadingSize, bannerSubHeadingSize, mainHeadingSize, mainSubHeadingSize } from "@/components/utils/Sizes";
 
 export default function Banner({ service, heroSrc, heroBannerDescription }) {
   const scrollToDeliverables = () => {
@@ -19,7 +20,8 @@ export default function Banner({ service, heroSrc, heroBannerDescription }) {
       component="section"
       sx={{
         position: "relative",
-        minHeight: { xs: "72vh", md: "78vh" },
+        minHeight: "80vh" ,
+        maxHeight: "80vh",
         display: "flex",
         alignItems: "flex-end",
         color: whiteColor,
@@ -40,7 +42,7 @@ export default function Banner({ service, heroSrc, heroBannerDescription }) {
             position: "absolute",
             inset: 0,
             background:
-              "linear-gradient(105deg, rgba(15,23,42,0.92) 0%, rgba(15,23,42,0.55) 45%, rgba(15,23,42,0.75) 100%)",
+            "linear-gradient(135deg, rgba(8,12,20,0.82) 0%, rgba(8,12,20,0.55) 60%, rgba(8, 12, 20, 0.55) 100%)",
           }}
         />
       </Box>
@@ -123,9 +125,9 @@ export default function Banner({ service, heroSrc, heroBannerDescription }) {
           <Typography
             component="h1"
             sx={{
-              fontSize: { xs: 34, sm: 44, md: 52 },
-              fontWeight: 800,
-              lineHeight: 1.1,
+              fontSize: bannerHeadingSize.fontSize,
+              fontWeight: bannerHeadingSize.fontWeight,
+              lineHeight: bannerHeadingSize.lineHeight,
               maxWidth: 900,
               mb: 2,
               fontFamily: "inherit",
@@ -135,10 +137,11 @@ export default function Banner({ service, heroSrc, heroBannerDescription }) {
           </Typography>
           <Typography
             sx={{
-              fontSize: { xs: 15, sm: 17 },
-              lineHeight: 1.65,
+              fontSize: bannerSubHeadingSize.fontSize,
+                fontWeight: bannerSubHeadingSize.fontWeight,
+                lineHeight: bannerSubHeadingSize.lineHeight,
               color: "rgba(255,255,255,0.88)",
-              maxWidth: 720,
+              maxWidth: 800,
               mb: 3,
               wordBreak: "break-word",
             }}

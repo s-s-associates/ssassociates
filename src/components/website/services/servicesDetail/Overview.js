@@ -1,6 +1,6 @@
 "use client";
 
-import { primaryColor, secondaryColor, whiteColor } from "@/components/utils/Colors";
+import { primaryColor, secondaryColor, secondaryDark, whiteColor } from "@/components/utils/Colors";
 import { Box, Container, Typography } from "@mui/material";
 
 export default function Overview({ fullDescForHero }) {
@@ -9,7 +9,7 @@ export default function Overview({ fullDescForHero }) {
       id="service-overview"
       component="section"
       sx={{
-        bgcolor: secondaryColor,
+        bgcolor: secondaryDark,
         textAlign: "center",
         py: { xs: 4, md: 5 },
         scrollMarginTop: { xs: 10, sm: 11 },

@@ -21,7 +21,7 @@ export default function ServiceDetail({ service }) {
   const descText = (service.description || "").trim();
   const descFallback = "Learn how we plan, build, and hand over with clarity at every stage.";
   const fullDescForHero = descText || descFallback;
-  const HERO_WORD_LIMIT = 20;
+  const HERO_WORD_LIMIT = 10;
   const descWords = fullDescForHero.trim().split(/\s+/).filter(Boolean);
   const isLongByWords = descWords.length > HERO_WORD_LIMIT;
   const heroBannerDescription = isLongByWords
@@ -32,8 +32,8 @@ export default function ServiceDetail({ service }) {
   return (
     <Box sx={{ bgcolor: "#f8fafc", minHeight: "100vh" }}>
       <Banner service={service} heroSrc={heroSrc} heroBannerDescription={heroBannerDescription} />
-      <Deliverables whatYouGet={whatYouGet} />
       {showFullOverviewBelow ? <Overview fullDescForHero={fullDescForHero} /> : null}
+      <Deliverables whatYouGet={whatYouGet} />
       <WhyChooseUs extraBenefits={extraBenefits} />
       <SubServicesDetail subServices={subServicesDetail} />
       <ServiceCTA conclusion={conclusion} />

@@ -8,9 +8,9 @@ export const fadeUp = {
   transition: { duration: 0.45, ease: [0.25, 0.46, 0.45, 0.94] },
 };
 
-export function SectionHeading({ kicker, title, light }) {
+export function SectionHeading({ kicker, title, light, centered = true }) {
   return (
-    <Box sx={{ textAlign: "center", mb: { xs: 4, md: 5 } }}>
+    <Box sx={{ textAlign: centered ? "center" : "left", mb: { xs: 4, md: 5 } }}>
       <Typography
         component="p"
         sx={{
@@ -20,6 +20,19 @@ export function SectionHeading({ kicker, title, light }) {
           color: primaryColor,
           textTransform: "uppercase",
           mb: 1,
+          display: "inline-flex",
+          alignItems: "center",
+          justifyContent: centered ? "center" : "flex-start",
+          gap: 1.1,
+          "&::before, &::after": centered
+            ? {
+                content: '""',
+                width: { xs: 20, sm: 28 },
+                height: 1,
+                backgroundColor: "rgba(251,134,30,0.55)",
+                display: "inline-block",
+              }
+            : {},
         }}
       >
         {kicker}
@@ -40,7 +53,7 @@ export function SectionHeading({ kicker, title, light }) {
           width: 56,
           height: 3,
           bgcolor: primaryColor,
-          mx: "auto",
+          mx: centered ? "auto" : 0,
           mt: 2,
           borderRadius: 1,
         }}

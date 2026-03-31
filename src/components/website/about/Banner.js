@@ -26,9 +26,9 @@ function Banner() {
         sx={{
           position: "absolute",
           inset: 0,
-          backgroundImage: "url(/images/about/about-banner.jpg)",
+          backgroundImage: "url(/images/about/about-banner1.jpg)",
           backgroundSize: "cover",
-          backgroundPosition: "bottom",
+          backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
         }}
       />

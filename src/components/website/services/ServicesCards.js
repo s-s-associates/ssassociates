@@ -1,10 +1,9 @@
 "use client";
 
 import React, { useRef, useState, useCallback, useEffect } from "react";
-import { Box, Typography, IconButton, useTheme, useMediaQuery, Skeleton } from "@mui/material";
+import { Box, Typography, IconButton, useTheme, useMediaQuery, Skeleton, Stack } from "@mui/material";
 import ChevronLeftRoundedIcon from "@mui/icons-material/ChevronLeftRounded";
 import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
-import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { whiteColor, primaryColor } from "@/components/utils/Colors";
@@ -15,7 +14,6 @@ const SECTION_TITLE = "Our Services";
 const SECTION_DESCRIPTION =
   "SS Associates: A trusted leader in office renovation and integrated design and build services, providing seamless.";
 
-const FALLBACK_IMAGE = "/images/projects/EY-Fit-Out-Thumbnail-min.webp";
 
 function ServicesCards() {
   const theme = useTheme();
@@ -116,14 +114,13 @@ function ServicesCards() {
       }}
     >
       <Box ref={containerRef} sx={{ maxWidth: 1400, mx: "auto" }}>
-        <Box
-          sx={{
-            display: "grid",
-            gridTemplateColumns: { xs: "1fr", md: "1fr 1fr" },
-            gap: 3,
-            alignItems: "start",
-            mb: 5,
-          }}
+        <Stack
+          direction={{ xs: "column", md: "row" }}
+          justifyContent="space-between"
+          alignItems="start"
+          gap={1}
+          mb={5}
+          
         >
           <Typography
             component="h2"
@@ -147,7 +144,7 @@ function ServicesCards() {
           >
             {SECTION_DESCRIPTION}
           </Typography>
-        </Box>
+        </Stack>
 
         {fetchError && (
           <Typography sx={{ color: "rgba(255,255,255,0.75)", mb: 2 }}>{fetchError}</Typography>
@@ -307,14 +304,16 @@ function ServiceCard({ service, cardWidth, priority = false }) {
           inset: 0,
         }}
       >
-        <Image
+        <Box
+          component="img"
           src={imageSrc}
           alt={service.title || "Service"}
-          fill
-          sizes="(max-width: 899px) 90vw, (max-width: 1199px) 45vw, 25vw"
-          priority={priority}
-          fetchPriority={priority ? "high" : "auto"}
-          style={{ objectFit: "cover" }}
+          sx={{
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            display: "block",
+          }}
         />
         <Box
           sx={{

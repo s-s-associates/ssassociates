@@ -1,6 +1,6 @@
 "use client";
 
-import { primaryLight, whiteColor } from "@/components/utils/Colors";
+import { primaryLight, secondaryDark, whiteColor } from "@/components/utils/Colors";
 import { transition } from "@/components/utils/GlobalVariables";
 import ArrowForwardRoundedIcon from "@mui/icons-material/ArrowForwardRounded";
 import { Box, Button, Container, Typography } from "@mui/material";
@@ -23,8 +23,7 @@ function ProjectsPageCTA() {
         sx={{
           position: "absolute",
           inset: 0,
-          background:
-            "linear-gradient(125deg, rgb(8, 12, 20) 0%, rgb(16, 24, 40) 45%, rgb(25, 35, 55) 100%)",
+          background:secondaryDark,
         }}
       />
       <Box
@@ -34,7 +33,6 @@ function ProjectsPageCTA() {
           right: "-10%",
           width: { xs: "70%", md: "45%" },
           height: "140%",
-          background: `radial-gradient(ellipse at center, rgba(251, 134, 30, 0.22) 0%, transparent 65%)`,
           pointerEvents: "none",
         }}
       />
@@ -45,7 +43,6 @@ function ProjectsPageCTA() {
           left: 0,
           right: 0,
           height: "40%",
-          background: "linear-gradient(to top, rgba(0,0,0,0.25) 0%, transparent 100%)",
           pointerEvents: "none",
         }}
       />

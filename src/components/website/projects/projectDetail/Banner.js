@@ -33,8 +33,8 @@ export default function Banner({ project }) {
       sx={{
         position: "relative",
         width: "100%",
-        minHeight: { xs: "74vh", md: "80vh" },
-        maxHeight: { xs: "74vh", md: "80vh" },
+        minHeight: "80vh" ,
+        maxHeight: "80vh",
         overflow: "hidden",
         mt: 0,
       }}
@@ -62,7 +62,7 @@ export default function Banner({ project }) {
           pointerEvents: "none",
           zIndex: 1,
           background:
-            "linear-gradient(112deg, rgba(8,18,44,0.78) 0%, rgba(8,18,44,0.58) 38%, rgba(8,18,44,0.44) 58%, rgba(8,18,44,0.38) 100%)",
+          "linear-gradient(135deg, rgba(8,12,20,0.82) 0%, rgba(8,12,20,0.55) 60%, rgba(8, 12, 20, 0.55) 100%)",
         }}
       />
 
@@ -115,12 +115,14 @@ export default function Banner({ project }) {
                 gap: 6,
                 color: "inherit",
                 textDecoration: "none",
+                fontSize: 13,
+                fontWeight: 600,
               }}
             >
               <FiHome size={14} />
               Home
             </Link>
-            <Link href="/projects" style={{ color: "inherit", textDecoration: "none" }}>
+            <Link href="/projects" style={{ color: "inherit", textDecoration: "none", fontSize: 13, fontWeight: 600 }}>
               Projects
             </Link>
             <Typography
@@ -128,6 +130,7 @@ export default function Banner({ project }) {
               title={project.title || "Project"}
               sx={{
                 color: "rgba(255,255,255,0.95)",
+                fontSize: 13,
                 fontWeight: 600,
                 maxWidth: { xs: "min(100%, 52vw)", sm: 420, md: 560 },
                 overflow: "hidden",
@@ -169,9 +172,7 @@ export default function Banner({ project }) {
               />
             </Stack>
             <Typography
-              component="h1"
               sx={{
-                fontFamily: '"Times New Roman", Georgia, serif',
                 fontSize: bannerHeadingSize.fontSize,
                 fontWeight: bannerHeadingSize.fontWeight,
                 lineHeight: bannerHeadingSize.lineHeight,

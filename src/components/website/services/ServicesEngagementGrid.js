@@ -116,7 +116,7 @@ function ServicesEngagementGrid() {
                     height: "100%",
                     p: { xs: 2.5, sm: 3 },
                     borderRadius: btnRadius,
-                    border: `1px solid rgba(16, 24, 40, 0.08)`,
+                    border: `2px solid rgba(16, 24, 40, 0.08)`,
                     background: `linear-gradient(160deg, ${whiteColor} 0%, rgba(251, 134, 30, 0.04) 100%)`,
                     boxShadow,
                     transition,
@@ -125,6 +125,10 @@ function ServicesEngagementGrid() {
                       boxShadow: "0 16px 48px rgba(8, 12, 20, 0.1)",
                       borderColor: "rgba(251, 134, 30, 0.35)",
                       transform: "translateY(-4px)",
+                    },
+                    "&:hover .step-icon": {
+                      bgcolor: primaryColor,
+                      color: secondaryColor,
                     },
                   }}
                 >
@@ -148,6 +152,7 @@ function ServicesEngagementGrid() {
                       {item.step}
                     </Typography>
                     <Box
+                      className="step-icon"
                       sx={{
                         width: 48,
                         height: 48,
@@ -158,6 +163,7 @@ function ServicesEngagementGrid() {
                         bgcolor: secondaryDark,
                         color: whiteColor,
                         border: `2px solid ${primaryColor}`,
+                        transition: "all 0.25s ease",
                       }}
                     >
                       <Icon sx={{ fontSize: 24 }} />

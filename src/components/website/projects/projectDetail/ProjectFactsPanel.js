@@ -97,7 +97,7 @@ export default function ProjectFactsPanel({ project }) {
   const facts = [
     { key: "client", icon: Apartment, label: "Client", value: p.clientName },
     { key: "area", icon: SquareFoot, label: "Area", value: areaDisplay(p) },
-    { key: "budget", icon: AttachMoney, label: "Budget", value: p.budget },
+    // { key: "budget", icon: AttachMoney, label: "Budget", value: p.budget },
     { key: "duration", icon: AccessTime, label: "Duration", value: durationValue },
     { key: "floors", icon: Layers, label: "Floors", value: p.floors },
   ];
@@ -105,7 +105,7 @@ export default function ProjectFactsPanel({ project }) {
   const tagline = (p.tagline || "").trim();
 
   return (
-    <Box mb={10} mx={{ xs: 2, sm: 3, md: 4, lg: 5, xl: 10 }}>
+    <Box mb={10} mx={{ xs: 1, sm: 3, md: 4, lg: 5, xl: 10 }}>
       <Stack alignItems="center" spacing={1.5} sx={{ mb: 3, width: "100%", textAlign: "center" }}>
         <Chip
           label="Project facts"
@@ -144,23 +144,16 @@ export default function ProjectFactsPanel({ project }) {
       <Stack
         direction="row"
         flexWrap="wrap"
-        gap={2}
-        sx={{
-          width: "100%",
-          overflowX: { xs: "auto", lg: "visible" },
-          flexWrap: { xs: "nowrap", md: "wrap" },
-          pb: { xs: 0.5, md: 0 },
-          scrollbarWidth: "thin",
-        }}
+        justifyContent="center"
+        alignItems="center"
+        gap={[1,2,3]}
       >
         {facts.map(({ key, icon, label, value }) => (
           <Box
+
             key={key}
-            sx={{
-              flex: { xs: "0 0 auto", md: "1 1 0" },
-              minWidth: { xs: 200, md: 0 },
-              maxWidth: { xs: 220, md: "none" },
-            }}
+            maxWidth={[180, 220, 240]}
+            minWidth={[180, 220, 240]}
           >
             <FactCard icon={icon} label={label} value={value} />
           </Box>

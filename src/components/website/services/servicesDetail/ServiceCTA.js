@@ -1,6 +1,6 @@
 "use client";
 
-import { primaryColor } from "@/components/utils/Colors";
+import { primaryColor, secondaryColor, secondaryDark } from "@/components/utils/Colors";
 import { Box, Button, Container, Typography } from "@mui/material";
 import { motion } from "framer-motion";
 import Link from "next/link";
@@ -8,7 +8,7 @@ import { fadeUp } from "./serviceDetailShared";
 
 export default function ServiceCTA({ conclusion }) {
   return (
-    <Box component="section" sx={{ py: { xs: 7, md: 10 }, bgcolor: "#f8fafc" }}>
+    <Box component="section" sx={{ py: { xs: 7, md: 10 },  }}>
       <Container maxWidth="md">
         <motion.div {...fadeUp}>
           <Box
@@ -17,7 +17,7 @@ export default function ServiceCTA({ conclusion }) {
               px: { xs: 3, sm: 5 },
               py: { xs: 5, sm: 6 },
               borderRadius: 4,
-              background: "linear-gradient(145deg, rgb(15, 23, 42) 0%, rgb(30, 41, 59) 100%)",
+              background: secondaryDark,
               boxShadow: "0 24px 60px rgba(15,23,42,0.25)",
               border: "1px solid rgba(251, 134, 30, 0.25)",
             }}
