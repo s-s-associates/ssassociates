@@ -19,6 +19,7 @@ function ServicesCards() {
   const theme = useTheme();
   const isLg = useMediaQuery(theme.breakpoints.up("lg"));
   const isMd = useMediaQuery(theme.breakpoints.up("md"));
+  const isSm = useMediaQuery(theme.breakpoints.up("sm"));
   const scrollRef = useRef(null);
   const containerRef = useRef(null);
   const scrollIndexRef = useRef(0);
@@ -28,7 +29,7 @@ function ServicesCards() {
   const [loading, setLoading] = useState(true);
   const [fetchError, setFetchError] = useState(null);
 
-  const cardsPerView = isLg ? 4 : isMd ? 2 : 1;
+  const cardsPerView = isLg ? 4 : isMd ? 3 : isSm ? 2 : 1;
   const maxIndex = Math.max(0, services.length - cardsPerView);
   scrollIndexRef.current = scrollIndex;
 

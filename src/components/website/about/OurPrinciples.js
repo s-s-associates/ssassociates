@@ -3,11 +3,12 @@
 import {
   primaryColor,
   primaryBg,
+  primaryLight,
   secondaryColor,
-  textGrayDark,
+  secondaryDark,
+  secondaryLight,
   textGrayLight,
   whiteColor,
-  secondaryBg,
 } from "@/components/utils/Colors";
 import {
   btnRadius,
@@ -89,15 +90,31 @@ function OurPrinciples() {
     <Box
       component="section"
       sx={{
-        py: { xs: 6, md: 8 },
+        py: { xs: 7, md: 9 },
         px: { xs: 2, sm: 3, md: 4 },
-        backgroundColor: whiteColor,
+        background: secondaryDark,
+        position: "relative",
+        overflow: "hidden",
+        "&::before": {
+          content: '""',
+          position: "absolute",
+          inset: 0,
+          backgroundImage: `
+            linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px)
+          `,
+          backgroundSize: "56px 56px",
+          pointerEvents: "none",
+          zIndex: 0,
+        },
       }}
     >
       <Box
         sx={{
           maxWidth: 1200,
           mx: "auto",
+          position: "relative",
+          zIndex: 1,
         }}
       >
         <Box
@@ -117,8 +134,9 @@ function OurPrinciples() {
               py: 0.75,
               mb: 1.5,
               borderRadius: 999,
-              backgroundColor: secondaryBg,
-              color: secondaryColor,
+              backgroundColor: primaryBg,
+              border: "1px solid rgba(251,134,30,0.28)",
+              color: primaryColor,
               fontFamily:
                 "var(--font-app)",
               fontWeight: 600,
@@ -134,7 +152,7 @@ function OurPrinciples() {
                 "var(--font-app)",
               fontWeight: 700,
               fontSize: { xs: 26, md: 30 },
-              color: secondaryColor,
+              color: whiteColor,
               mb: 1,
             }}
           >
@@ -148,7 +166,7 @@ function OurPrinciples() {
               fontWeight: 400,
               fontSize: 14,
               lineHeight: 1.7,
-              color: textGrayDark,
+              color: "rgba(255,255,255,0.68)",
               maxWidth: 560,
               mx: "auto",
             }}
@@ -183,17 +201,19 @@ function OurPrinciples() {
                 transition={{ duration: 0.2 }}
                 sx={{
                   position: "relative",
-                  backgroundColor: whiteColor,
+                  backgroundColor: "rgba(255,255,255,0.06)",
                   borderRadius: btnRadius,
-                  border: `1px solid ${textGrayLight}`,
+                  border: "1px solid rgba(255,255,255,0.14)",
                   boxShadow,
                   px: 2.5,
                   py: 2.5,
                   overflow: "hidden",
                   cursor: "default",
+                  backdropFilter: "blur(8px)",
+                  WebkitBackdropFilter: "blur(8px)",
                   transition,
                   "&:hover": {
-                    boxShadow: boxShadowHover,
+                    boxShadow: `${boxShadowHover}, 0 16px 36px rgba(251, 134, 30, 0.28), 0 0 48px rgba(251, 134, 30, 0.2)`,
                   },
                 }}
               >
@@ -299,7 +319,7 @@ function OurPrinciples() {
                         fontSize: 13,
                         textTransform: "uppercase",
                         letterSpacing: "0.08em",
-                        color: textGrayDark,
+                        color: "rgba(255,255,255,0.68)",
                       }}
                     >
                       {card.label}
@@ -312,7 +332,7 @@ function OurPrinciples() {
                         "var(--font-app)",
                       fontWeight: 600,
                       fontSize: 16,
-                      color: secondaryColor,
+                      color: whiteColor,
                     }}
                   >
                     {card.title}
@@ -325,7 +345,7 @@ function OurPrinciples() {
                       fontWeight: 400,
                       fontSize: 14,
                       lineHeight: 1.7,
-                      color: textGrayDark,
+                      color: "rgba(255,255,255,0.72)",
                     }}
                   >
                     {card.description}

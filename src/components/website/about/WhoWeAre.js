@@ -16,13 +16,13 @@ import { Box, Container, Stack, Typography } from "@mui/material";
 import { motion } from "framer-motion";
 
 const FACE_FRONT_URL =
-  "https://img.freepik.com/free-photo/medium-shot-man-looking-document_23-2148751962.jpg?t=st=1773859500~exp=1773863100~hmac=d86ba1a6396695711824fd8c0ffb760358f239f47bab00834015e5ef2abbea4f&w=1480";
+  "/images/about/whoweare-1.jpg";
 const FACE_BACK_URL =
-  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRu9yT-i-HqFTfeHDt2tAXSIQuRF3_7n3HJNg&s";
+  "/images/about/whoweare-2.jpg";
 const FACE_TOP_URL =
-  "https://t3.ftcdn.net/jpg/01/52/05/90/360_F_152059080_aGjnTtv3MhoRzt7OYlsqcQl6g81vC6Gc.jpg";
+  "/images/about/whoweare-3.jpeg";
 const FACE_BOTTOM_URL =
-  "https://st2.depositphotos.com/1092019/10107/i/450/depositphotos_101075562-stock-photo-who-we-are-question-through.jpg";
+  "/images/about/whoweare-4.jpg";
 
 const highlights = [
   { label: "25+", sub: "Years experience" },
@@ -195,7 +195,7 @@ export default function WhoWeAre() {
               </motion.div>
             </Box>
 
-            <Box p={5} pb={2} m={1}>
+            <Box p={5} pb={2} m={1} display={{ xs: "none", lg: "block" }}>
       <div id="viewStage">
         <div id="cube1" className="cube">
           <div className="facefront fb" />

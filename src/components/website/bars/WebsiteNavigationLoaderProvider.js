@@ -23,18 +23,33 @@ function normalizePath(path) {
 const WebsiteNavLoadContext = createContext(null);
 
 export function WebsiteNavigationLoaderProvider({ children }) {
-  const [loading, setLoading] = useState(false);
+  const [isInitialLoading, setIsInitialLoading] = useState(true);
+  const [isNavigating, setIsNavigating] = useState(false);
   const pathname = usePathname();
+  const loading = isInitialLoading || isNavigating;
 
   useEffect(() => {
-    setLoading(false);
+    setIsNavigating(false);
   }, [pathname]);
+
+  useEffect(() => {
+    const preloadHeroImage = new window.Image();
+    preloadHeroImage.src = "/images/home/home-banner-person.png";
+
+    const timer = window.setTimeout(() => {
+      setIsInitialLoading(false);
+    }, 1000);
+
+    return () => {
+      window.clearTimeout(timer);
+    };
+  }, []);
 
   const startNavigation = useCallback(
     (href) => {
       if (!href || typeof href !== "string") return;
       if (normalizePath(href) === normalizePath(pathname)) return;
-      setLoading(true);
+      setIsNavigating(true);
     },
     [pathname]
   );

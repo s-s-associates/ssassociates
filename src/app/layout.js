@@ -30,6 +30,14 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en" className={quicksand.variable}>
+      <head>
+        <link
+          rel="preload"
+          as="image"
+          href="/images/home/home-banner-person.png"
+          fetchPriority="high"
+        />
+      </head>
       <body style={{ backgroundColor: bggrayColor, maxWidth: "1700px", margin: "0 auto" }}>
         <ThemeRegistry>{children}</ThemeRegistry>
       </body>

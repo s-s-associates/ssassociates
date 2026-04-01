@@ -15,7 +15,7 @@ import SubscriberForm from "@/components/website/subscriber/SubscriberForm";
 import { Box } from "@mui/material";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { FaFacebookF, FaTwitter, FaInstagram, FaWhatsapp, FaLinkedinIn } from "react-icons/fa";
 
 const quickLinks = [
@@ -26,14 +26,6 @@ const quickLinks = [
   { label: "Contact", href: "/contact" },
 ];
 
-const services = [
-  "Residential Construction",
-  "Commercial Construction",
-  "Interior Design",
-  "Renovation & Remodeling",
-  "Project Management",
-  "Consultation",
-];
 
 const socialLinks = [
   { Icon: FaFacebookF, href: "#" },
@@ -67,6 +59,17 @@ const underlineFromLeftHover = {
 };
 
 function Footer() {
+  const [services, setServices] = useState([]);
+
+  useEffect(() => {
+    fetch("/api/services")
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.success) setServices(data.services);
+      })
+      .catch(() => {});
+  }, []);
+
   return (
     <Box
       component="footer"
@@ -257,37 +260,50 @@ function Footer() {
             Our Services
           </Box>
           <Box sx={{ display: "flex", flexDirection: "column", gap: 1.25 }}>
-            {services.map((name) => (
-              <Box
-                key={name}
-                sx={{
-                  "&:hover span": {
-                    color: primaryColor,
-                    ...underlineFromLeftHover,
-                  },
-                }}
-              >
-                <Link
-                  href="/services"
-                  style={{ textDecoration: "none", display: "flex", alignItems: "center", gap: 8 }}
-                >
-                  <KeyboardArrowRight sx={{ color: primaryColor, fontSize: 20 }} />
+            {services.length === 0
+              ? // skeleton placeholders while loading
+                Array.from({ length: 4 }).map((_, i) => (
                   <Box
-                    component="span"
+                    key={i}
                     sx={{
-                      ...underlineFromLeft,
-                      fontFamily: "var(--font-app)",
-                      fontWeight: 400,
-                      fontSize: 14,
-                      color: textGrayLight,
-                      transition: "color 0.2s",
+                      height: 14,
+                      borderRadius: 1,
+                      bgcolor: "rgba(255,255,255,0.08)",
+                      width: `${60 + (i % 3) * 15}%`,
+                    }}
+                  />
+                ))
+              : services.map((service) => (
+                  <Box
+                    key={service._id}
+                    sx={{
+                      "&:hover span": {
+                        color: primaryColor,
+                        ...underlineFromLeftHover,
+                      },
                     }}
                   >
-                    {name}
+                    <Link
+                      href={`/services/${service._id}`}
+                      style={{ textDecoration: "none", display: "flex", alignItems: "center", gap: 8 }}
+                    >
+                      <KeyboardArrowRight sx={{ color: primaryColor, fontSize: 20 }} />
+                      <Box
+                        component="span"
+                        sx={{
+                          ...underlineFromLeft,
+                          fontFamily: "var(--font-app)",
+                          fontWeight: 400,
+                          fontSize: 14,
+                          color: textGrayLight,
+                          transition: "color 0.2s",
+                        }}
+                      >
+                        {service.title}
+                      </Box>
+                    </Link>
                   </Box>
-                </Link>
-              </Box>
-            ))}
+                ))}
           </Box>
         </Box>
 
