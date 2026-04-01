@@ -34,6 +34,30 @@ a {
   text-decoration: none;
 }
 
+/* ── Custom scrollbar ───────────────────────────────────────────────────────── */
+
+/* Hide scrollbar (keep scrolling enabled) */
+::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  display: none;
+}
+
+::-webkit-scrollbar-button {
+  display: none;
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* Firefox */
+* {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+/* ─────────────────────────────────────────────────────────────────────────── */
+
 /* SweetAlert2 above MUI Dialog and other modals */
 .swal2-container {
   z-index: 9999 !important;

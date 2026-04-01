@@ -8,6 +8,9 @@ import { Box, Typography } from "@mui/material";
 import { motion } from "framer-motion";
 import React from "react";
 
+const COMPANY_PHONE = process.env.NEXT_PUBLIC_COMPANY_PHONE || "+923008414733";
+const COMPANY_EMAIL = process.env.NEXT_PUBLIC_COMPANY_EMAIL || "info@ssassociates.com";
+
 const whyChooseUsItems = [
   "25+ years of industry experience",
   "500+ successful projects completed",
@@ -143,7 +146,7 @@ function CTASection({
                 <Typography
                   className="contact-value"
                   component="a"
-                  href="tel:+1234567890"
+                  href={`tel:${COMPANY_PHONE.replace(/\s/g, "")}`}
                   sx={{
                     color: whiteColor,
                     fontSize: { xs: 15, md: 18 },
@@ -154,7 +157,7 @@ function CTASection({
                     cursor: "pointer",
                   }}
                 >
-                  +1 (234) 567-890
+                  {COMPANY_PHONE}
                 </Typography>
               </Box>
             </Box>
@@ -196,7 +199,7 @@ function CTASection({
                 <Typography
                   className="contact-value"
                   component="a"
-                  href="mailto:info@ssassociates.com"
+                  href={`mailto:${COMPANY_EMAIL}`}
                   sx={{
                     color: whiteColor,
                     fontSize: { xs: 15, md: 18 },
@@ -207,7 +210,7 @@ function CTASection({
                     cursor: "pointer",
                   }}
                 >
-                  info@ssassociates.com
+                  {COMPANY_EMAIL}
                 </Typography>
               </Box>
             </Box>

@@ -10,6 +10,8 @@ import Swal from "sweetalert2";
 import { menuItems, projectPagesChildren } from "./sidebarMenuConfig";
 import { primaryColor } from "@/components/utils/Colors";
 
+const COMPANY_NAME = process.env.NEXT_PUBLIC_COMPANY_NAME || "S&S Associates";
+
 const SIDEBAR_BG = "#1A1A1A";
 const MENU_ITEM_ACTIVE_BG = "#FFFFFF";
 const MENU_ITEM_ACTIVE_COLOR = "#15151D";
@@ -81,7 +83,7 @@ function Sidebar() {
           px: 1.5,
         }}
       >
-        S&S Associates
+        {COMPANY_NAME}
       </Box>
 
       {/* MENU label */}

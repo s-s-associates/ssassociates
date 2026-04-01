@@ -54,6 +54,10 @@ const inputSx = {
 
 const phoneInputHeight = 37;
 const phoneBorderRadius = 10;
+const COMPANY_EMAIL = process.env.NEXT_PUBLIC_COMPANY_EMAIL || "info@ssassociates.com";
+const COMPANY_PHONE = process.env.NEXT_PUBLIC_COMPANY_PHONE || "+923008414733";
+const COMPANY_ADDRESS = process.env.NEXT_PUBLIC_COMPANY_ADDRESS || "Ayub, 67 Trade Centre Block, Johar Town, Lahore, Pakistan";
+const COMPANY_HOURS = process.env.NEXT_PUBLIC_WORKING_HOURS || "Mon - Sat: 9:00 AM - 6:00 PM";
 
 export default function ContactForm() {
   const handleSubmit = async (values) => {
@@ -176,10 +180,10 @@ export default function ContactForm() {
 
                   <Stack gap={1.5}>
                     {[
-                      { icon: <FiPhoneCall size={16} />, title: "Call Us", value: "+92 300 123 4567" },
-                      { icon: <FiMail size={16} />, title: "Email Us", value: "info@ssassociates.com" },
-                      { icon: <FiMapPin size={16} />, title: "Visit Us", value: "Lahore, Pakistan" },
-                      { icon: <FiClock size={16} />, title: "Working Hours", value: "Mon - Sat, 9AM - 6PM" },
+                      { icon: <FiPhoneCall size={16} />, title: "Call Us", value: COMPANY_PHONE },
+                      { icon: <FiMail size={16} />, title: "Email Us", value: COMPANY_EMAIL },
+                      { icon: <FiMapPin size={16} />, title: "Visit Us", value: COMPANY_ADDRESS },
+                      { icon: <FiClock size={16} />, title: "Working Hours", value: COMPANY_HOURS },
                     ].map((item) => (
                       <Box
                         key={item.title}

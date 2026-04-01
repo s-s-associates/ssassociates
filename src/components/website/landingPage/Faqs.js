@@ -18,6 +18,9 @@ import MailOutlineIcon from "@mui/icons-material/MailOutline";
 import EastIcon from "@mui/icons-material/East";
 import React, { useEffect, useState } from "react";
 
+const COMPANY_PHONE = process.env.NEXT_PUBLIC_COMPANY_PHONE || "+923008414733";
+const COMPANY_EMAIL = process.env.NEXT_PUBLIC_COMPANY_EMAIL || "info@ssassociates.com";
+
 function Faqs() {
   const [faqs, setFaqs] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -163,7 +166,7 @@ function Faqs() {
                 <LocalPhoneOutlinedIcon sx={{ color: primaryColor, fontSize: 18 }} />
               </Box>
               <Typography sx={{ fontSize: 14, lineHeight: 1.7, color: "rgba(231,236,255,0.95)" }}>
-                +92 300 123 4567
+                {COMPANY_PHONE}
               </Typography>
             </Box>
             <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mb: 2 }}>
@@ -182,7 +185,7 @@ function Faqs() {
                 <MailOutlineIcon sx={{ color: primaryColor, fontSize: 18 }} />
               </Box>
               <Typography sx={{ fontSize: 14, lineHeight: 1.7, color: "rgba(231,236,255,0.95)" }}>
-                info@ssassociates.com
+                {COMPANY_EMAIL}
               </Typography>
             </Box>
             <Box

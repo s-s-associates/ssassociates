@@ -38,7 +38,7 @@ export function WebsiteNavigationLoaderProvider({ children }) {
 
     const timer = window.setTimeout(() => {
       setIsInitialLoading(false);
-    }, 1000);
+    }, 500);
 
     return () => {
       window.clearTimeout(timer);

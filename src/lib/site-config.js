@@ -19,11 +19,11 @@ export function truncateMetaDescription(text, maxLen = 160) {
   return `${out}…`;
 }
 
-export const SITE_NAME = "S&S Associates";
+export const SITE_NAME = process.env.NEXT_PUBLIC_COMPANY_NAME || "S&S Associates";
 
-/** Default OG / Twitter image when a page has no specific image. */
+/** Default social preview image when a page has no specific image. */
 export function getDefaultOgImagePath() {
-  return "/ss-logo.png";
+  return "/logo.png";
 }
 
 /**

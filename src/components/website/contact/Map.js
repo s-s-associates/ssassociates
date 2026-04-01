@@ -5,6 +5,9 @@ import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
 import { Box, Button, Typography } from "@mui/material";
 import React from "react";
 
+const COMPANY_NAME = process.env.NEXT_PUBLIC_COMPANY_NAME || "S&S Associates";
+const COMPANY_ADDRESS = process.env.NEXT_PUBLIC_COMPANY_ADDRESS || "Ayub, 67 Trade Centre Block, Johar Town, Lahore, Pakistan";
+
 function Map() {
   return (
     <Box
@@ -38,7 +41,7 @@ function Map() {
             mb: 4,
           }}
         >
-          Find us at our headquarters in Building City
+          Find us at our headquarters
         </Typography>
 
         <Box
@@ -53,7 +56,7 @@ function Map() {
         >
           <Box
             component="iframe"
-            title="S&S Associates Lahore"
+            title={`${COMPANY_NAME} location map`}
             src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4569.376874268435!2d74.2577622482634!3d31.456842727345006!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3919012785b30b73%3A0x2a59b81a0e9bff74!2sS%26S%20Associates%20Lahore!5e0!3m2!1sen!2s!4v1774520890394!5m2!1sen!2s"
             loading="lazy"
             referrerPolicy="no-referrer-when-downgrade"
@@ -100,23 +103,13 @@ function Map() {
               }}
             >
               <LocationOnOutlinedIcon
-                sx={{ color: primaryColor, fontSize: 46, mb: 1.5 }}
+                sx={{ color: primaryColor, fontSize: 46, mb: 0.5 }}
               />
 
               <Typography
-                sx={{ color: grayColor, fontWeight: 700, fontSize: { xs: 24, md: 32 } }}
+                sx={{ color: grayColor, fontWeight: 700, fontSize: { xs: 18, md: 20 } , mb:1}}
               >
-                Ayub, 67 Trade Centre Block
-              </Typography>
-
-              <Typography
-                sx={{
-                  color: "rgba(21, 21, 29, 0.62)",
-                  fontSize: { xs: 15, md: 20 },
-                  mb: 3,
-                }}
-              >
-                Johar Town, Lahore, Pakistan
+                {COMPANY_ADDRESS}
               </Typography>
 
               <Button

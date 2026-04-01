@@ -9,32 +9,31 @@ import { Box, Typography } from "@mui/material";
 import { motion } from "framer-motion";
 import React from "react";
 
+const COMPANY_PHONE = process.env.NEXT_PUBLIC_COMPANY_PHONE || "+923008414733";
+const COMPANY_EMAIL = process.env.NEXT_PUBLIC_COMPANY_EMAIL || "info@ssassociates.com";
+const COMPANY_ADDRESS = process.env.NEXT_PUBLIC_COMPANY_ADDRESS || "Ayub, 67 Trade Centre Block, Johar Town, Lahore, Pakistan";
+const COMPANY_HOURS = process.env.NEXT_PUBLIC_WORKING_HOURS || "Mon - Sat: 9:00 AM - 6:00 PM";
+
 const contactItems = [
   {
     title: "Phone",
     icon: PhoneOutlinedIcon,
-    lines: [
-      { text: "+1 (234) 567-890", href: "tel:+1234567890" },
-      { text: "+1 (234) 567-891", href: "tel:+1234567891" },
-    ],
+    lines: [{ text: COMPANY_PHONE, href: `tel:${COMPANY_PHONE.replace(/\s/g, "")}` }],
   },
   {
     title: "Email",
     icon: EmailOutlinedIcon,
-    lines: [
-      { text: "info@ssassociates.com", href: "mailto:info@ssassociates.com" },
-      { text: "contact@ssassociates.com", href: "mailto:contact@ssassociates.com" },
-    ],
+    lines: [{ text: COMPANY_EMAIL, href: `mailto:${COMPANY_EMAIL}` }],
   },
   {
     title: "Address",
     icon: LocationOnOutlinedIcon,
-    lines: [{ text: "123 Construction Ave" }, { text: "Building City, BC 12345" }],
+    lines: [{ text: COMPANY_ADDRESS }],
   },
   {
     title: "Working Hours",
     icon: AccessTimeIcon,
-    lines: [{ text: "Mon - Sat: 8:00 AM - 6:00 PM" }, { text: "Sunday: Closed" }],
+    lines: [{ text: COMPANY_HOURS }],
   },
 ];
 

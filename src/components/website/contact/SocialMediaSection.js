@@ -5,35 +5,42 @@ import ArrowOutwardRoundedIcon from "@mui/icons-material/ArrowOutwardRounded";
 import FacebookRoundedIcon from "@mui/icons-material/FacebookRounded";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
-import XIcon from "@mui/icons-material/X";
+import WhatsAppIcon from "@mui/icons-material/WhatsApp";
+import EmailRoundedIcon from "@mui/icons-material/EmailRounded";
 import { Box, Typography } from "@mui/material";
 import { motion } from "framer-motion";
 import React from "react";
 
 const socialItems = [
   {
-    name: "Facebook",
-    icon: FacebookRoundedIcon,
-    href: "https://www.facebook.com/",
-    accent: "linear-gradient(135deg, rgba(251,134,30,0.28), rgba(255,255,255,0.05))",
+    name: "WhatsApp",
+    icon: WhatsAppIcon,
+    href: process.env.NEXT_PUBLIC_COMPANY_WHATSAPP,
+    accent: "linear-gradient(135deg, rgba(255,166,92,0.3), rgba(255,255,255,0.04))",
   },
   {
-    name: "X / Twitter",
-    icon: XIcon,
-    href: "https://x.com/",
-    accent: "linear-gradient(135deg, rgba(255,166,92,0.3), rgba(255,255,255,0.04))",
+    name: "Facebook",
+    icon: FacebookRoundedIcon,
+    href: process.env.NEXT_PUBLIC_COMPANY_FACEBOOK,
+    accent: "linear-gradient(135deg, rgba(251,134,30,0.28), rgba(255,255,255,0.05))",
   },
   {
     name: "Instagram",
     icon: InstagramIcon,
-    href: "https://www.instagram.com/",
+    href: process.env.NEXT_PUBLIC_COMPANY_INSTAGRAM,
     accent: "linear-gradient(135deg, rgba(231,100,0,0.36), rgba(255,255,255,0.05))",
   },
   {
     name: "LinkedIn",
     icon: LinkedInIcon,
-    href: "https://www.linkedin.com/",
+    href: process.env.NEXT_PUBLIC_COMPANY_LINKEDIN,
     accent: "linear-gradient(135deg, rgba(251,134,30,0.25), rgba(255,255,255,0.05))",
+  },
+  {
+    name: "Email",
+    icon: EmailRoundedIcon,
+    href: `mailto:${process.env.NEXT_PUBLIC_COMPANY_EMAIL || ""}`,
+    accent: "linear-gradient(135deg, rgba(255,142,61,0.28), rgba(255,255,255,0.05))",
   },
 ];
 
@@ -140,7 +147,7 @@ function SocialMediaSection() {
           viewport={{ once: true, amount: 0.2 }}
           sx={{
             display: "grid",
-            gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr", lg: "repeat(4, 1fr)" },
+            gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr", lg: "repeat(5, 1fr)" },
             gap: { xs: 2, md: 3 },
           }}
         >

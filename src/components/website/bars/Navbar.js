@@ -26,6 +26,8 @@ import { usePathname } from "next/navigation";
 import React, { useState, useEffect } from "react";
 import { useWebsiteNavigationLoading } from "./WebsiteNavigationLoaderProvider";
 
+const COMPANY_NAME = process.env.NEXT_PUBLIC_COMPANY_NAME || "S&S Associates";
+
 const navLinks = [
   { label: "Home", href: "/" },
   { label: "About", href: "/about" },
@@ -78,6 +80,32 @@ const underlineFromLeftHover = {
     transition: "transform 0.25s ease",
   },
 };
+
+function PakistanFlagIcon({ size = 20 }) {
+  return (
+    <Box
+      component="svg"
+      viewBox="0 0 48 36"
+      aria-hidden
+      sx={{
+        width: size,
+        height: Math.round((size * 3) / 4),
+        display: "inline-block",
+        borderRadius: "2px",
+        boxShadow: "0 0 0 1px rgba(0,0,0,0.12)",
+      }}
+    >
+      <rect width="48" height="36" fill="#01411C" />
+      <rect width="12" height="36" fill="#fff" />
+      <circle cx="30" cy="18" r="8.5" fill="#fff" />
+      <circle cx="32.2" cy="17.2" r="7.8" fill="#01411C" />
+      <path
+        d="M36.1 11.2l1.4 3.1 3.3.3-2.5 2.2.8 3.2-3-1.8-2.9 1.8.8-3.2-2.5-2.2 3.2-.3 1.4-3.1z"
+        fill="#fff"
+      />
+    </Box>
+  );
+}
 
 function Navbar() {
   const pathname = usePathname();
@@ -163,7 +191,7 @@ function Navbar() {
                 <Link href="/" style={{ display: "inline-flex" }}>
                   <Image
                     src="/logo.png"
-                    alt="S&S Associates"
+                    alt={COMPANY_NAME}
                     width={40}
                     height={40}
                     priority
@@ -188,7 +216,7 @@ function Navbar() {
                       },
                     }}
                   >
-                    S&S Associates
+                    {COMPANY_NAME}
                   </Box>
                 </Link>
                 <Box
@@ -280,9 +308,32 @@ function Navbar() {
             sx={{
               display: { xs: "none", md: "flex" },
               alignItems: "center",
-              gap: 3,
+              gap: 1.5,
             }}
           >
+            <Box component={motion.div} variants={item}>
+              <Box
+                component="span"
+                sx={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 0.7,
+                  px: 1.15,
+                  py: 0.55,
+                  borderRadius: "999px",
+                  border: "1px solid rgba(255,255,255,0.3)",
+                  backgroundColor: "rgba(255,255,255,0.06)",
+                  color: whiteColor,
+                  fontSize: 14,
+                  fontWeight: 600,
+                  letterSpacing: "0.01em",
+                  lineHeight: 1,
+                }}
+              >
+                <PakistanFlagIcon size={18} />
+                Pakistan
+              </Box>
+            </Box>
             <Box component={motion.div} variants={item}>
               <Link
                 href="/contact"
@@ -309,24 +360,44 @@ function Navbar() {
             </Box>
           </Box>
 
-          {/* Mobile menu button */}
+          {/* Mobile right side: Pakistan badge + menu button */}
           <Box
             component={motion.div}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.25 }}
-            sx={{ display: { md: "none" } }}
+            sx={{ display: { md: "none" }, alignItems: "center", gap: 1 }}
           >
+            <Box
+              component="span"
+              sx={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 0.6,
+                px: 0.95,
+                py: 0.45,
+                borderRadius: "999px",
+                border: "1px solid rgba(255,255,255,0.3)",
+                backgroundColor: "rgba(255,255,255,0.06)",
+                color: whiteColor,
+                fontSize: 11,
+                fontWeight: 600,
+                lineHeight: 1,
+              }}
+            >
+              <PakistanFlagIcon size={12} />
+              Pakistan
+            </Box>
             <IconButton
               onClick={() => setDrawerOpen(true)}
               aria-label="Open menu"
               sx={{
-                  color: textGrayDark,
+                color: textGrayDark,
                 borderRadius: "8px",
                 transition: "color 0.2s ease, transform 0.2s ease",
                 "&:hover": {
                   color: primaryColor,
-                    backgroundColor: secondaryBg,
+                  backgroundColor: secondaryBg,
                   transform: "scale(1.06)",
                 },
                 "&:hover .MuiTouchRipple-root": { borderRadius: "8px" },
@@ -352,7 +423,9 @@ function Navbar() {
               sx={{
                 position: "fixed",
                 inset: 0,
-                bgcolor: "rgba(0,0,0,0.4)",
+                bgcolor: "rgba(6, 10, 18, 0.42)",
+                backdropFilter: "blur(3px)",
+                WebkitBackdropFilter: "blur(3px)",
                 zIndex: 1200,
               }}
             />
@@ -369,11 +442,27 @@ function Navbar() {
                 bottom: 0,
                 width: 280,
                 // maxWidth: "vw",
-                bgcolor: "#fff",
+                bgcolor: "rgba(14, 20, 33, 0.74)",
+                backdropFilter: "blur(16px)",
+                WebkitBackdropFilter: "blur(16px)",
+                borderLeft: "1px solid rgba(255,255,255,0.14)",
                 zIndex: 1201,
-                boxShadow: "-4px 0 20px rgba(0,0,0,0.1)",
+                boxShadow: "-12px 0 32px rgba(0,0,0,0.42)",
                 py: 3,
                 px: 2,
+                overflow: "hidden",
+                "&::before": {
+                  content: '""',
+                  position: "absolute",
+                  top: -80,
+                  right: -90,
+                  width: 220,
+                  height: 220,
+                  borderRadius: "50%",
+                  background: "radial-gradient(circle at center, rgba(251,134,30,0.32), transparent 70%)",
+                  filter: "blur(4px)",
+                  pointerEvents: "none",
+                },
               }}
             >
               <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 2 }}>
@@ -381,12 +470,12 @@ function Navbar() {
                   onClick={() => setDrawerOpen(false)}
                   aria-label="Close menu"
                   sx={{
-                    color: textGrayDark,
+                    color: whiteColor,
                     borderRadius: "8px",
                     transition: "color 0.2s ease, transform 0.2s ease",
                     "&:hover": {
                       color: primaryColor,
-                      backgroundColor: secondaryBg,
+                      backgroundColor: "rgba(255,255,255,0.1)",
                       transform: "scale(1.06)",
                     },
                     "&:hover .MuiTouchRipple-root": { borderRadius: "8px" },
@@ -427,17 +516,26 @@ function Navbar() {
                             fontWeight: 400,
                             fontSize: 16,
                             lineHeight: "24px",
-                            color: isActive ? primaryColor : textGrayDark,
+                            color: isActive ? primaryColor : "rgba(255,255,255,0.9)",
                             px: 2,
                             py: 1.5,
-                            ml: 1.5,
-                            borderLeft: isActive
-                              ? `3px solid ${primaryColor}`
-                              : "3px solid transparent",
+                            ml: 1,
+                            mr: 1,
+                            borderLeft: "none",
+                            borderRadius: 2,
+                            border: isActive
+                              ? `1px solid rgba(251,134,30,0.45)`
+                              : "1px solid rgba(255,255,255,0.08)",
+                            backgroundColor: isActive
+                              ? "rgba(251,134,30,0.12)"
+                              : "rgba(255,255,255,0.03)",
+                            backdropFilter: "blur(2px)",
                             transition,
                             ...(isActive ? underlineFromLeftHover : {}),
                             "&:hover": {
                               color: primaryColor,
+                              backgroundColor: "rgba(251,134,30,0.12)",
+                              borderColor: "rgba(251,134,30,0.38)",
                               ...underlineFromLeftHover,
                             },
                           }}
@@ -448,6 +546,28 @@ function Navbar() {
                     </Box>
                   );
                 })}
+                <Box component={motion.div} variants={item} sx={{ mt: 1.25, mx: 2 }}>
+                  <Box
+                    component="span"
+                    sx={{
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: 0.8,
+                      px: 1.2,
+                      py: 0.55,
+                      borderRadius: "999px",
+                      border: "1px solid rgba(255,255,255,0.22)",
+                      backgroundColor: "rgba(255, 255, 255, 0.09)",
+                      color: whiteColor,
+                      fontWeight: 600,
+                      fontSize: 12,
+                      lineHeight: 1,
+                    }}
+                  >
+                    <PakistanFlagIcon size={14} />
+                    Pakistan
+                  </Box>
+                </Box>
                 <Box component={motion.div} variants={item} sx={{ mt: 2 }}>
                   <Link
                     href="/contact"

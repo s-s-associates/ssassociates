@@ -16,7 +16,14 @@ import { Box } from "@mui/material";
 import Image from "next/image";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
-import { FaFacebookF, FaTwitter, FaInstagram, FaWhatsapp, FaLinkedinIn } from "react-icons/fa";
+import { FaFacebookF, FaInstagram, FaWhatsapp, FaLinkedinIn } from "react-icons/fa";
+import { MdEmail } from "react-icons/md";
+
+const COMPANY_NAME = process.env.NEXT_PUBLIC_COMPANY_NAME || "S&S Associates";
+const COMPANY_EMAIL = process.env.NEXT_PUBLIC_COMPANY_EMAIL || "info@ssassociates.com";
+const COMPANY_PHONE = process.env.NEXT_PUBLIC_COMPANY_PHONE || "+923008414733";
+const COMPANY_ADDRESS = process.env.NEXT_PUBLIC_COMPANY_ADDRESS || "Ayub, 67 Trade Centre Block, Johar Town, Lahore, Pakistan";
+const COMPANY_HOURS = process.env.NEXT_PUBLIC_WORKING_HOURS || "Mon - Sat: 9:00 AM - 6:00 PM";
 
 const quickLinks = [
   { label: "Home", href: "/" },
@@ -28,11 +35,11 @@ const quickLinks = [
 
 
 const socialLinks = [
-  { Icon: FaFacebookF, href: "#" },
-  { Icon: FaTwitter, href: "#" },
-  { Icon: FaInstagram, href: "#" },
-  { Icon: FaWhatsapp, href: "#" },
-  { Icon: FaLinkedinIn, href: "#" },
+  { Icon: FaWhatsapp, href: process.env.NEXT_PUBLIC_COMPANY_WHATSAPP },
+  { Icon: FaFacebookF, href: process.env.NEXT_PUBLIC_COMPANY_FACEBOOK },
+  { Icon: FaInstagram, href: process.env.NEXT_PUBLIC_COMPANY_INSTAGRAM },
+  { Icon: FaLinkedinIn, href: process.env.NEXT_PUBLIC_COMPANY_LINKEDIN },
+  { Icon: MdEmail, href: `mailto:${COMPANY_EMAIL}` },
 ];
 
 // Animated underline: line enters from left to right on hover
@@ -114,7 +121,7 @@ function Footer() {
             >
               <Image
                 src="/logo.png"
-                alt="S&S Associates"
+                alt={COMPANY_NAME}
                 width={70}
                 height={70}
                 style={{ objectFit: "contain" }}
@@ -137,7 +144,7 @@ function Footer() {
                   },
                 }}
               >
-                S&S Associates
+                {COMPANY_NAME}
               </Box>
               <Box
                 component="span"
@@ -346,7 +353,7 @@ function Footer() {
                   transition: "color 0.2s",
                 }}
               >
-                123 Construction Ave, Building City, BC 12345
+                {COMPANY_ADDRESS}
               </Box>
             </Box>
             <Box
@@ -373,7 +380,7 @@ function Footer() {
                   transition: "color 0.2s",
                 }}
               >
-                +1 (234) 567-890
+                {COMPANY_PHONE}
               </Box>
             </Box>
             <Box
@@ -400,7 +407,7 @@ function Footer() {
                   transition: "color 0.2s",
                 }}
               >
-                info@ssassociates.com
+                {COMPANY_EMAIL}
               </Box>
             </Box>
             <Box
@@ -427,7 +434,7 @@ function Footer() {
                   transition: "color 0.2s",
                 }}
               >
-                Mon - Sat: 8:00 AM - 6:00 PM
+                {COMPANY_HOURS}
               </Box>
             </Box>
           </Box>
@@ -463,7 +470,7 @@ function Footer() {
               color: textGrayLight,
             }}
           >
-            © 2026 S&S Associates. All rights reserved. Built with excellence.
+            © 2026 {COMPANY_NAME}. All rights reserved. Built with excellence.
           </Box>
           <Box
             sx={{
