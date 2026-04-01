@@ -13,20 +13,252 @@
 # when using Next.js app/robots.js (Next.js will error: conflicting public file).
 # =============================================================================
 
+# ── Standard crawlers ────────────────────────────────────────────────────────
 User-agent: *
 Allow: /
-
-# Admin, API, and auth (never index)
+Allow: /about
+Allow: /contact
+Allow: /services
+Allow: /projects
+Allow: /home
 Disallow: /user/
 Disallow: /api/
 Disallow: /login
 Disallow: /setup
 
-# Optional: block common bot noise (uncomment if needed)
-# User-agent: AhrefsBot
-# Disallow: /
+# ── AI crawlers — explicitly allowed ─────────────────────────────────────────
 
-# Sitemap (canonical dynamic URL on Next.js host)
+# OpenAI / ChatGPT
+User-agent: GPTBot
+Allow: /
+Allow: /about
+Allow: /contact
+Allow: /services
+Allow: /projects
+Allow: /home
+Disallow: /user/
+Disallow: /api/
+Disallow: /login
+Disallow: /setup
+
+User-agent: ChatGPT-User
+Allow: /
+Allow: /about
+Allow: /contact
+Allow: /services
+Allow: /projects
+Allow: /home
+Disallow: /user/
+Disallow: /api/
+Disallow: /login
+Disallow: /setup
+
+User-agent: OAI-SearchBot
+Allow: /
+Allow: /about
+Allow: /contact
+Allow: /services
+Allow: /projects
+Allow: /home
+Disallow: /user/
+Disallow: /api/
+Disallow: /login
+Disallow: /setup
+
+# Anthropic / Claude
+User-agent: ClaudeBot
+Allow: /
+Allow: /about
+Allow: /contact
+Allow: /services
+Allow: /projects
+Allow: /home
+Disallow: /user/
+Disallow: /api/
+Disallow: /login
+Disallow: /setup
+
+User-agent: Claude-Web
+Allow: /
+Allow: /about
+Allow: /contact
+Allow: /services
+Allow: /projects
+Allow: /home
+Disallow: /user/
+Disallow: /api/
+Disallow: /login
+Disallow: /setup
+
+User-agent: anthropic-ai
+Allow: /
+Allow: /about
+Allow: /contact
+Allow: /services
+Allow: /projects
+Allow: /home
+Disallow: /user/
+Disallow: /api/
+Disallow: /login
+Disallow: /setup
+
+# Perplexity AI
+User-agent: PerplexityBot
+Allow: /
+Allow: /about
+Allow: /contact
+Allow: /services
+Allow: /projects
+Allow: /home
+Disallow: /user/
+Disallow: /api/
+Disallow: /login
+Disallow: /setup
+
+# You.com
+User-agent: YouBot
+Allow: /
+Allow: /about
+Allow: /contact
+Allow: /services
+Allow: /projects
+Allow: /home
+Disallow: /user/
+Disallow: /api/
+Disallow: /login
+Disallow: /setup
+
+# Cohere
+User-agent: cohere-ai
+Allow: /
+Allow: /about
+Allow: /contact
+Allow: /services
+Allow: /projects
+Allow: /home
+Disallow: /user/
+Disallow: /api/
+Disallow: /login
+Disallow: /setup
+
+# Omgili / Webz.io AI
+User-agent: Omgilibot
+Allow: /
+Allow: /about
+Allow: /contact
+Allow: /services
+Allow: /projects
+Allow: /home
+Disallow: /user/
+Disallow: /api/
+Disallow: /login
+Disallow: /setup
+
+# Diffbot AI
+User-agent: Diffbot
+Allow: /
+Allow: /about
+Allow: /contact
+Allow: /services
+Allow: /projects
+Allow: /home
+Disallow: /user/
+Disallow: /api/
+Disallow: /login
+Disallow: /setup
+
+# Meta AI
+User-agent: FacebookBot
+Allow: /
+Allow: /about
+Allow: /contact
+Allow: /services
+Allow: /projects
+Allow: /home
+Disallow: /user/
+Disallow: /api/
+Disallow: /login
+Disallow: /setup
+
+# Apple AI / Siri
+User-agent: Applebot-Extended
+Allow: /
+Allow: /about
+Allow: /contact
+Allow: /services
+Allow: /projects
+Allow: /home
+Disallow: /user/
+Disallow: /api/
+Disallow: /login
+Disallow: /setup
+
+# ByteDance / TikTok AI
+User-agent: Bytespider
+Allow: /
+Allow: /about
+Allow: /contact
+Allow: /services
+Allow: /projects
+Allow: /home
+Disallow: /user/
+Disallow: /api/
+Disallow: /login
+Disallow: /setup
+
+# Google AI / Gemini training
+User-agent: Googlebot-Extended
+Allow: /
+Allow: /about
+Allow: /contact
+Allow: /services
+Allow: /projects
+Allow: /home
+Disallow: /user/
+Disallow: /api/
+Disallow: /login
+Disallow: /setup
+
+# Common Crawl (used by many LLMs)
+User-agent: CCBot
+Allow: /
+Allow: /about
+Allow: /contact
+Allow: /services
+Allow: /projects
+Allow: /home
+Disallow: /user/
+Disallow: /api/
+Disallow: /login
+Disallow: /setup
+
+# DataForSEO AI
+User-agent: DataForSeoBot
+Allow: /
+Allow: /about
+Allow: /contact
+Allow: /services
+Allow: /projects
+Allow: /home
+Disallow: /user/
+Disallow: /api/
+Disallow: /login
+Disallow: /setup
+
+# Huawei AI
+User-agent: PetalBot
+Allow: /
+Allow: /about
+Allow: /contact
+Allow: /services
+Allow: /projects
+Allow: /home
+Disallow: /user/
+Disallow: /api/
+Disallow: /login
+Disallow: /setup
+
+# ── Sitemap ───────────────────────────────────────────────────────────────────
 Sitemap: https://www.ssassociates.com/sitemap.xml
 
 # =============================================================================
