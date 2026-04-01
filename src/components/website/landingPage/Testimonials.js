@@ -139,11 +139,11 @@ const Testimonials = () => {
 
   return (
     <Box
+    py={[5,10,20]}
       component="section"
       sx={{
         position: "relative",
         overflow: "hidden",
-        py: 20,
         px: { xs: 3, sm: 3, md: 40 },
         backgroundColor: secondaryDark,
         backgroundImage:
@@ -155,35 +155,7 @@ const Testimonials = () => {
         color: "rgba(255,255,255,0.92)",
       }}
     >
-      {/* <Box
-        aria-hidden
-        sx={{
-          position: "absolute",
-          top: { xs: -80, md: -100 },
-          right: { xs: -60, md: -80 },
-          width: { xs: 240, md: 320 },
-          height: { xs: 240, md: 320 },
-          borderRadius: "50%",
-          background: "radial-gradient(circle at center, rgba(251,134,30,0.26), transparent 68%)",
-          filter: "blur(2px)",
-          pointerEvents: "none",
-        }}
-      />
-      <Box
-        aria-hidden
-        sx={{
-          position: "absolute",
-          bottom: { xs: -70, md: -90 },
-          left: { xs: -50, md: -60 },
-          width: { xs: 260, md: 340 },
-          height: { xs: 260, md: 340 },
-          borderRadius: "50%",
-          background:
-            "radial-gradient(circle at center, rgba(251,134,30,0.18), rgba(255,184,116,0.1) 45%, transparent 70%)",
-          filter: "blur(3px)",
-          pointerEvents: "none",
-        }}
-      /> */}
+     
 
       <Stack
         direction={["column-reverse", "column-reverse", "row"]}
@@ -278,7 +250,7 @@ const Testimonials = () => {
         </Stack>
       </Stack>
 
-      <Stack maxWidth={500} minWidth={400} maxHeight={[400, 400, "auto"]} overflow={"hidden"}>
+      <Stack maxWidth={[320,350,400,500]} minWidth={[220,250,300,400]} maxHeight={[400, 400, "auto"]} overflow={"hidden"}>
         {loading ? (
           <Stack minHeight={280} alignItems="center" justifyContent="center" p={3}>
             <CircularProgress sx={{ color: primaryColor }} />

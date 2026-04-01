@@ -81,7 +81,8 @@ export default function ProjectCard() {
   return (
     <Box
       my={8}
-      p={5}
+      px={[2,3,5]}
+      py={[5,5,5]}
       bgcolor={secondaryDark}
       borderRadius={sectionRadius}
       maxWidth={1450}

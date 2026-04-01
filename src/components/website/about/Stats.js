@@ -3,24 +3,16 @@
 import {
   primaryColor,
   primaryBg,
+  primaryLight,
   secondaryColor,
+  secondaryBg,
   textGrayDark,
   whiteColor,
-  secondaryBg,
+  bordergrayColor,
 } from "@/components/utils/Colors";
-import {
-  btnRadius,
-  boxShadow,
-  boxShadowHover,
-  transition,
-} from "@/components/utils/GlobalVariables";
-import {
-  Engineering,
-  Apartment,
-  EmojiPeople,
-  Verified,
-} from "@mui/icons-material";
-import { Box, Stack } from "@mui/material";
+import { btnRadius, boxShadow } from "@/components/utils/GlobalVariables";
+import { Engineering, Apartment, EmojiPeople, Verified } from "@mui/icons-material";
+import { Box, Stack, Typography } from "@mui/material";
 import { motion, useInView, animate } from "framer-motion";
 import React, { useEffect, useRef, useState } from "react";
 
@@ -34,9 +26,7 @@ function AnimatedNumber({ value, suffix = "" }) {
     const controls = animate(0, value, {
       duration: 1.8,
       ease: "easeOut",
-      onUpdate: (latest) => {
-        setCurrent(Math.floor(latest));
-      },
+      onUpdate: (latest) => setCurrent(Math.floor(latest)),
     });
     return () => controls.stop();
   }, [isInView, value]);
@@ -81,191 +71,213 @@ const stats = [
 ];
 
 const containerVariants = {
-  hidden: { opacity: 0, y: 24 },
-  show: {
-    opacity: 1,
-    y: 0,
-    transition: { staggerChildren: 0.08, delayChildren: 0.1 },
-  },
+  hidden: {},
+  show: { transition: { staggerChildren: 0.1, delayChildren: 0.05 } },
 };
 
 const itemVariants = {
-  hidden: { opacity: 0, y: 16 },
-  show: { opacity: 1, y: 0 },
+  hidden: { opacity: 0, y: 24 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.45, ease: "easeOut" } },
 };
+
+function StatCard({ stat }) {
+  const Icon = stat.icon;
+  return (
+    <Box
+      component={motion.div}
+      variants={itemVariants}
+      whileHover={{ y: -5 }}
+      transition={{ duration: 0.22 }}
+      sx={{
+        bgcolor: whiteColor,
+        borderRadius: "16px",
+        border: `1px solid ${bordergrayColor}`,
+        boxShadow: "0 2px 16px rgba(16,24,40,0.06)",
+        p: { xs: 1.5, sm: 3 },
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        textAlign: "center",
+        gap: 1.5,
+        cursor: "default",
+        transition: "box-shadow 0.22s, border-color 0.22s, transform 0.22s",
+        "&:hover": {
+          boxShadow: "0 8px 32px rgba(251,134,30,0.14)",
+          borderColor: primaryColor,
+        },
+      }}
+    >
+      {/* Icon */}
+      <Box
+        component={motion.div}
+        animate={{ y: [0, -5, 0] }}
+        transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+        sx={{
+          width: { xs: 52, sm: 60 },
+          height: { xs: 52, sm: 60 },
+          borderRadius: "50%",
+          bgcolor: primaryBg,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          color: primaryColor,
+          flexShrink: 0,
+        }}
+      >
+        <Icon sx={{ fontSize: { xs: 26, sm: 30 } }} />
+      </Box>
+
+      {/* Number */}
+      <Typography
+        sx={{
+          fontWeight: 800,
+          fontSize: { xs: 34, sm: 40, md: 44 },
+          lineHeight: 1,
+          color: secondaryColor,
+          letterSpacing: "-0.02em",
+        }}
+      >
+        <AnimatedNumber value={stat.value} suffix={stat.suffix} />
+      </Typography>
+
+      {/* Divider accent */}
+      <Box
+        sx={{
+          width: 32,
+          height: 3,
+          borderRadius: 2,
+          bgcolor: primaryColor,
+          opacity: 0.7,
+        }}
+      />
+
+      {/* Label */}
+      <Typography
+        sx={{
+          fontWeight: 700,
+          fontSize: { xs: 13, sm: 14 },
+          color: secondaryColor,
+          lineHeight: 1.35,
+        }}
+      >
+        {stat.label}
+      </Typography>
+
+      {/* Hint */}
+      <Typography
+        sx={{
+          fontWeight: 400,
+          fontSize: { xs: 12, sm: 13 },
+          color: primaryColor,
+          lineHeight: 1.4,
+        }}
+      >
+        {stat.hint}
+      </Typography>
+    </Box>
+  );
+}
 
 function Stats() {
   return (
     <Box
       component="section"
       sx={{
-        py: { xs: 5, md: 7 },
-        px: { xs: 2, sm: 3, md: 4 },
-        backgroundColor: whiteColor,
+        py: { xs: 6, md: 8 },
+        px: { xs:1.5, sm: 3, md: 4 },
+        bgcolor: whiteColor,
       }}
     >
       <Box
         sx={{
-          maxWidth: 1200,
+          maxWidth: 1100,
           mx: "auto",
-          borderRadius: btnRadius,
-          backgroundColor: secondaryBg,
-          p: { xs: 3, md: 4 },
+          borderRadius: { xs: "20px", md: "24px" },
+          bgcolor: secondaryBg,
+          px: { xs: 1, sm: 4, md: 5 },
+          py: { xs: 5, sm: 5, md: 5 },
           boxShadow,
           textAlign: "center",
+          position: "relative",
+          overflow: "hidden",
         }}
       >
+        {/* Subtle background accent */}
         <Box
+          aria-hidden
           sx={{
-            maxWidth: 640,
-            mx: "auto",
-            mb: 3,
+            position: "absolute",
+            top: -60,
+            right: -60,
+            width: 220,
+            height: 220,
+            borderRadius: "50%",
+            background: `radial-gradient(circle, rgba(251,134,30,0.07) 0%, transparent 70%)`,
+            pointerEvents: "none",
           }}
-        >
-          <Box
+        />
+        <Box
+          aria-hidden
+          sx={{
+            position: "absolute",
+            bottom: -40,
+            left: -40,
+            width: 160,
+            height: 160,
+            borderRadius: "50%",
+            background: `radial-gradient(circle, rgba(251,134,30,0.05) 0%, transparent 70%)`,
+            pointerEvents: "none",
+          }}
+        />
+
+        {/* Heading */}
+        <Box sx={{ maxWidth: 600, mx: "auto", mb: { xs: 3.5, md: 4.5 }, position: "relative", zIndex: 1 }}>
+          <Typography
             component="h2"
             sx={{
-              fontFamily:
-                "var(--font-app)",
               fontWeight: 700,
-              fontSize: { xs: 24, md: 28 },
+              fontSize: { xs: 22, sm: 26, md: 30 },
               color: secondaryColor,
-              mb: 1,
+              lineHeight: 1.25,
+              mb: 1.5,
             }}
           >
             Proven results you can measure.
-          </Box>
-          <Box
-            component="p"
+          </Typography>
+          <Typography
             sx={{
-              fontFamily:
-                "var(--font-app)",
               fontWeight: 400,
-              fontSize: 14,
-              lineHeight: 1.6,
+              fontSize: { xs: 13, sm: 14 },
+              lineHeight: 1.65,
               color: textGrayDark,
             }}
           >
-            From first sketch to final inspection, our numbers reflect the trust
-            clients place in S&amp;S Associates.
-          </Box>
+            From first sketch to final inspection, our numbers reflect the trust clients place in S&amp;S Associates.
+          </Typography>
         </Box>
 
+        {/* Cards grid */}
         <Box
           component={motion.div}
           variants={containerVariants}
           initial="hidden"
           whileInView="show"
-          viewport={{ once: true, amount: 0.2 }}
+          viewport={{ once: true, amount: 0.15 }}
           sx={{
             display: "grid",
             gridTemplateColumns: {
-              xs: "repeat(2, minmax(0, 1fr))",
-              md: "repeat(4, minmax(0, 1fr))",
+              xs: "repeat(2, 1fr)",
+              sm: "repeat(2, 1fr)",
+              md: "repeat(4, 1fr)",
             },
-            gap: { xs: 2.5, md: 3 },
-            alignItems: "stretch",
+            gap: { xs: 1, sm: 2.5, md: 3 },
+            position: "relative",
+            zIndex: 1,
           }}
         >
-          {stats.map((stat) => {
-            const Icon = stat.icon;
-            return (
-              <Box
-                key={stat.label}
-                component={motion.div}
-                variants={itemVariants}
-                whileHover={{ y: -4, scale: 1.02 }}
-                transition={{ duration: 0.2 }}
-                sx={{
-                  backgroundColor: whiteColor,
-                  borderRadius: btnRadius,
-                  p: 2.5,
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "flex-start",
-                  gap: 1.25,
-                  boxShadow,
-                  border: `1px solid ${secondaryBg}`,
-                  cursor: "default",
-                  transition,
-                  "&:hover": {
-                    boxShadow: boxShadowHover,
-                    borderColor: primaryColor,
-                  },
-                }}
-              >
-                <Stack 
-                width="100%"
-                direction="row"
-                justifyContent="space-between"
-                alignItems="center"
-                  sx={{
-                    gap: 1.25,
-                    mb: 0.5,
-                  }}
-                >
-                  <Box
-                    component="div"
-                    sx={{
-                      fontWeight: 700,
-                      fontSize: 40,
-                      color: secondaryColor,
-                    }}
-                  >
-                      <AnimatedNumber value={stat.value} suffix={stat.suffix} />
-                  </Box>
-                  <Box
-                    component={motion.div}
-                    animate={{ y: [0, -4, 0] }}
-                    transition={{
-                      duration: 1.8,
-                      repeat: Infinity,
-                      repeatType: "loop",
-                      ease: "easeInOut",
-                    }}
-                    sx={{
-                      width: 60,
-                      height: 60,
-                      borderRadius: "50%",
-                      backgroundColor: primaryBg,
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      color: primaryColor,
-                    }}
-                  >
-                    <Icon sx={{ fontSize: 34 }} />
-                  </Box>
-                </Stack>
-                <Box
-                  component="div"
-                  sx={{
-                    fontFamily:
-                      "var(--font-app)",
-                    fontWeight: 500,
-                    fontSize: 14,
-                    color: secondaryColor,
-                    textAlign: "center",
-                  }}
-                >
-                  {stat.label}
-                </Box>
-                <Box
-                  component="div"
-                  sx={{
-                    fontFamily:
-                      "var(--font-app)",
-                    fontWeight: 400,
-                    fontSize: 12,
-                    color: textGrayDark,
-                    textAlign: "center",
-                  }}
-                >
-                  {stat.hint}
-                </Box>
-              </Box>
-            );
-          })}
+          {stats.map((stat) => (
+            <StatCard key={stat.label} stat={stat} />
+          ))}
         </Box>
       </Box>
     </Box>
@@ -273,4 +285,3 @@ function Stats() {
 }
 
 export default Stats;
-
