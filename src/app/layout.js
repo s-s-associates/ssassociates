@@ -29,8 +29,8 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
-      <body className={quicksand.variable} style={{ backgroundColor: bggrayColor, maxWidth: "1700px", margin: "0 auto" }}>
+    <html lang="en" className={quicksand.variable}>
+      <body style={{ backgroundColor: bggrayColor, maxWidth: "1700px", margin: "0 auto" }}>
         <ThemeRegistry>{children}</ThemeRegistry>
       </body>
     </html>
