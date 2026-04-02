@@ -3,12 +3,13 @@
 import { FiChevronDown, FiLogOut } from "react-icons/fi";
 import { clearAuth } from "@/lib/auth-storage";
 import { Box } from "@mui/material";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import React, { useState } from "react";
 import Swal from "sweetalert2";
 import { menuItems, projectPagesChildren } from "./sidebarMenuConfig";
-import { primaryColor } from "@/components/utils/Colors";
+import { primaryColor, secondaryDark } from "@/components/utils/Colors";
 
 const COMPANY_NAME = process.env.NEXT_PUBLIC_COMPANY_NAME || "S&S Associates";
 
@@ -57,7 +58,7 @@ function Sidebar() {
         width: "100%",
         maxWidth: 280,
         height: "100vh",
-        background: SIDEBAR_BG,
+        background: secondaryDark,
         py: 3,
         px: 2,
         display: "flex",
@@ -73,17 +74,34 @@ function Sidebar() {
         component={Link}
         href="/user/dashboard"
         sx={{
-          fontFamily: "var(--font-inter), Inter, sans-serif",
-          fontWeight: 700,
-          fontSize: 18,
-          letterSpacing: "0.08em",
-          color: "#fff",
+          display: "flex",
+          alignItems: "center",
+          gap: 1.5,
           textDecoration: "none",
           mb: 4,
           px: 1.5,
         }}
       >
-        {COMPANY_NAME}
+        <Image
+          src="/logo.png"
+          alt={COMPANY_NAME}
+          width={36}
+          height={36}
+          style={{ objectFit: "contain", width: 36, height: 36, flexShrink: 0 }}
+          priority
+        />
+        <Box
+          component="span"
+          sx={{
+            fontWeight: 700,
+            fontSize: 16,
+            letterSpacing: "0.03em",
+            color: "#fff",
+            lineHeight: 1.2,
+          }}
+        >
+          {COMPANY_NAME}
+        </Box>
       </Box>
 
       {/* MENU label */}

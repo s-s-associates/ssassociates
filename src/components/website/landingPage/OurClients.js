@@ -229,6 +229,8 @@ function OurClients() {
   const [clients, setClients] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const viewportRef = useRef(null);
+  const [viewportWidth, setViewportWidth] = useState(0);
 
   // ── API fetch ──────────────────────────────────────────────────────────────
   useEffect(() => {
@@ -253,16 +255,31 @@ function OurClients() {
     return () => { cancelled = true; };
   }, []);
 
+  const copyMeta = useMemo(() => {
+    const loopLength = clients.length * STEP;
+    if (!clients.length || !loopLength) {
+      return { copiesPerSide: 1, totalCopies: 3, centerCopyIndex: 1 };
+    }
+    // Keep enough copies on each side so viewport never reaches track end.
+    const copiesPerSide = Math.max(2, Math.ceil(viewportWidth / loopLength) + 1);
+    return {
+      copiesPerSide,
+      totalCopies: copiesPerSide * 2 + 1,
+      centerCopyIndex: copiesPerSide,
+    };
+  }, [clients.length, viewportWidth]);
+
   const looped = useMemo(() => {
     if (!clients.length) return [];
-    return [...clients, ...clients, ...clients];
-  }, [clients]);
+    return Array.from({ length: copyMeta.totalCopies }, () => clients).flat();
+  }, [clients, copyMeta.totalCopies]);
 
   // ── Infinite-scroll RAF refs ───────────────────────────────────────────────
   const trackRef        = useRef(null);
   const xRef            = useRef(0);
   const rafRef          = useRef(null);
   const loopLengthRef   = useRef(0);
+  const copiesPerSideRef = useRef(copyMeta.copiesPerSide);
   const isDragging      = useRef(false);
   const isHoverPaused   = useRef(false);
   const dragStartX      = useRef(0);
@@ -274,6 +291,21 @@ function OurClients() {
     loopLengthRef.current = clients.length * STEP;
   }, [clients.length]);
 
+  useEffect(() => {
+    copiesPerSideRef.current = copyMeta.copiesPerSide;
+  }, [copyMeta.copiesPerSide]);
+
+  useEffect(() => {
+    if (!viewportRef.current) return undefined;
+    const node = viewportRef.current;
+    const ro = new ResizeObserver((entries) => {
+      const width = entries?.[0]?.contentRect?.width ?? 0;
+      setViewportWidth(width);
+    });
+    ro.observe(node);
+    return () => ro.disconnect();
+  }, []);
+
   const applyTransform = (x) => {
     if (trackRef.current) trackRef.current.style.transform = `translateX(${x}px)`;
   };
@@ -282,16 +314,19 @@ function OurClients() {
   const normalise = (x) => {
     const ll = loopLengthRef.current;
     if (!ll) return x;
+    const cps = copiesPerSideRef.current;
+    const min = -(cps + 1) * ll;
+    const max = -cps * ll;
     let v = x;
-    while (v < -2 * ll) v += ll;
-    while (v >= -ll)    v -= ll;
+    while (v < min) v += ll;
+    while (v >= max) v -= ll;
     return v;
   };
 
   // Start RAF loop once clients are available
   useEffect(() => {
     if (!clients.length) return;
-    xRef.current = -loopLengthRef.current;
+    xRef.current = -copyMeta.centerCopyIndex * loopLengthRef.current;
     applyTransform(xRef.current);
 
     const tick = () => {
@@ -303,7 +338,7 @@ function OurClients() {
     };
     rafRef.current = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(rafRef.current);
-  }, [clients.length]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [clients.length, copyMeta.centerCopyIndex]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // ── Pointer / drag handlers ────────────────────────────────────────────────
   const onPointerDown = (e) => {
@@ -497,7 +532,7 @@ function OurClients() {
           No clients to show yet.
         </Typography>
       ) : (
-        <Box sx={{ position: "relative", zIndex: 1 }}>
+        <Box ref={viewportRef} sx={{ position: "relative", zIndex: 1 }}>
           {/* Edge fade-out masks */}
           <Box
             sx={{

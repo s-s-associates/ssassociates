@@ -203,11 +203,11 @@ function Navbar() {
               <Box sx={{ display: "flex", flexDirection: "column", lineHeight: 1 }}>
                 <Link href="/" onClick={() => startNavigation("/")} style={{ textDecoration: "none" }}>
                   <Box
+  fontSize={[18,20]}
+  fontWeight={700}
                     component="span"
                     sx={{
                       ...underlineFromLeft,
-                      fontWeight: 600,
-                      fontSize: 20,
                       color: primaryColor,
                       transition: "color 0.2s ease",
                       "&:hover": {
@@ -221,9 +221,9 @@ function Navbar() {
                 </Link>
                 <Box
                   component="span"
+                  fontSize={[10,12]}
                   sx={{
                     fontWeight: 400,
-                    fontSize: 12,
                     color: whiteColor,
                     mt: 0.25,
                   }}

@@ -5,11 +5,17 @@ import { keyframes } from "@mui/system";
 import DoubleArrowIcon from "@mui/icons-material/DoubleArrow";
 import Link from "next/link";
 import Image from "next/image";
+import { Monoton } from "next/font/google";
 import React, { useMemo, useRef, useState } from "react";
 import {
   primaryColor,
   secondaryDark,
 } from "@/components/utils/Colors";
+
+const monoton = Monoton({
+  weight: "400",
+  subsets: ["latin"],
+});
 
 const scrollIconBounce = keyframes`
   0%, 100% { transform: rotate(90deg) translateX(0); }
@@ -93,6 +99,7 @@ function HomeBanner() {
         width: "100%",
         overflow: "hidden",
         backgroundColor: secondaryDark,
+        userSelect: "none",
       }}
     >
       {/* Grid overlay - lines */}
@@ -161,14 +168,16 @@ function HomeBanner() {
           transform: "translateY(80px)",
           animation: "personSlideIn 1s ease-out 0.3s forwards",
           "@keyframes personSlideIn": {
-            "0%": {
-              opacity: 0,
-              transform: "translateY(80px)",
-            },
-            "100%": {
-              opacity: 1,
-              transform: "translateY(0)",
-            },
+            "0%": { opacity: 0, transform: "translateY(80px)" },
+            "100%": { opacity: 1, transform: "translateY(0)" },
+          },
+          // dark overlay on mobile so text stays readable over the image
+          "&::after": {
+            content: '""',
+            display: { xs: "block", sm: "none" },
+            position: "absolute",
+            inset: 0,
+            background: "linear-gradient(to bottom, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.25) 50%, rgba(0,0,0,0.6) 100%)",
           },
         }}
       />
@@ -211,7 +220,7 @@ function HomeBanner() {
       <Box
         sx={{
           position: "absolute",
-          left: { xs: 30, sm: 40, md: 60 },
+          left: { xs: 30, sm: 40, md: 40 },
           top: { xs: "18%", sm: "20%", md: "22%" },
           right: { xs: 3, sm: 4, md: "40%" },
           zIndex: 2,
@@ -232,25 +241,26 @@ function HomeBanner() {
       >
         <Typography
           component="h1"
+          lineHeight={[1.5,1.1]}
           sx={{
             color: "#fff",
-            fontFamily:
-              "var(--font-app)",
-            fontWeight: 900,
-            fontSize: { xs: 38, sm: 46, md: 54, lg: 62 },
-            lineHeight: 1.15,
-            letterSpacing: "-0.02em",
+            fontFamily: `${monoton.style.fontFamily}, var(--font-app) !important`,
+            fontSize: { xs: 34, sm: 46, md: 54, lg: 62 },
+            letterSpacing: 2,
             textTransform: "uppercase",
             margin: 0,
             display: "block",
-            WebkitTextStroke: "0.5px #fff",
+            WebkitTextStroke: 0,
+            wordSpacing: 12,
+            
           }}
         >
-          FOUNDATIONS FOR A
+          FOUNDATIONS
           <br />
-          STRONGER
+          FOR A <span style={{ color: primaryColor,
+            fontFamily: `${monoton.style.fontFamily}, var(--font-app) !important`, }}>STRONGER</span>
           <br />
-          FUTURE.
+          FUTURE
         </Typography>
 
         <Typography
@@ -277,12 +287,14 @@ function HomeBanner() {
             href="/about"
             variant="outlined"
             sx={{
+              height: 35,
+              width: 120,
               color: "#fff",
               borderColor: "#fff",
               borderWidth: 1.5,
               borderRadius: 1.5,
-              px: 3,
-              py: 1.5,
+              px: 1,
+              py: 0.5,
               fontWeight: 700,
               fontSize: 15,
               textTransform: "none",
@@ -300,11 +312,13 @@ function HomeBanner() {
             component={Link}
             href="/contact"
             sx={{
+              height: 38,
+              width: 120,
               color: "#fff",
               backgroundColor: "rgba(30, 35, 45, 0.95)",
               borderRadius: 1.5,
-              px: 3,
-              py: 1.5,
+              px: 1,
+              py: 0.5,
               fontWeight: 700,
               fontSize: 15,
               textTransform: "none",
@@ -384,16 +398,56 @@ function HomeBanner() {
           sustainable materials and energy-efficient.
         </Typography>
 
-        <Image
-          src="/images/home/stats-image.png"
-          alt="7.5K Excellence, 90% Rating"
-          width={280}
-          height={100}
-          loading="lazy"
-          fetchPriority="low"
-          style={{ width: "auto", height: "auto", maxHeight: 90 }}
-          sizes="(max-width: 600px) 200px, 280px"
-        />
+        <Box sx={{ display: "flex", alignItems: "center", gap: { xs: 1.5, sm: 2 } }}>
+          {[
+            { value: "7.5K", label: "Excellence" },
+            { value: "90%", label: "Rating" },
+          ].map(({ value, label }, i) => (
+            <Box key={label} sx={{ display: "flex", alignItems: "center", gap: { xs: 0.75, sm: 1 } }}>
+              <Image
+                src="/images/home/left-leaf.png"
+                alt=""
+                width={28}
+                height={70}
+                style={{  opacity: 0.92 }}
+              />
+              <Box sx={{ textAlign: "center" }}>
+                <Typography
+                  sx={{
+                    fontWeight: 800,
+                    fontSize: { xs: 30, sm: 30 },
+                    color: "#fff",
+                    lineHeight: 1.1,
+                    letterSpacing: "-0.01em",
+                  }}
+                >
+                  {value}
+                </Typography>
+                <Typography
+                  sx={{
+                    fontSize: { xs: 11, sm: 13 },
+                    color: "rgba(255,255,255,0.75)",
+                    fontWeight: 500,
+                    lineHeight: 1.3,
+                  }}
+                >
+                  {label}
+                </Typography>
+              </Box>
+              <Image
+                src="/images/home/right-leaf.png"
+                alt=""
+                width={28}
+                height={70}
+                style={{  opacity: 0.92 }}
+              />
+              {/* divider between stats */}
+              {i === 0 && (
+                <Box sx={{ width: "1px", height: 36, bgcolor: "rgba(255,255,255,0.2)", mx: { xs: 0.5, sm: 1 } }} />
+              )}
+            </Box>
+          ))}
+        </Box>
       </Box>
 
       {/* Bottom blur bar */}

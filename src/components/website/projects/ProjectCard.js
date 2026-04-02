@@ -7,7 +7,7 @@ import ArrowForwardRoundedIcon from "@mui/icons-material/ArrowForwardRounded";
 import { Box, Button, Grid, Skeleton, Typography } from "@mui/material";
 import Image from "next/image";
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 
 const FALLBACK_IMAGE = "/images/projects/thumbnail-min.webp";
 const SKELETON_COUNT = 6;
@@ -47,7 +47,7 @@ function ProjectCardSkeleton() {
   );
 }
 
-export default function ProjectCard() {
+export default function ProjectCard({ maxProjects }) {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [fetchError, setFetchError] = useState(null);
@@ -77,6 +77,12 @@ export default function ProjectCard() {
       cancelled = true;
     };
   }, []);
+
+  const visibleProjects = useMemo(() => {
+    if (!Array.isArray(projects)) return [];
+    if (typeof maxProjects !== "number" || maxProjects <= 0) return projects;
+    return projects.slice(0, maxProjects);
+  }, [projects, maxProjects]);
 
   return (
     <Box
@@ -154,7 +160,7 @@ export default function ProjectCard() {
 
         {!loading &&
           !fetchError &&
-          projects.map((project, index) => {
+          visibleProjects.map((project, index) => {
             const id = project?._id != null ? String(project._id) : "";
             const href = id ? `/projects/${id}` : "/projects";
             const image =

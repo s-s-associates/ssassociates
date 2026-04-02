@@ -165,6 +165,7 @@ const Testimonials = () => {
         sx={{
           position: "relative",
           zIndex: 1,
+          overflow: "hidden",
           width: "100%",
           maxWidth: 980,
           mx: "auto",
