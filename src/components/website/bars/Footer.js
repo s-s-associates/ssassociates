@@ -135,7 +135,7 @@ function Footer() {
               }}
             >
               <Image
-                src="/logo112.png"
+                src="/logo.png"
                 alt={COMPANY_NAME}
                 width={70}
                 height={70}

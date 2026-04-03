@@ -190,7 +190,7 @@ function Navbar() {
               >
                 <Link href="/" style={{ display: "inline-flex" }}>
                   <Image
-                    src="/logo112.png"
+                    src="/logo.png"
                     alt={COMPANY_NAME}
                     width={50}
                     height={50}
