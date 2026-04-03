@@ -1,7 +1,18 @@
 "use client";
 
-import { whiteColor, blackColor, textGrayLight, secondaryDark, primaryColor } from "@/components/utils/Colors";
-import { btnRadius, boxShadow, transition, sectionRadius } from "@/components/utils/GlobalVariables";
+import {
+  whiteColor,
+  blackColor,
+  textGrayLight,
+  secondaryDark,
+  primaryColor,
+} from "@/components/utils/Colors";
+import {
+  btnRadius,
+  boxShadow,
+  transition,
+  sectionRadius,
+} from "@/components/utils/GlobalVariables";
 import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import ArrowForwardRoundedIcon from "@mui/icons-material/ArrowForwardRounded";
 import { Box, Button, Grid, Skeleton, Typography } from "@mui/material";
@@ -13,7 +24,10 @@ const FALLBACK_IMAGE = "/images/projects/thumbnail-min.webp";
 const SKELETON_COUNT = 6;
 
 function hasClientLocationLine(project) {
-  return Boolean((project?.clientName || "").trim() && ((project?.location || project?.category || "").trim()));
+  return Boolean(
+    (project?.clientName || "").trim() &&
+    (project?.location || project?.category || "").trim(),
+  );
 }
 
 function ProjectCardSkeleton() {
@@ -39,8 +53,16 @@ function ProjectCardSkeleton() {
           }}
         />
         <Box sx={{ px: 0, py: 1.5 }}>
-          <Skeleton width="92%" height={28} sx={{ bgcolor: "rgba(255,255,255,0.1)", mb: 1 }} />
-          <Skeleton width="60%" height={18} sx={{ bgcolor: "rgba(255,255,255,0.08)" }} />
+          <Skeleton
+            width="92%"
+            height={28}
+            sx={{ bgcolor: "rgba(255,255,255,0.1)", mb: 1 }}
+          />
+          <Skeleton
+            width="60%"
+            height={18}
+            sx={{ bgcolor: "rgba(255,255,255,0.08)" }}
+          />
         </Box>
       </Box>
     </Grid>
@@ -48,8 +70,11 @@ function ProjectCardSkeleton() {
 }
 
 export default function ProjectCard({ maxProjects, initialProjects }) {
-  const hasInitial = Array.isArray(initialProjects) && initialProjects.length > 0;
-  const [projects, setProjects] = useState(() => (hasInitial ? initialProjects : []));
+  const hasInitial =
+    Array.isArray(initialProjects) && initialProjects.length > 0;
+  const [projects, setProjects] = useState(() =>
+    hasInitial ? initialProjects : [],
+  );
   const [loading, setLoading] = useState(() => !hasInitial);
   const [fetchError, setFetchError] = useState(null);
 
@@ -89,8 +114,8 @@ export default function ProjectCard({ maxProjects, initialProjects }) {
   return (
     <Box
       my={8}
-      px={[2,3,5]}
-      py={[5,5,5]}
+      px={[2, 3, 5]}
+      py={[5, 5, 5]}
       bgcolor={secondaryDark}
       borderRadius={sectionRadius}
       maxWidth={1450}
@@ -130,7 +155,8 @@ export default function ProjectCard({ maxProjects, initialProjects }) {
                 mb: 4,
               }}
             >
-              Discover some of our recent projects, showcasing distinct and memorable interior spaces.
+              Discover some of our recent projects, showcasing distinct and
+              memorable interior spaces.
             </Typography>
             <Button
               component={Link}
@@ -168,153 +194,162 @@ export default function ProjectCard({ maxProjects, initialProjects }) {
             const href = id ? `/projects/${id}` : "/projects";
             const image =
               project?.bannerUrl &&
-              (String(project.bannerUrl).startsWith("http") || String(project.bannerUrl).startsWith("/"))
+              (String(project.bannerUrl).startsWith("http") ||
+                String(project.bannerUrl).startsWith("/"))
                 ? project.bannerUrl
                 : FALLBACK_IMAGE;
             const title = project?.title || "Untitled project";
             const companyName = (project?.clientName || "").trim();
-            const address = (project?.location || project?.category || "").trim();
+            const address = (
+              project?.location ||
+              project?.category ||
+              ""
+            ).trim();
             const showClientLocation = hasClientLocationLine(project);
             const imagePriority = index < 6;
             return (
-            <Grid size={{ xs: 12, sm: 6, md: 4 }} key={id || `${title}-${index}`}>
-              <Box
-                component={Link}
-                href={href}
-                sx={{
-                  display: "block",
-                  textDecoration: "none",
-                  borderRadius: btnRadius,
-                  overflow: "hidden",
-                  backgroundColor: secondaryDark,
-                  boxShadow,
-                  transition,
-                  minWidth: 0,
-                }}
+              <Grid
+                size={{ xs: 12, sm: 6, md: 4 }}
+                key={id || `${title}-${index}`}
               >
                 <Box
-                  className="card-image-wrap"
+                  component={Link}
+                  href={href}
                   sx={{
-                    position: "relative",
-                    width: "100%",
-                    height: 250,
+                    display: "block",
+                    textDecoration: "none",
+                    borderRadius: btnRadius,
                     overflow: "hidden",
-                    borderBottomLeftRadius: sectionRadius,
-                    borderBottomRightRadius: sectionRadius,
-                    borderTopLeftRadius: sectionRadius,
-                    borderTopRightRadius: sectionRadius,
-                    transition: "border-radius 0.3s ease-in-out",
-                    "&:hover": {
-                      borderBottomLeftRadius: sectionRadius,
-                      borderTopLeftRadius: sectionRadius,
-                      borderTopRightRadius: sectionRadius,
-                      borderBottomRightRadius: 30,
-                    },
-                    "&:hover .card-image-inner": {
-                      transform: "scale(1.05)",
-                    },
-                    "&:hover .card-plus-btn": {
-                      backgroundColor: secondaryDark,
-                      color: whiteColor,
-                    },
-                    "&:hover .card-plus-icon": {
-                      transform: "rotate(360deg)",
-                    },
+                    backgroundColor: secondaryDark,
+                    boxShadow,
+                    transition,
+                    minWidth: 0,
                   }}
                 >
                   <Box
-                    className="card-image-inner"
+                    className="card-image-wrap"
                     sx={{
-                      position: "absolute",
-                      inset: 0,
-                      transition: "transform 0.4s ease",
-                    }}
-                  >
-                    <Image
-                      src={image}
-                      alt={title}
-                      fill
-                      sizes="(max-width: 600px) 100vw, (max-width: 960px) 50vw, 33vw"
-                      priority={imagePriority}
-                      fetchPriority={imagePriority ? "high" : "auto"}
-                      style={{ objectFit: "cover" }}
-                    />
-                  </Box>
-                  <Box
-                    className="card-plus-btn"
-                    sx={{
-                      position: "absolute",
-                      bottom: 12,
-                      right: 12,
-                      width: 40,
-                      height: 40,
-                      borderRadius: "50%",
-                      backgroundColor: "rgba(255,255,255,0.85)",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      color: primaryColor,
-                      transition: "background-color 0.3s ease, color 0.3s ease",
-                    }}
-                  >
-                    <AddRoundedIcon
-                      className="card-plus-icon"
-                      sx={{
-                        fontSize: 20,
-                        transition: "transform 0.5s ease",
-                      }}
-                    />
-                  </Box>
-                </Box>
-
-                <Box>
-                  <Box
-                    sx={{
-                      display: "inline-block",
-                      maxWidth: "100%",
-                      my: 1.5,
-                    }}
-                  >
-                    <Typography
-                      component="span"
-                      sx={{
-                        display: "inline",
-                        fontWeight: 700,
-                        fontSize: { xs: 15, sm: 16, md: 23 },
-                        lineHeight: 1.35,
+                      position: "relative",
+                      width: "100%",
+                      height: 250,
+                      overflow: "hidden",
+                      borderBottomLeftRadius: sectionRadius,
+                      borderBottomRightRadius: sectionRadius,
+                      borderTopLeftRadius: sectionRadius,
+                      borderTopRightRadius: sectionRadius,
+                      transition: "border-radius 0.3s ease-in-out",
+                      "&:hover": {
+                        borderBottomLeftRadius: sectionRadius,
+                        borderTopLeftRadius: sectionRadius,
+                        borderTopRightRadius: sectionRadius,
+                        borderBottomRightRadius: 30,
+                      },
+                      "&:hover .card-image-inner": {
+                        transform: "scale(1.05)",
+                      },
+                      "&:hover .card-plus-btn": {
+                        backgroundColor: secondaryDark,
                         color: whiteColor,
-                        backgroundImage: `linear-gradient(${whiteColor}, ${whiteColor})`,
-                        backgroundSize: "0% 2px",
-                        backgroundPosition: "bottom left",
-                        backgroundRepeat: "no-repeat",
-                        transition: "background-size 0.6s ease",
-                        "&:hover": {
-                          backgroundSize: "100% 3px",
-                          textDecorationColor: whiteColor,
-                        },
-                      }}
-                    >
-                      {title}
-                    </Typography>
-                  </Box>
-                  {showClientLocation ? (
+                      },
+                      "&:hover .card-plus-icon": {
+                        transform: "rotate(360deg)",
+                      },
+                    }}
+                  >
                     <Box
-                      component="span"
+                      className="card-image-inner"
                       sx={{
-                        fontWeight: 400,
-                        fontSize: 13,
-                        color: whiteColor,
-                        opacity: 0.85,
-                        display: "block",
+                        position: "absolute",
+                        inset: 0,
+                        transition: "transform 0.4s ease",
                       }}
                     >
-                      {companyName} {" | "}
-                      {address}
+                      <Image
+                        src={image}
+                        alt={title}
+                        fill
+                        sizes="(max-width: 600px) 100vw, (max-width: 960px) 50vw, 33vw"
+                        priority={imagePriority}
+                        fetchPriority={imagePriority ? "high" : "auto"}
+                        style={{ objectFit: "cover" }}
+                      />
                     </Box>
-                  ) : null}
+                    <Box
+                      className="card-plus-btn"
+                      sx={{
+                        position: "absolute",
+                        bottom: 12,
+                        right: 12,
+                        width: 40,
+                        height: 40,
+                        borderRadius: "50%",
+                        backgroundColor: "rgba(255,255,255,0.85)",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        color: primaryColor,
+                        transition:
+                          "background-color 0.3s ease, color 0.3s ease",
+                      }}
+                    >
+                      <AddRoundedIcon
+                        className="card-plus-icon"
+                        sx={{
+                          fontSize: 20,
+                          transition: "transform 0.5s ease",
+                        }}
+                      />
+                    </Box>
+                  </Box>
+
+                  <Box>
+                    <Box
+                      sx={{
+                        display: "inline-block",
+                        maxWidth: "100%",
+                        my: 1.5,
+                      }}
+                    >
+                      <Typography
+                        component="span"
+                        sx={{
+                          display: "inline",
+                          fontWeight: 700,
+                          fontSize: { xs: 15, sm: 16, md: 23 },
+                          lineHeight: 1.35,
+                          color: whiteColor,
+                          backgroundImage: `linear-gradient(${whiteColor}, ${whiteColor})`,
+                          backgroundSize: "0% 2px",
+                          backgroundPosition: "bottom left",
+                          backgroundRepeat: "no-repeat",
+                          transition: "background-size 0.6s ease",
+                          "&:hover": {
+                            backgroundSize: "100% 3px",
+                            textDecorationColor: whiteColor,
+                          },
+                        }}
+                      >
+                        {title}
+                      </Typography>
+                    </Box>
+                    {showClientLocation ? (
+                      <Box
+                        component="span"
+                        sx={{
+                          fontWeight: 400,
+                          fontSize: 13,
+                          color: whiteColor,
+                          opacity: 0.85,
+                          display: "block",
+                        }}
+                      >
+                        {companyName} {" | "}
+                        {address}
+                      </Box>
+                    ) : null}
+                  </Box>
                 </Box>
-              </Box>
-            </Grid>
+              </Grid>
             );
           })}
 

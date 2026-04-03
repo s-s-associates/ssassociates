@@ -18,7 +18,8 @@ const ROOT = path.join(__dirname, "..");
 const SEO_STATIC = path.join(ROOT, "seo-static");
 
 function getBaseUrl() {
-  const raw = process.env.NEXT_PUBLIC_SITE_URL || "https://www.ss-associates.pk";
+  const raw =
+    process.env.NEXT_PUBLIC_SITE_URL || "https://www.ss-associates.pk";
   return String(raw).replace(/\/+$/, "");
 }
 
@@ -52,12 +53,42 @@ function buildStaticUrlEntries(base) {
   const now = new Date().toISOString();
   return [
     { loc: base, lastmod: now, changefreq: "daily", priority: "1.0" },
-    { loc: `${base}/about`, lastmod: now, changefreq: "weekly", priority: "0.8" },
-    { loc: `${base}/services`, lastmod: now, changefreq: "weekly", priority: "0.8" },
-    { loc: `${base}/projects`, lastmod: now, changefreq: "weekly", priority: "0.8" },
-    { loc: `${base}/contact`, lastmod: now, changefreq: "weekly", priority: "0.8" },
-    { loc: `${base}/privacy-policy`, lastmod: now, changefreq: "monthly", priority: "0.5" },
-    { loc: `${base}/terms-%26-conditions`, lastmod: now, changefreq: "monthly", priority: "0.5" },
+    {
+      loc: `${base}/about`,
+      lastmod: now,
+      changefreq: "weekly",
+      priority: "0.8",
+    },
+    {
+      loc: `${base}/services`,
+      lastmod: now,
+      changefreq: "weekly",
+      priority: "0.8",
+    },
+    {
+      loc: `${base}/projects`,
+      lastmod: now,
+      changefreq: "weekly",
+      priority: "0.8",
+    },
+    {
+      loc: `${base}/contact`,
+      lastmod: now,
+      changefreq: "weekly",
+      priority: "0.8",
+    },
+    {
+      loc: `${base}/privacy-policy`,
+      lastmod: now,
+      changefreq: "monthly",
+      priority: "0.5",
+    },
+    {
+      loc: `${base}/terms-%26-conditions`,
+      lastmod: now,
+      changefreq: "monthly",
+      priority: "0.5",
+    },
   ];
 }
 
@@ -69,7 +100,7 @@ function writeSitemapXml(entries) {
     <lastmod>${escapeXml(e.lastmod)}</lastmod>
     <changefreq>${escapeXml(e.changefreq)}</changefreq>
     <priority>${escapeXml(e.priority)}</priority>
-  </url>`
+  </url>`,
     )
     .join("\n");
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
@@ -78,7 +109,11 @@ ${urls}
 </urlset>
 `;
   fs.writeFileSync(path.join(SEO_STATIC, "sitemap.xml"), xml, "utf8");
-  console.log("[generate-seo] Wrote seo-static/sitemap.xml with", entries.length, "URLs");
+  console.log(
+    "[generate-seo] Wrote seo-static/sitemap.xml with",
+    entries.length,
+    "URLs",
+  );
 }
 
 function sampleOrganizationJsonLd(base) {
@@ -96,7 +131,12 @@ function sampleBreadcrumbJsonLd(base) {
     "@type": "BreadcrumbList",
     itemListElement: [
       { "@type": "ListItem", position: 1, name: "Home", item: `${base}/` },
-      { "@type": "ListItem", position: 2, name: "Projects", item: `${base}/projects` },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Projects",
+        item: `${base}/projects`,
+      },
     ],
   };
 }
@@ -125,7 +165,9 @@ async function main() {
   const uri = process.env.MONGODB_URI;
 
   if (!uri) {
-    console.warn("[generate-seo] MONGODB_URI not set — dynamic service/project URLs omitted");
+    console.warn(
+      "[generate-seo] MONGODB_URI not set — dynamic service/project URLs omitted",
+    );
     writeSitemapXml(entries);
     logUrls(entries);
     logSchemaSamples(base);
@@ -136,8 +178,16 @@ async function main() {
   try {
     await mongoose.connect(uri);
     const db = mongoose.connection.db;
-    const services = await db.collection("services").find({}).project({ updatedAt: 1, createdAt: 1 }).toArray();
-    const projects = await db.collection("projects").find({}).project({ updatedAt: 1, createdAt: 1 }).toArray();
+    const services = await db
+      .collection("services")
+      .find({})
+      .project({ updatedAt: 1, createdAt: 1 })
+      .toArray();
+    const projects = await db
+      .collection("projects")
+      .find({})
+      .project({ updatedAt: 1, createdAt: 1 })
+      .toArray();
 
     const nowIso = new Date().toISOString();
     function toIso(d) {
@@ -163,7 +213,13 @@ async function main() {
         priority: "0.7",
       });
     }
-    console.log("[generate-seo] Added", services.length, "service URLs,", projects.length, "project URLs");
+    console.log(
+      "[generate-seo] Added",
+      services.length,
+      "service URLs,",
+      projects.length,
+      "project URLs",
+    );
     await mongoose.disconnect();
   } catch (err) {
     console.warn("[generate-seo] MongoDB skipped:", err.message || err);

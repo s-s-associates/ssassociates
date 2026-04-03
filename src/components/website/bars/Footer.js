@@ -142,35 +142,37 @@ function Footer() {
                 style={{ objectFit: "contain", backgroundColor: "transparent" }}
               />
             </Box>
-            <Box
-              component={Link}
-              href="/"
-              sx={{
-                ...underlineFromLeft,
-                fontFamily: "var(--font-app)",
-                fontWeight: 600,
-                fontSize: 20,
-                color: whiteColor,
-                textDecoration: "none",
-                transition: "color 0.2s",
-                "&:hover": {
-                  color: primaryColor,
-                  ...underlineFromLeftHover,
-                },
-              }}
-            >
-              {COMPANY_NAME}
-            </Box>
-            <Box
-              component="span"
-              sx={{
-                fontFamily: "var(--font-app)",
-                fontWeight: 400,
-                fontSize: 14,
-                color: textGrayLight,
-              }}
-            >
-              Building Excellence
+            <Box sx={{ display: "flex", flexDirection: "column", gap: 0.25 }}>
+              <Box
+                component={Link}
+                href="/"
+                sx={{
+                  ...underlineFromLeft,
+                  fontFamily: "var(--font-app)",
+                  fontWeight: 600,
+                  fontSize: 20,
+                  color: whiteColor,
+                  textDecoration: "none",
+                  transition: "color 0.2s",
+                  "&:hover": {
+                    color: primaryColor,
+                    ...underlineFromLeftHover,
+                  },
+                }}
+              >
+                {COMPANY_NAME}
+              </Box>
+              <Box
+                component="span"
+                sx={{
+                  fontFamily: "var(--font-app)",
+                  fontWeight: 400,
+                  fontSize: 14,
+                  color: textGrayLight,
+                }}
+              >
+                Building Excellence
+              </Box>
             </Box>
           </Box>
           <Box
