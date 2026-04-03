@@ -3,7 +3,6 @@
 import {
   primaryColor,
   secondaryColor,
-  textGrayDark,
   textGrayLight,
   whiteColor,
   secondaryBg,
@@ -122,7 +121,9 @@ function Navbar() {
   useEffect(() => {
     if (drawerOpen) document.body.style.overflow = "hidden";
     else document.body.style.overflow = "";
-    return () => { document.body.style.overflow = ""; };
+    return () => {
+      document.body.style.overflow = "";
+    };
   }, [drawerOpen]);
 
   return (
@@ -132,7 +133,7 @@ function Navbar() {
         mx={1}
         sx={{
           position: "fixed",
-          top:  scrolled ? 6 : 0,
+          top: scrolled ? 6 : 0,
           left: 0,
           right: 0,
           zIndex: 1100,
@@ -158,7 +159,6 @@ function Navbar() {
             minHeight: 56,
           }}
         >
-      
           <Box
             component={motion.div}
             variants={container}
@@ -177,34 +177,40 @@ function Navbar() {
             >
               <Box
                 sx={{
-                  width: 40,
-                  height: 40,
-                  borderRadius: 1.5,
+                  width: 50,
+                  height: 50,
+                  borderRadius: 1,
                   overflow: "hidden",
-                  bgcolor: secondaryColor,
+                  // bgcolor: secondaryColor,
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  mr: { xs: 0, md: 0.5 },
+                  // mr: { xs: 0, md: 0.5 },
                 }}
               >
                 <Link href="/" style={{ display: "inline-flex" }}>
                   <Image
-                    src="/logo.png"
+                    src="/logo112.png"
                     alt={COMPANY_NAME}
-                    width={40}
-                    height={40}
+                    width={50}
+                    height={50}
                     priority
                     fetchPriority="high"
                     style={{ objectFit: "contain" }}
                   />
                 </Link>
               </Box>
-              <Box sx={{ display: "flex", flexDirection: "column", lineHeight: 1 }}>
-                <Link href="/" onClick={() => startNavigation("/")} style={{ textDecoration: "none" }}>
+              <Box
+                sx={{ display: "flex", flexDirection: "column", lineHeight: 1 }}
+              >
+                <Link
+                  href="/"
+                  onClick={() => startNavigation("/")}
+                  style={{ textDecoration: "none" }}
+                >
                   <Box
-  fontSize={[18,20]}
-  fontWeight={700}
+                    fontSize={[18, 20]}
+                    fontWeight={700}
                     component="span"
                     sx={{
                       ...underlineFromLeft,
@@ -221,7 +227,7 @@ function Navbar() {
                 </Link>
                 <Box
                   component="span"
-                  fontSize={[10,12]}
+                  fontSize={[10, 12]}
                   sx={{
                     fontWeight: 400,
                     color: whiteColor,
@@ -275,8 +281,7 @@ function Navbar() {
                       component="span"
                       sx={{
                         ...underlineFromLeft,
-                        fontFamily:
-                          "var(--font-app)",
+                        fontFamily: "var(--font-app)",
                         fontWeight: 400,
                         fontSize: 16,
                         lineHeight: "24px",
@@ -392,7 +397,7 @@ function Navbar() {
               onClick={() => setDrawerOpen(true)}
               aria-label="Open menu"
               sx={{
-                color: textGrayDark,
+                color: primaryColor,
                 borderRadius: "8px",
                 transition: "color 0.2s ease, transform 0.2s ease",
                 "&:hover": {
@@ -434,7 +439,11 @@ function Navbar() {
               initial={{ x: "100%" }}
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
-              transition={{ type: "tween", duration: 0.28, ease: [0.32, 0.72, 0, 1] }}
+              transition={{
+                type: "tween",
+                duration: 0.28,
+                ease: [0.32, 0.72, 0, 1],
+              }}
               sx={{
                 position: "fixed",
                 top: 0,
@@ -459,7 +468,8 @@ function Navbar() {
                   width: 220,
                   height: 220,
                   borderRadius: "50%",
-                  background: "radial-gradient(circle at center, rgba(251,134,30,0.32), transparent 70%)",
+                  background:
+                    "radial-gradient(circle at center, rgba(251,134,30,0.32), transparent 70%)",
                   filter: "blur(4px)",
                   pointerEvents: "none",
                 },
@@ -497,7 +507,11 @@ function Navbar() {
                       ? pathname === "/"
                       : pathname.startsWith(link.href);
                   return (
-                    <Box component={motion.div} key={link.label} variants={item}>
+                    <Box
+                      component={motion.div}
+                      key={link.label}
+                      variants={item}
+                    >
                       <Link
                         href={link.href}
                         onClick={() => {
@@ -511,12 +525,13 @@ function Navbar() {
                           sx={{
                             ...underlineFromLeft,
                             display: "block",
-                            fontFamily:
-                              "var(--font-app)",
+                            fontFamily: "var(--font-app)",
                             fontWeight: 400,
                             fontSize: 16,
                             lineHeight: "24px",
-                            color: isActive ? primaryColor : "rgba(255,255,255,0.9)",
+                            color: isActive
+                              ? primaryColor
+                              : "rgba(255,255,255,0.9)",
                             px: 2,
                             py: 1.5,
                             ml: 1,
@@ -546,7 +561,11 @@ function Navbar() {
                     </Box>
                   );
                 })}
-                <Box component={motion.div} variants={item} sx={{ mt: 1.25, mx: 2 }}>
+                <Box
+                  component={motion.div}
+                  variants={item}
+                  sx={{ mt: 1.25, mx: 2 }}
+                >
                   <Box
                     component="span"
                     sx={{

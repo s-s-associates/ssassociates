@@ -16,14 +16,23 @@ import { Box } from "@mui/material";
 import Image from "next/image";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
-import { FaFacebookF, FaInstagram, FaWhatsapp, FaLinkedinIn } from "react-icons/fa";
+import {
+  FaFacebookF,
+  FaInstagram,
+  FaWhatsapp,
+  FaLinkedinIn,
+} from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
 
 const COMPANY_NAME = process.env.NEXT_PUBLIC_COMPANY_NAME || "S&S Associates";
-const COMPANY_EMAIL = process.env.NEXT_PUBLIC_COMPANY_EMAIL || "info@ssassociates.com";
+const COMPANY_EMAIL =
+  process.env.NEXT_PUBLIC_COMPANY_EMAIL || "info@ssassociates.com";
 const COMPANY_PHONE = process.env.NEXT_PUBLIC_COMPANY_PHONE || "+923008414733";
-const COMPANY_ADDRESS = process.env.NEXT_PUBLIC_COMPANY_ADDRESS || "Ayub, 67 Trade Centre Block, Johar Town, Lahore, Pakistan";
-const COMPANY_HOURS = process.env.NEXT_PUBLIC_WORKING_HOURS || "Mon - Sat: 9:00 AM - 6:00 PM";
+const COMPANY_ADDRESS =
+  process.env.NEXT_PUBLIC_COMPANY_ADDRESS ||
+  "Ayub, 67 Trade Centre Block, Johar Town, Lahore, Pakistan";
+const COMPANY_HOURS =
+  process.env.NEXT_PUBLIC_WORKING_HOURS || "Mon - Sat: 9:00 AM - 6:00 PM";
 
 const quickLinks = [
   { label: "Home", href: "/" },
@@ -32,7 +41,6 @@ const quickLinks = [
   { label: "Projects", href: "/projects" },
   { label: "Contact", href: "/contact" },
 ];
-
 
 const socialLinks = [
   { Icon: FaWhatsapp, href: process.env.NEXT_PUBLIC_COMPANY_WHATSAPP },
@@ -106,7 +114,14 @@ function Footer() {
       >
         {/* Column 1: Company info + logo + social */}
         <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-          <Box sx={{ display: "flex", alignItems: "center", gap: 2, flexWrap: "wrap" }}>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: 2,
+              flexWrap: "wrap",
+            }}
+          >
             <Box
               sx={{
                 width: 70,
@@ -120,43 +135,43 @@ function Footer() {
               }}
             >
               <Image
-                src="/logo.png"
+                src="/logo112.png"
                 alt={COMPANY_NAME}
                 width={70}
                 height={70}
-                style={{ objectFit: "contain" }}
+                style={{ objectFit: "contain", backgroundColor: "transparent" }}
               />
             </Box>
             <Box
-                component={Link}
-                href="/"
-                sx={{
-                  ...underlineFromLeft,
-                  fontFamily: "var(--font-app)",
-                  fontWeight: 600,
-                  fontSize: 20,
-                  color: whiteColor,
-                  textDecoration: "none",
-                  transition: "color 0.2s",
-                  "&:hover": {
-                    color: primaryColor,
-                    ...underlineFromLeftHover,
-                  },
-                }}
-              >
-                {COMPANY_NAME}
-              </Box>
-              <Box
-                component="span"
-                sx={{
-                  fontFamily: "var(--font-app)",
-                  fontWeight: 400,
-                  fontSize: 14,
-                  color: textGrayLight,
-                }}
-              >
-                Building Excellence
-              </Box>
+              component={Link}
+              href="/"
+              sx={{
+                ...underlineFromLeft,
+                fontFamily: "var(--font-app)",
+                fontWeight: 600,
+                fontSize: 20,
+                color: whiteColor,
+                textDecoration: "none",
+                transition: "color 0.2s",
+                "&:hover": {
+                  color: primaryColor,
+                  ...underlineFromLeftHover,
+                },
+              }}
+            >
+              {COMPANY_NAME}
+            </Box>
+            <Box
+              component="span"
+              sx={{
+                fontFamily: "var(--font-app)",
+                fontWeight: 400,
+                fontSize: 14,
+                color: textGrayLight,
+              }}
+            >
+              Building Excellence
+            </Box>
           </Box>
           <Box
             sx={{
@@ -231,9 +246,16 @@ function Footer() {
               >
                 <Link
                   href={link.href}
-                  style={{ textDecoration: "none", display: "flex", alignItems: "center", gap: 8 }}
+                  style={{
+                    textDecoration: "none",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 8,
+                  }}
                 >
-                  <KeyboardArrowRight sx={{ color: primaryColor, fontSize: 20 }} />
+                  <KeyboardArrowRight
+                    sx={{ color: primaryColor, fontSize: 20 }}
+                  />
                   <Box
                     component="span"
                     sx={{
@@ -292,9 +314,16 @@ function Footer() {
                   >
                     <Link
                       href={`/services/${service._id}`}
-                      style={{ textDecoration: "none", display: "flex", alignItems: "center", gap: 8 }}
+                      style={{
+                        textDecoration: "none",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 8,
+                      }}
                     >
-                      <KeyboardArrowRight sx={{ color: primaryColor, fontSize: 20 }} />
+                      <KeyboardArrowRight
+                        sx={{ color: primaryColor, fontSize: 20 }}
+                      />
                       <Box
                         component="span"
                         sx={{
@@ -340,7 +369,14 @@ function Footer() {
                 },
               }}
             >
-              <LocationOn sx={{ color: primaryColor, fontSize: 20, mt: 0.25, flexShrink: 0 }} />
+              <LocationOn
+                sx={{
+                  color: primaryColor,
+                  fontSize: 20,
+                  mt: 0.25,
+                  flexShrink: 0,
+                }}
+              />
               <Box
                 className="contact-text"
                 sx={{
@@ -368,7 +404,9 @@ function Footer() {
                 },
               }}
             >
-              <Phone sx={{ color: primaryColor, fontSize: 20, flexShrink: 0 }} />
+              <Phone
+                sx={{ color: primaryColor, fontSize: 20, flexShrink: 0 }}
+              />
               <Box
                 className="contact-text"
                 sx={{
@@ -395,7 +433,9 @@ function Footer() {
                 },
               }}
             >
-              <Email sx={{ color: primaryColor, fontSize: 20, flexShrink: 0 }} />
+              <Email
+                sx={{ color: primaryColor, fontSize: 20, flexShrink: 0 }}
+              />
               <Box
                 className="contact-text"
                 sx={{
@@ -422,7 +462,9 @@ function Footer() {
                 },
               }}
             >
-              <AccessTime sx={{ color: primaryColor, fontSize: 20, flexShrink: 0 }} />
+              <AccessTime
+                sx={{ color: primaryColor, fontSize: 20, flexShrink: 0 }}
+              />
               <Box
                 className="contact-text"
                 sx={{
@@ -480,10 +522,7 @@ function Footer() {
               alignItems: "center",
             }}
           >
-            <Link
-              href="/privacy-policy"
-              style={{ textDecoration: "none" }}
-            >
+            <Link href="/privacy-policy" style={{ textDecoration: "none" }}>
               <Box
                 component="span"
                 sx={{
@@ -502,10 +541,7 @@ function Footer() {
                 Privacy Policy
               </Box>
             </Link>
-            <Link
-              href="/terms-&-conditions"
-              style={{ textDecoration: "none" }}
-            >
+            <Link href="/terms-&-conditions" style={{ textDecoration: "none" }}>
               <Box
                 component="span"
                 sx={{
