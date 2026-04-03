@@ -1,9 +1,9 @@
 /**
  * Canonical site URL for SEO, sitemaps, and Open Graph.
- * Set NEXT_PUBLIC_SITE_URL in production (e.g. https://www.ssassociates.com).
+ * Set NEXT_PUBLIC_SITE_URL in production (e.g. https://www.ss-associates.pk).
  */
 export function getSiteUrl() {
-  const raw = process.env.NEXT_PUBLIC_SITE_URL || "https://www.ssassociates.com";
+  const raw = process.env.NEXT_PUBLIC_SITE_URL || "https://www.ss-associates.pk";
   return String(raw).replace(/\/+$/, "");
 }
 

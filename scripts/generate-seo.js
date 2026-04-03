@@ -18,7 +18,7 @@ const ROOT = path.join(__dirname, "..");
 const SEO_STATIC = path.join(ROOT, "seo-static");
 
 function getBaseUrl() {
-  const raw = process.env.NEXT_PUBLIC_SITE_URL || "https://www.ssassociates.com";
+  const raw = process.env.NEXT_PUBLIC_SITE_URL || "https://www.ss-associates.pk";
   return String(raw).replace(/\/+$/, "");
 }
 

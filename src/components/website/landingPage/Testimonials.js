@@ -80,12 +80,14 @@ function ProfileAvatar({ url, name }) {
   );
 }
 
-const Testimonials = () => {
+const Testimonials = ({ initialTestimonials = [] }) => {
   const sliderRef = useRef(null);
-  const [items, setItems] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const hasInitial = Array.isArray(initialTestimonials) && initialTestimonials.length > 0;
+  const [items, setItems] = useState(() => (hasInitial ? sortTestimonials(initialTestimonials) : []));
+  const [loading, setLoading] = useState(() => !hasInitial);
 
   useEffect(() => {
+    if (hasInitial) return;
     let cancelled = false;
     (async () => {
       setLoading(true);
@@ -107,7 +109,7 @@ const Testimonials = () => {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [hasInitial]);
 
   const count = items.length;
   const [progress, setProgress] = useState(count > 0 ? 100 / count : 0);
@@ -151,7 +153,7 @@ const Testimonials = () => {
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
-        backgroundAttachment: "fixed",
+        backgroundAttachment: { xs: "fixed", md: "fixed" },
         color: "rgba(255,255,255,0.92)",
       }}
     >
@@ -181,7 +183,8 @@ const Testimonials = () => {
         }}
       >
       <Stack gap={2}>
-        <Box
+        <Typography
+          component="h2"
           sx={{
             display: "inline-flex",
             alignItems: "center",
@@ -194,10 +197,11 @@ const Testimonials = () => {
             fontSize: 12,
             fontWeight: 600,
             width: "fit-content",
+            margin: 0,
           }}
         >
           Testimonials
-        </Box>
+        </Typography>
         <LinearProgress
           variant="determinate"
           value={loading || count === 0 ? 0 : progress}

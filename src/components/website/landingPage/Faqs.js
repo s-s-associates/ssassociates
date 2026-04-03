@@ -21,13 +21,20 @@ import React, { useEffect, useState } from "react";
 const COMPANY_PHONE = process.env.NEXT_PUBLIC_COMPANY_PHONE || "+923008414733";
 const COMPANY_EMAIL = process.env.NEXT_PUBLIC_COMPANY_EMAIL || "info@ssassociates.com";
 
-function Faqs() {
-  const [faqs, setFaqs] = useState([]);
-  const [loading, setLoading] = useState(true);
+function Faqs({ initialFaqs = [] }) {
+  const hasInitial = Array.isArray(initialFaqs) && initialFaqs.length > 0;
+  const sortedInitial = hasInitial
+    ? [...initialFaqs].sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
+    : [];
+  const [faqs, setFaqs] = useState(() => sortedInitial);
+  const [loading, setLoading] = useState(() => !hasInitial);
   const [fetchError, setFetchError] = useState(null);
-  const [openIndex, setOpenIndex] = useState(1);
+  const [openIndex, setOpenIndex] = useState(() =>
+    sortedInitial.length > 1 ? 1 : sortedInitial.length > 0 ? 0 : -1
+  );
 
   useEffect(() => {
+    if (hasInitial) return;
     let cancelled = false;
 
     async function loadFaqs() {
@@ -60,7 +67,7 @@ function Faqs() {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [hasInitial]);
 
   const handleToggle = (index) => {
     setOpenIndex((prev) => (prev === index ? -1 : index));

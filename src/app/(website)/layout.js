@@ -1,8 +1,6 @@
-import { GlobalWebsiteJsonLd } from "@/components/seo/SEO";
 import Footer from "@/components/website/bars/Footer";
 import Navbar from "@/components/website/bars/Navbar";
 import { WebsiteNavigationLoaderProvider } from "@/components/website/bars/WebsiteNavigationLoaderProvider";
-import { SITE_SEO_KEYWORDS } from "@/lib/seo-keywords";
 import {
   getDefaultOgImagePath,
   getSearchVerificationMetadata,
@@ -18,6 +16,7 @@ const defaultDescription = truncateMetaDescription(
 
 const defaultTitle = `${SITE_NAME} | Construction & Building Solutions`;
 const ogImage = { url: getDefaultOgImagePath(), width: 1200, height: 630, alt: SITE_NAME };
+const verification = getSearchVerificationMetadata();
 
 export const metadata = {
   metadataBase: new URL(siteUrl),
@@ -44,14 +43,14 @@ export const metadata = {
       "max-snippet": -1,
     },
   },
-  keywords: SITE_SEO_KEYWORDS,
-  verification: getSearchVerificationMetadata(),
+  ...(verification ? { verification } : {}),
   formatDetection: {
     email: false,
     address: false,
     telephone: false,
   },
   alternates: {
+    canonical: "/",
     languages: {
       en: siteUrl,
       "en-US": siteUrl,
@@ -99,7 +98,6 @@ export const viewport = {
 export default function WebsiteLayout({ children }) {
   return (
     <WebsiteNavigationLoaderProvider>
-      <GlobalWebsiteJsonLd baseUrl={siteUrl} contact={{}} />
       <Navbar />
       {children}
       <Footer />

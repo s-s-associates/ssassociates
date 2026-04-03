@@ -55,6 +55,6 @@ Files in this folder
 
 Production domain
 -----------------
-Replace https://www.ssassociates.com in both files with NEXT_PUBLIC_SITE_URL
+Replace https://www.ss-associates.pk in both files with NEXT_PUBLIC_SITE_URL
 when you change domain, or regenerate mirrors via: npm run seo
 (output also written to seo-static/ at project root).

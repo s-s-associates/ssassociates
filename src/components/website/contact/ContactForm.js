@@ -10,6 +10,7 @@ import { BeatLoader } from "react-spinners";
 import Swal from "sweetalert2";
 import { FiClock, FiMail, FiMapPin, FiPhoneCall, FiSend } from "react-icons/fi";
 import * as Yup from "yup";
+import { usePathname } from "next/navigation";
 
 const contactSchema = Yup.object().shape({
   fullName: Yup.string().trim().required("Full name is required"),
@@ -60,6 +61,9 @@ const COMPANY_ADDRESS = process.env.NEXT_PUBLIC_COMPANY_ADDRESS || "Ayub, 67 Tra
 const COMPANY_HOURS = process.env.NEXT_PUBLIC_WORKING_HOURS || "Mon - Sat: 9:00 AM - 6:00 PM";
 
 export default function ContactForm() {
+  const pathname = usePathname();
+  const contactHeadingLevel = pathname === "/" || pathname === "/home" ? "h2" : "h1";
+
   const handleSubmit = async (values) => {
     try {
       const res = await fetch("/api/contact", {
@@ -152,7 +156,7 @@ export default function ContactForm() {
                   </Box>
 
                   <Typography
-                    component="h1"
+                    component={contactHeadingLevel}
                     sx={{
                       fontFamily: "var(--font-app)",
                       fontSize: { xs: 38, sm: 48, lg: 54 },

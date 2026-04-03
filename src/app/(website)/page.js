@@ -1,4 +1,5 @@
 import LandingPage from "@/components/website/landingPage/LandingPage";
+import { getPublicFaqs, getPublicProjects, getPublicServices, getPublicTestimonials } from "@/lib/public-content";
 import { SITE_NAME, truncateMetaDescription } from "@/lib/site-config";
 
 export const metadata = {
@@ -9,10 +10,23 @@ export const metadata = {
   alternates: { canonical: "/" },
 };
 
-export default function Home() {
+/** ISR: fresh API-backed content periodically without client-only fetches for crawlers. */
+export const revalidate = 60;
+
+export default async function Home() {
+  const [initialServices, initialProjects, initialTestimonials, initialFaqs] = await Promise.all([
+    getPublicServices(),
+    getPublicProjects(),
+    getPublicTestimonials(),
+    getPublicFaqs(),
+  ]);
+
   return (
-  <>
-  <LandingPage/>
-  </>
+    <LandingPage
+      initialServices={initialServices}
+      initialProjects={initialProjects}
+      initialTestimonials={initialTestimonials}
+      initialFaqs={initialFaqs}
+    />
   );
 }

@@ -12,7 +12,7 @@ This checklist complements the implemented SEO stack (`app/sitemap.js`, `app/rob
 | Dynamic `sitemap.xml` | `src/app/sitemap.js` — static routes + MongoDB `services` / `projects` with `lastModified` |
 | Static mirrors (optional) | `npm run seo` writes `seo-static/*` for FTP/nginx — **never** `public/robots.txt` or `public/sitemap.xml` (Next.js conflict) |
 | Public reference copies | `public/seo/robots-reference.txt` & `public/seo/sitemap-static.xml` — **different URLs** (`/seo/...`) so no conflict; for docs / static hosting handoff |
-| Site URL | `NEXT_PUBLIC_SITE_URL` (default `https://www.ssassociates.com`) — **set in production** |
+| Site URL | `NEXT_PUBLIC_SITE_URL` (default `https://www.ss-associates.pk`) — **set in production** |
 | Global metadata | Root + `(website)/layout.js` — `metadataBase`, title template, description, OG, Twitter, keywords |
 | Per-page metadata | Home, about, services list, projects list, contact, privacy, terms — title, description (≤160 chars), canonical |
 | Dynamic metadata | `/services/[id]`, `/projects/[id]` — DB-driven title/description, OG/Twitter images, canonical |
@@ -91,7 +91,7 @@ This checklist complements the implemented SEO stack (`app/sitemap.js`, `app/rob
 ## Environment checklist (production)
 
 ```bash
-NEXT_PUBLIC_SITE_URL=https://www.ssassociates.com
+NEXT_PUBLIC_SITE_URL=https://www.ss-associates.pk
 MONGODB_URI=mongodb+srv://...
 # Optional — adds <meta name="google-site-verification"> in page source for Search Console
 GOOGLE_SITE_VERIFICATION=your_token_here
@@ -122,8 +122,8 @@ npm run build        # Runs prebuild (seo) then next build
 After deploy, curl checks:
 
 ```bash
-curl -sS https://www.ssassociates.com/robots.txt | head
-curl -sS https://www.ssassociates.com/sitemap.xml | head
+curl -sS https://www.ss-associates.pk/robots.txt | head
+curl -sS https://www.ss-associates.pk/sitemap.xml | head
 ```
 
 ---

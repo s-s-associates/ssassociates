@@ -259,7 +259,7 @@ Disallow: /login
 Disallow: /setup
 
 # ── Sitemap ───────────────────────────────────────────────────────────────────
-Sitemap: https://www.ssassociates.com/sitemap.xml
+Sitemap: https://www.ss-associates.pk/sitemap.xml
 
 # =============================================================================
 # End of reference

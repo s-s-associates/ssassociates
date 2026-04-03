@@ -47,12 +47,14 @@ function ProjectCardSkeleton() {
   );
 }
 
-export default function ProjectCard({ maxProjects }) {
-  const [projects, setProjects] = useState([]);
-  const [loading, setLoading] = useState(true);
+export default function ProjectCard({ maxProjects, initialProjects }) {
+  const hasInitial = Array.isArray(initialProjects) && initialProjects.length > 0;
+  const [projects, setProjects] = useState(() => (hasInitial ? initialProjects : []));
+  const [loading, setLoading] = useState(() => !hasInitial);
   const [fetchError, setFetchError] = useState(null);
 
   useEffect(() => {
+    if (hasInitial) return;
     let cancelled = false;
     (async () => {
       setLoading(true);
@@ -76,7 +78,7 @@ export default function ProjectCard({ maxProjects }) {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [hasInitial]);
 
   const visibleProjects = useMemo(() => {
     if (!Array.isArray(projects)) return [];
@@ -98,12 +100,13 @@ export default function ProjectCard({ maxProjects }) {
         <Grid size={{ xs: 12, sm: 6, md: 4 }}>
           <Box sx={{ minWidth: 0 }}>
             <Typography
-              component="span"
+              component="h2"
               sx={{
                 color: whiteColor,
                 fontWeight: 700,
                 fontSize: { xs: 25, sm: 30, md: 35, lg: 40 },
                 lineHeight: 1.25,
+                margin: 0,
                 backgroundImage: `linear-gradient(${whiteColor}, ${whiteColor})`,
                 backgroundSize: "0% 2px",
                 backgroundPosition: "bottom left",

@@ -15,7 +15,7 @@ const SECTION_DESCRIPTION =
   "SS Associates: A trusted leader in office renovation and integrated design and build services, providing seamless.";
 
 
-function ServicesCards() {
+function ServicesCards({ initialServices }) {
   const theme = useTheme();
   const isLg = useMediaQuery(theme.breakpoints.up("lg"));
   const isMd = useMediaQuery(theme.breakpoints.up("md"));
@@ -25,8 +25,9 @@ function ServicesCards() {
   const scrollIndexRef = useRef(0);
   const [scrollIndex, setScrollIndex] = useState(0);
   const [containerWidth, setContainerWidth] = useState(0);
-  const [services, setServices] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const hasInitial = Array.isArray(initialServices) && initialServices.length > 0;
+  const [services, setServices] = useState(() => (hasInitial ? initialServices : []));
+  const [loading, setLoading] = useState(() => !hasInitial);
   const [fetchError, setFetchError] = useState(null);
 
   const cardsPerView = isLg ? 4 : isMd ? 3 : isSm ? 2 : 1;
@@ -34,6 +35,7 @@ function ServicesCards() {
   scrollIndexRef.current = scrollIndex;
 
   useEffect(() => {
+    if (hasInitial) return;
     let cancelled = false;
     (async () => {
       try {
@@ -54,7 +56,7 @@ function ServicesCards() {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [hasInitial]);
 
   useEffect(() => {
     const el = containerRef.current;
