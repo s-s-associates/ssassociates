@@ -251,7 +251,7 @@ function HomeBanner() {
             margin: 0,
             display: "block",
             WebkitTextStroke: 0,
-            wordSpacing: 12,
+            wordSpacing: 13,
             
           }}
         >
