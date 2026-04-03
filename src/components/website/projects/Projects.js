@@ -9,7 +9,7 @@ function Projects() {
   return (
     <>
       <Banner />
-      <ProjectCard />
+      <ProjectCard showCategoryFilter />
       {/* <ProjectsIntroStats /> */}
       <ProjectsExpertiseGrid />
       <ProjectsPageCTA />

@@ -1,5 +1,6 @@
 "use client";
 
+import { buildBrandedEmail } from "@/lib/email-template-builder";
 import React, { useState, useCallback, useEffect, useMemo } from "react";
 import {
   Box,
@@ -122,14 +123,14 @@ function formatDate(date) {
 }
 
 function buildPreviewHtml(body, ctaText, ctaUrl, heading) {
-  const hasCta = ctaText && ctaUrl;
-  const ctaBlock = hasCta
-    ? `<table role="presentation" cellpadding="0" cellspacing="0" style="margin: 28px 0 0 0;"><tr><td align="center"><a href="${ctaUrl}" target="_blank" rel="noopener" style="display: inline-block; padding: 14px 28px; background: linear-gradient(135deg, #1a1a2e 0%, #2d2d44 100%); color: #fff; text-decoration: none; font-weight: 600; border-radius: 8px; font-size: 16px;">${ctaText}</a></td></tr></table>`
-    : "";
-  const headingBlock = heading ? `<h1 style="margin: 0 0 16px 0; font-size: 24px; font-weight: 700; color: #1f2937;">${heading}</h1>` : "";
-  const content = (body || "").replace(/\n/g, "<br>");
-  const inner = `${headingBlock}<div style="color: #1f2937; font-size: 16px; line-height: 1.65;">${content}</div>${ctaBlock}`;
-  return `<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head><body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif; background-color: #f0f2f5;"><table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="background-color: #f0f2f5; padding: 24px;"><tr><td align="center"><table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px; background-color: #ffffff; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.06);"><tr><td style="padding: 40px 32px;">${inner}</td></tr><tr><td style="padding: 20px 32px; background-color: #f8fafc; border-radius: 0 0 12px 12px; text-align: center;"><p style="margin: 0; color: #64748b; font-size: 12px;">This email was sent from ${process.env.NEXT_PUBLIC_COMPANY_NAME}.</p></td></tr></table></td></tr></table></body></html>`;
+  return buildBrandedEmail({
+    body,
+    heading,
+    ctaText,
+    ctaUrl,
+    appUrl: APP_URL,
+    companyName: process.env.NEXT_PUBLIC_COMPANY_NAME,
+  });
 }
 
 export default function SubscribersPage() {
@@ -470,9 +471,6 @@ export default function SubscribersPage() {
       Swal.fire({ title: "No recipients", text: "Select at least one subscriber or add subscribers first.", icon: "warning", confirmButtonColor: primaryColor });
       return;
     }
-    const bodyWithHeading = composeHeading.trim()
-      ? `<h1 style="margin:0 0 16px 0;font-size:24px;">${composeHeading.trim()}</h1>\n${composeBody.trim().replace(/\n/g, "<br>")}`
-      : composeBody.trim().replace(/\n/g, "<br>");
     setSendLoading(true);
     try {
       const res = await fetch(API_SEND_BULK, {
@@ -480,7 +478,7 @@ export default function SubscribersPage() {
         headers: { "Content-Type": "application/json", ...getAuthHeaders() },
         body: JSON.stringify({
           subject: composeSubject.trim(),
-          body: bodyWithHeading,
+          body: composeBody.trim(),
           heading: composeHeading.trim(),
           ctaText: composeCtaText.trim() || undefined,
           ctaUrl: composeCtaUrl.trim() || undefined,

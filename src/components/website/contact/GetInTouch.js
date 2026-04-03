@@ -13,6 +13,7 @@ const COMPANY_PHONE = process.env.NEXT_PUBLIC_COMPANY_PHONE || "+923008414733";
 const COMPANY_EMAIL = process.env.NEXT_PUBLIC_COMPANY_EMAIL || "info@ssassociates.com";
 const COMPANY_ADDRESS = process.env.NEXT_PUBLIC_COMPANY_ADDRESS || "Ayub, 67 Trade Centre Block, Johar Town, Lahore, Pakistan";
 const COMPANY_HOURS = process.env.NEXT_PUBLIC_WORKING_HOURS || "Mon - Sat: 9:00 AM - 6:00 PM";
+const COMPANY_LOCATION = process.env.NEXT_PUBLIC_COMPANY_LOCATION || `https://maps.google.com/?q=${encodeURIComponent(COMPANY_ADDRESS)}`;
 
 const contactItems = [
   {
@@ -28,7 +29,7 @@ const contactItems = [
   {
     title: "Address",
     icon: LocationOnOutlinedIcon,
-    lines: [{ text: COMPANY_ADDRESS }],
+    lines: [{ text: COMPANY_ADDRESS, href: COMPANY_LOCATION, copy: COMPANY_ADDRESS }],
   },
   {
     title: "Working Hours",
@@ -259,6 +260,9 @@ function GetInTouch() {
                             key={line.text}
                             component="a"
                             href={line.href}
+                            target={line.copy ? "_blank" : undefined}
+                            rel={line.copy ? "noopener noreferrer" : undefined}
+                            onClick={line.copy ? () => navigator.clipboard.writeText(line.copy).catch(() => {}) : undefined}
                             sx={{
                               fontSize: 14,
                               color: "rgba(255,255,255,0.82)",
@@ -266,6 +270,7 @@ function GetInTouch() {
                               lineHeight: 1.5,
                               wordBreak: "break-word",
                               transition: "color 0.2s ease",
+                              cursor: "pointer",
                               "&:hover": { color: primaryLight },
                             }}
                           >

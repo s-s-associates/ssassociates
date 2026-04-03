@@ -172,7 +172,7 @@ function Faqs({ initialFaqs = [] }) {
               >
                 <LocalPhoneOutlinedIcon sx={{ color: primaryColor, fontSize: 18 }} />
               </Box>
-              <Typography sx={{ fontSize: 14, lineHeight: 1.7, color: "rgba(231,236,255,0.95)" }}>
+              <Typography component="a" href={`tel:${COMPANY_PHONE}`} sx={{ fontSize: 14, lineHeight: 1.7, color: "rgba(231,236,255,0.95)", textDecoration: "none", "&:hover": { color: "inherit", textDecoration: "underline" } }}>
                 {COMPANY_PHONE}
               </Typography>
             </Box>
@@ -191,7 +191,7 @@ function Faqs({ initialFaqs = [] }) {
               >
                 <MailOutlineIcon sx={{ color: primaryColor, fontSize: 18 }} />
               </Box>
-              <Typography sx={{ fontSize: 14, lineHeight: 1.7, color: "rgba(231,236,255,0.95)" }}>
+              <Typography component="a" href={`mailto:${COMPANY_EMAIL}`} sx={{ fontSize: 14, lineHeight: 1.7, color: "rgba(231,236,255,0.95)", textDecoration: "none", "&:hover": { color: "inherit", textDecoration: "underline" } }}>
                 {COMPANY_EMAIL}
               </Typography>
             </Box>

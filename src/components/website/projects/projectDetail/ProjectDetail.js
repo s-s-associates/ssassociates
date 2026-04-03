@@ -11,6 +11,7 @@ import ProjectSpecifications from "./ProjectSpecifications";
 import { buildFeatureItems, splitToList } from "./projectDetailHelpers";
 import Technologies from "./Technologies";
 import ImagesGallery from "./ImagesGallery";
+import ProjectVideoSection from "./ProjectVideoSection";
 
 export default function ProjectDetail({ project }) {
   const projectData = project || {};
@@ -32,6 +33,7 @@ export default function ProjectDetail({ project }) {
             <ChallengesAndSolutions project={projectData} />
             {/* <Technologies items={technologyItems} /> */}
             <ImagesGallery title={projectData.title} images={projectData.imageGallery || []} />
+            <ProjectVideoSection videoUrl={projectData.videoUrl} title={projectData.title} />
 
       <ProjectCTA />
     </>

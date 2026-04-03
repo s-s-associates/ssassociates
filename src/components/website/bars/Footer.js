@@ -12,7 +12,7 @@ import Email from "@mui/icons-material/Email";
 import AccessTime from "@mui/icons-material/AccessTime";
 import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
 import SubscriberForm from "@/components/website/subscriber/SubscriberForm";
-import { Box } from "@mui/material";
+import { Box, Tooltip } from "@mui/material";
 import Image from "next/image";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
@@ -43,12 +43,16 @@ const quickLinks = [
 ];
 
 const socialLinks = [
-  { Icon: FaWhatsapp, href: process.env.NEXT_PUBLIC_COMPANY_WHATSAPP },
-  { Icon: FaFacebookF, href: process.env.NEXT_PUBLIC_COMPANY_FACEBOOK },
-  { Icon: FaInstagram, href: process.env.NEXT_PUBLIC_COMPANY_INSTAGRAM },
-  { Icon: FaLinkedinIn, href: process.env.NEXT_PUBLIC_COMPANY_LINKEDIN },
-  { Icon: MdEmail, href: `mailto:${COMPANY_EMAIL}` },
+  { Icon: FaWhatsapp, href: process.env.NEXT_PUBLIC_COMPANY_WHATSAPP, label: "Open WhatsApp" },
+  { Icon: FaFacebookF, href: process.env.NEXT_PUBLIC_COMPANY_FACEBOOK, label: "Open Facebook" },
+  { Icon: FaInstagram, href: process.env.NEXT_PUBLIC_COMPANY_INSTAGRAM, label: "Open Instagram" },
+  { Icon: FaLinkedinIn, href: process.env.NEXT_PUBLIC_COMPANY_LINKEDIN, label: "Open LinkedIn" },
+  { Icon: MdEmail, href: `mailto:${COMPANY_EMAIL}`, label: "Send Email" },
 ];
+
+const CURRENT_YEAR = new Date().getFullYear();
+const LOCATION_URL = process.env.NEXT_PUBLIC_COMPANY_LOCATION || `https://maps.google.com/?q=${encodeURIComponent(COMPANY_ADDRESS)}`;
+const copyAddress = () => navigator.clipboard.writeText(COMPANY_ADDRESS).catch(() => {});
 
 // Animated underline: line enters from left to right on hover
 const underlineFromLeft = {
@@ -190,34 +194,35 @@ function Footer() {
             construction needs.
           </Box>
           <Box sx={{ display: "flex", gap: 1.5, alignItems: "center" }}>
-            {socialLinks.map(({ Icon, href }, idx) => (
-              <Box
-                key={idx}
-                component="a"
-                href={href}
-                target="_blank"
-                rel="noopener noreferrer"
-                sx={{
-                  width: 40,
-                  height: 40,
-                  borderRadius: "50%",
-                  bgcolor: "rgba(255,255,255,0.1)",
-                  border: `1px solid ${textGrayLight}`,
-                  color: whiteColor,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  fontSize: 18,
-                  textDecoration: "none",
-                  transition: "background-color 0.2s, border-color 0.2s",
-                  "&:hover": {
-                    bgcolor: primaryColor,
-                    borderColor: primaryColor,
-                  },
-                }}
-              >
-                <Icon />
-              </Box>
+            {socialLinks.map(({ Icon, href, label }, idx) => (
+              <Tooltip key={idx} title={label} arrow placement="top">
+                <Box
+                  component="a"
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  sx={{
+                    width: 40,
+                    height: 40,
+                    borderRadius: "50%",
+                    bgcolor: "rgba(255,255,255,0.1)",
+                    border: `1px solid ${textGrayLight}`,
+                    color: whiteColor,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    fontSize: 18,
+                    textDecoration: "none",
+                    transition: "background-color 0.2s, border-color 0.2s",
+                    "&:hover": {
+                      bgcolor: primaryColor,
+                      borderColor: primaryColor,
+                    },
+                  }}
+                >
+                  <Icon />
+                </Box>
+              </Tooltip>
             ))}
           </Box>
         </Box>
@@ -360,11 +365,17 @@ function Footer() {
           </Box>
           <Box sx={{ display: "flex", flexDirection: "column", gap: 1.5 }}>
             <Box
+              component="a"
+              href={LOCATION_URL}
+              onClick={copyAddress}
+              target="_blank"
+              rel="noopener noreferrer"
               sx={{
                 display: "flex",
                 alignItems: "flex-start",
                 gap: 1.5,
-                cursor: "default",
+                textDecoration: "none",
+                cursor: "pointer",
                 "&:hover .contact-text": {
                   color: primaryColor,
                   ...underlineFromLeftHover,
@@ -395,11 +406,14 @@ function Footer() {
               </Box>
             </Box>
             <Box
+              component="a"
+              href={`tel:${COMPANY_PHONE}`}
               sx={{
                 display: "flex",
                 alignItems: "center",
                 gap: 1.5,
-                cursor: "default",
+                textDecoration: "none",
+                cursor: "pointer",
                 "&:hover .contact-text": {
                   color: primaryColor,
                   ...underlineFromLeftHover,
@@ -424,11 +438,14 @@ function Footer() {
               </Box>
             </Box>
             <Box
+              component="a"
+              href={`mailto:${COMPANY_EMAIL}`}
               sx={{
                 display: "flex",
                 alignItems: "center",
                 gap: 1.5,
-                cursor: "default",
+                textDecoration: "none",
+                cursor: "pointer",
                 "&:hover .contact-text": {
                   color: primaryColor,
                   ...underlineFromLeftHover,
@@ -514,7 +531,7 @@ function Footer() {
               color: textGrayLight,
             }}
           >
-            © 2026 {COMPANY_NAME}. All rights reserved. Built with excellence.
+            © {CURRENT_YEAR} {COMPANY_NAME}. All rights reserved. Built with excellence.
           </Box>
           <Box
             sx={{

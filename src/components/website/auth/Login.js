@@ -123,38 +123,39 @@ function Login() {
             bgcolor: "#f8fafc",
           }}
         >
-          {/* Left — visual (50% desktop, top band mobile) */}
+          {/* Left — visual panel */}
           <Box
             sx={{
               position: "relative",
               width: { xs: "100%", md: "50%" },
-              // `fill` Image needs explicit height — `auto` collapses when children are all absolute
-              minHeight: { xs: "clamp(300px, 56vh, 520px)", sm: 360, md: "100vh" },
+              minHeight: { xs: "clamp(320px, 58vh, 540px)", sm: 380, md: "100vh" },
               flexShrink: 0,
+              overflow: "hidden",
             }}
           >
+            {/* Background image */}
             <Image
               src="/images/auth/login2.jpg"
               alt=""
               fill
               priority
               sizes="(max-width: 900px) 100vw, 50vw"
-              style={{
-                objectFit: "cover",
-                objectPosition: "center center",
-              }}
+              style={{ objectFit: "cover", objectPosition: "center center" }}
             />
-            <Box
-              sx={{
-                position: "absolute",
-                inset: 0,
-                background: {
-                  xs: "linear-gradient(120deg, rgba(8,12,20,0.78) 0%, rgba(8,12,20,0.5) 50%, rgba(8,12,20,0.38) 100%)",
-                  md: "linear-gradient(105deg, rgba(8,12,20,0.88) 0%, rgba(8,12,20,0.55) 42%, rgba(8,12,20,0.35) 100%)",
-                },
-                pointerEvents: "none",
-              }}
-            />
+
+            {/* Multi-layer overlay: dark base + warm orange glow from bottom */}
+            <Box sx={{ position: "absolute", inset: 0, background: "linear-gradient(160deg, rgba(5,7,12,0.92) 0%, rgba(10,14,22,0.75) 45%, rgba(20,14,8,0.60) 100%)", pointerEvents: "none" }} />
+            <Box sx={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse 80% 50% at 20% 110%, rgba(251,134,30,0.28) 0%, transparent 65%)", pointerEvents: "none" }} />
+            <Box sx={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse 60% 40% at 90% -10%, rgba(251,134,30,0.10) 0%, transparent 60%)", pointerEvents: "none" }} />
+
+            {/* Subtle grid pattern */}
+            <Box sx={{
+              position: "absolute", inset: 0, pointerEvents: "none", opacity: 0.06,
+              backgroundImage: "linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)",
+              backgroundSize: "48px 48px",
+            }} />
+
+            {/* Content */}
             <Box
               sx={{
                 position: "absolute",
@@ -163,223 +164,172 @@ function Login() {
                 flexDirection: "column",
                 justifyContent: { xs: "flex-start", md: "space-between" },
                 alignItems: "flex-start",
-                textAlign: "left",
-                gap: { xs: 1.75, sm: 2.25, md: 0 },
-                pl: { xs: 1.75, sm: 2.75, md: 3.25, lg: 4, xl: 5 },
-                pr: { xs: 1.75, sm: 2.25, md: 4 },
-                pt: { xs: 2.25, sm: 3.25, md: 4.5 },
-                pb: { xs: 2.25, sm: 2.75, md: 4 },
-                pointerEvents: "none",
-                maxWidth: "100%",
+                pl: { xs: 2.5, sm: 3.5, md: 4, lg: 5 },
+                pr: { xs: 2.5, sm: 3, md: 4 },
+                pt: { xs: 3, sm: 4, md: 5 },
+                pb: { xs: 3, sm: 3.5, md: 5 },
+                gap: { xs: 2.5, sm: 3, md: 0 },
               }}
             >
-              {/* Top — brand strip, flush left */}
+              {/* ── TOP: Logo + brand ── */}
               <Box sx={{ width: "100%" }}>
-                <Typography
-                  sx={{
-                    fontSize: { xs: 10, sm: 12 },
-                    fontWeight: 800,
-                    letterSpacing: { xs: "0.2em", sm: "0.26em" },
-                    color: primaryColor,
-                    textTransform: "uppercase",
-                  }}
-                >
-                  S&amp;S Associates
-                </Typography>
-                <Typography
-                  sx={{
-                    mt: { xs: 0.5, sm: 0.75 },
-                    fontSize: { xs: 11, sm: 13 },
-                    fontWeight: 600,
-                    color: whiteColor,
-                    letterSpacing: "0.06em",
-                    textTransform: "uppercase",
-                    display: { xs: "none", sm: "block" },
-                  }}
-                >
-                  Admin workspace · Secure access
-                </Typography>
-                <Typography
-                  sx={{
-                    mt: 0.5,
-                    fontSize: { xs: 11, sm: 12 },
-                    fontWeight: 600,
-                    color: whiteColor,
-                    letterSpacing: "0.1em",
-                    textTransform: "uppercase",
-                    display: { xs: "block", sm: "none" },
-                  }}
-                >
-                  Secure login
-                </Typography>
-                <Box
-                  sx={{
-                    mt: { xs: 1.25, sm: 2 },
-                    height: { xs: 3, md: 4 },
-                    width: { xs: 36, sm: 44, md: 60 },
-                    borderRadius: 1,
-                    background: `linear-gradient(90deg, ${primaryColor}, rgba(251,134,30,0.25))`,
-                  }}
-                />
+                <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mb: { xs: 1.5, md: 2 } }}>
+                  {/* Logo badge */}
+                  <Box sx={{
+                    width: { xs: 40, sm: 46 }, height: { xs: 40, sm: 46 },
+                    borderRadius: "12px",
+                    bgcolor: "rgba(255,255,255,0.08)",
+                    border: "1px solid rgba(255,255,255,0.14)",
+                    backdropFilter: "blur(8px)",
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                    flexShrink: 0,
+                    boxShadow: "0 4px 20px rgba(0,0,0,0.3)",
+                  }}>
+                    <Image src="/logo.png" alt="S&S Associates" width={30} height={30}
+                      style={{ objectFit: "contain", width: "75%", height: "75%" }} />
+                  </Box>
+                  {/* Brand text */}
+                  <Box>
+                    <Typography sx={{
+                      fontSize: { xs: 13, sm: 15 }, fontWeight: 800,
+                      letterSpacing: "0.06em", color: whiteColor,
+                      textTransform: "uppercase", lineHeight: 1.2,
+                    }}>
+                      S&amp;S Associates
+                    </Typography>
+                    <Typography sx={{
+                      fontSize: { xs: 10, sm: 11 }, fontWeight: 600,
+                      letterSpacing: "0.14em", color: primaryColor,
+                      textTransform: "uppercase", mt: 0.25,
+                    }}>
+                      Admin Workspace
+                    </Typography>
+                  </Box>
+                </Box>
+                {/* Accent divider */}
+                <Box sx={{
+                  height: 3, width: { xs: 48, sm: 64 }, borderRadius: 2,
+                  background: `linear-gradient(90deg, ${primaryColor}, rgba(251,134,30,0.2))`,
+                }} />
               </Box>
 
-              {/* Center — headline + narrative */}
-              <Box
-                sx={{
-                  flex: { xs: "0 0 auto", md: 1 },
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "center",
-                  py: { xs: 0, sm: 1, md: 3 },
-                  width: "100%",
-                  maxWidth: { xs: "100%", sm: 560, md: 540 },
-                }}
-              >
-                <Typography
-                  sx={{
-                    color: whiteColor,
-                    fontWeight: 800,
-                    fontSize: { xs: 22, sm: 30, md: 36, lg: 38 },
-                    lineHeight: { xs: 1.14, md: 1.12 },
-                    letterSpacing: "-0.03em",
-                    textShadow: "0 4px 32px rgba(0,0,0,0.45)",
-                  }}
-                >
-                  Build with clarity.
-                  <Box
-                    component="span"
-                    sx={{
-                      display: "block",
-                      color: whiteColor,
-                      mt: { xs: 0.5, sm: 0.75 },
-                    }}
-                  >
+              {/* ── MIDDLE: Headline ── */}
+              <Box sx={{
+                flex: { xs: "0 0 auto", md: 1 },
+                display: "flex", flexDirection: "column", justifyContent: "center",
+                py: { xs: 0, md: 3 },
+                width: "100%", maxWidth: 520,
+              }}>
+                {/* Eyebrow badge */}
+                <Box sx={{
+                  display: "inline-flex", alignItems: "center", gap: 0.75,
+                  bgcolor: "rgba(251,134,30,0.15)",
+                  border: "1px solid rgba(251,134,30,0.3)",
+                  borderRadius: "50px",
+                  px: 1.5, py: 0.5, mb: { xs: 2, md: 2.5 },
+                  backdropFilter: "blur(6px)",
+                  width: "fit-content",
+                }}>
+                  <Box sx={{ width: 6, height: 6, borderRadius: "50%", bgcolor: primaryColor, flexShrink: 0,
+                    boxShadow: `0 0 8px ${primaryColor}`, animation: "pulse 2s infinite",
+                    "@keyframes pulse": { "0%,100%": { opacity: 1 }, "50%": { opacity: 0.5 } },
+                  }} />
+                  <Typography sx={{ fontSize: 11, fontWeight: 700, color: primaryColor, letterSpacing: "0.1em", textTransform: "uppercase" }}>
+                    Secure Access Portal
+                  </Typography>
+                </Box>
+
+                <Typography sx={{
+                  color: whiteColor, fontWeight: 800,
+                  fontSize: { xs: 24, sm: 32, md: 38, lg: 42 },
+                  lineHeight: 1.1, letterSpacing: "-0.03em",
+                  textShadow: "0 4px 40px rgba(0,0,0,0.5)",
+                }}>
+                  Build with{" "}
+                  <Box component="span" sx={{
+                    color: primaryColor,
+                    textShadow: `0 0 40px rgba(251,134,30,0.5)`,
+                  }}>
+                    clarity.
+                  </Box>
+                  <Box component="span" sx={{ display: "block", mt: { xs: 0.5, md: 0.75 } }}>
                     Deliver with confidence.
                   </Box>
                 </Typography>
 
-                {/* Mobile: one short line */}
-                <Typography
-                  sx={{
-                    mt: { xs: 1.35, sm: 2 },
-                    color: whiteColor,
-                    fontSize: { xs: 13, sm: 15 },
-                    lineHeight: 1.55,
-                    fontWeight: 500,
-                    display: { xs: "block", sm: "none" },
-                  }}
-                >
-                  Sign in to manage projects, services &amp; site content.
+                <Typography sx={{
+                  mt: { xs: 1.5, md: 2.25 },
+                  color: "rgba(255,255,255,0.65)",
+                  fontSize: { xs: 13, sm: 15 }, lineHeight: 1.7, fontWeight: 400,
+                  display: { xs: "none", sm: "block" },
+                  maxWidth: 440,
+                }}>
+                  Coordinate projects, media, and client-facing content from one
+                  authenticated environment — built for repeatability and fast delivery.
                 </Typography>
 
-                {/* Desktop / large: extra depth */}
-                <Typography
-                  sx={{
-                    mt: { xs: 0, sm: 2, md: 2.25 },
-                    color: whiteColor,
-                    fontSize: { xs: 14, md: 15 },
-                    lineHeight: 1.65,
-                    fontWeight: 400,
-                    display: { xs: "none", lg: "block" },
-                    maxWidth: 520,
-                    borderLeft: `3px solid ${primaryColor}`,
-                    pl: { xs: 2, md: 2.25 },
-                    py: 0.5,
-                  }}
-                >
-                  Coordinate categories, media uploads, and client-facing pages from one authenticated environment — built
-                  for repeatability, auditability, and fast handovers across Lahore and Pakistan-wide projects.
+                {/* Mobile short desc */}
+                <Typography sx={{
+                  mt: 1.25, color: "rgba(255,255,255,0.65)",
+                  fontSize: 13, lineHeight: 1.6,
+                  display: { xs: "block", sm: "none" },
+                }}>
+                  Sign in to manage projects, services &amp; site content.
                 </Typography>
               </Box>
 
-              {/* Bottom — capability list (all items on every breakpoint) */}
+              {/* ── BOTTOM: Feature cards + footer tag ── */}
               <Box sx={{ width: "100%", maxWidth: 500 }}>
-                <Typography
-                  sx={{
-                    fontSize: { xs: 10, sm: 11 },
-                    fontWeight: 700,
-                    letterSpacing: "0.18em",
-                    color: whiteColor,
-                    textTransform: "uppercase",
-                    mb: { xs: 1, sm: 1.5 },
-                  }}
-                >
-                  Inside the dashboard
-                </Typography>
-                <Box sx={{ display: "flex", flexDirection: "column", gap: { xs: 0.85, sm: 1.25 } }}>
+                {/* Feature list */}
+                <Box sx={{ display: "flex", flexDirection: "column", gap: { xs: 1, sm: 1.25 }, mb: { xs: 2, sm: 2.5 } }}>
                   {[
-                    { Icon: FiLayers, text: "Portfolio & project lifecycle — grey structure to delivery" },
-                    {
-                      Icon: FiTrendingUp,
-                      text: "Services, FAQs & testimonials aligned with your live site",
-                    },
-                    { Icon: FiShield, text: "Secure admin access — no public indexing of this area" },
-                  ].map(({ Icon, text }) => (
-                    <Box
-                      key={text}
-                      sx={{
-                        display: "flex",
-                        alignItems: "flex-start",
-                        gap: 1.25,
-                        color: whiteColor,
-                      }}
-                    >
-                      <Box
-                        sx={{
-                          flexShrink: 0,
-                          width: { xs: 26, sm: 30 },
-                          height: { xs: 26, sm: 30 },
-                          borderRadius: 1,
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          bgcolor: "rgba(251,134,30,0.18)",
-                          border: "1px solid rgba(251,134,30,0.35)",
-                          color: primaryColor,
-                          mt: 0.1,
-                        }}
-                      >
+                    { Icon: FiLayers, label: "Portfolio & project lifecycle", sub: "Grey structure to delivery" },
+                    { Icon: FiTrendingUp, label: "Services, FAQs & testimonials", sub: "Aligned with your live site" },
+                    { Icon: FiShield, label: "Secure admin access", sub: "No public indexing of this area" },
+                  ].map(({ Icon, label, sub }) => (
+                    <Box key={label} sx={{
+                      display: "flex", alignItems: "center", gap: 1.5,
+                      bgcolor: "rgba(255,255,255,0.04)",
+                      border: "1px solid rgba(255,255,255,0.08)",
+                      borderRadius: "12px",
+                      px: { xs: 1.5, sm: 2 }, py: { xs: 1, sm: 1.25 },
+                      backdropFilter: "blur(10px)",
+                      transition: "background 0.2s",
+                    }}>
+                      <Box sx={{
+                        flexShrink: 0, width: { xs: 32, sm: 36 }, height: { xs: 32, sm: 36 },
+                        borderRadius: "10px",
+                        display: "flex", alignItems: "center", justifyContent: "center",
+                        bgcolor: "rgba(251,134,30,0.15)",
+                        border: "1px solid rgba(251,134,30,0.3)",
+                        color: primaryColor,
+                      }}>
                         <Icon size={16} strokeWidth={2.2} />
                       </Box>
-                      <Typography
-                        sx={{
-                          fontSize: { xs: 12, sm: 14 },
-                          lineHeight: 1.5,
-                          fontWeight: 500,
-                          color: "inherit",
-                        }}
-                      >
-                        {text}
-                      </Typography>
+                      <Box>
+                        <Typography sx={{ fontSize: { xs: 12, sm: 13 }, fontWeight: 700, color: whiteColor, lineHeight: 1.25 }}>
+                          {label}
+                        </Typography>
+                        <Typography sx={{ fontSize: { xs: 10, sm: 11 }, color: "rgba(255,255,255,0.5)", lineHeight: 1.3, mt: 0.2 }}>
+                          {sub}
+                        </Typography>
+                      </Box>
                     </Box>
                   ))}
                 </Box>
-                <Box
-                  sx={{
-                    mt: { xs: 1.25, sm: 2 },
-                    pt: { xs: 1.25, sm: 2 },
-                    borderTop: "1px solid rgba(255,255,255,0.12)",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 1,
-                    color: whiteColor,
-                  }}
-                >
-                  <FiCheck size={14} color="rgba(251,134,30,0.95)" style={{ flexShrink: 0 }} />
-                  <Typography
-                    sx={{
-                      fontSize: { xs: 11, sm: 12 },
-                      fontWeight: 600,
-                      letterSpacing: { xs: "0.02em", sm: "0.04em" },
-                      color: "inherit",
-                    }}
-                  >
-                    <Box component="span" sx={{ display: { xs: "inline", sm: "none" } }}>
-                      Pakistan · Construction
-                    </Box>
-                    <Box component="span" sx={{ display: { xs: "none", sm: "inline" } }}>
-                      Pakistan · Construction · Engineering
-                    </Box>
+
+                {/* Footer badge */}
+                <Box sx={{
+                  display: "inline-flex", alignItems: "center", gap: 1,
+                  borderTop: "1px solid rgba(255,255,255,0.1)",
+                  pt: { xs: 1.5, sm: 2 }, width: "100%",
+                }}>
+                  <FiCheck size={14} color={primaryColor} style={{ flexShrink: 0 }} />
+                  <Typography sx={{
+                    fontSize: { xs: 11, sm: 12 }, fontWeight: 600,
+                    color: "rgba(255,255,255,0.55)", letterSpacing: "0.05em",
+                  }}>
+                    Pakistan · Construction · Engineering
                   </Typography>
                 </Box>
               </Box>

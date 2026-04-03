@@ -2,7 +2,7 @@
 
 import { bggrayColor, bordergrayColor, primaryColor } from "@/components/utils/Colors";
 import { getAuth } from "@/lib/auth-storage";
-import { Box, Button } from "@mui/material";
+import { Box, Button, Divider, Typography } from "@mui/material";
 import React from "react";
 import { FiRefreshCw } from "react-icons/fi";
 import DashboardHeader from "./DashboardHeader";
@@ -26,6 +26,34 @@ function getDisplayName(authUser, authEmail) {
   return authUser?.email || authEmail || "User";
 }
 
+function SectionLabel({ children }) {
+  return (
+    <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mb: 2, mt: 1 }}>
+      <Box
+        sx={{
+          width: 4,
+          height: 16,
+          borderRadius: 1,
+          background: `linear-gradient(180deg, ${primaryColor}, #f97316)`,
+          flexShrink: 0,
+        }}
+      />
+      <Typography
+        sx={{
+          fontSize: 11,
+          fontWeight: 800,
+          letterSpacing: "0.14em",
+          textTransform: "uppercase",
+          color: "rgba(15,23,42,0.45)",
+        }}
+      >
+        {children}
+      </Typography>
+      <Divider sx={{ flex: 1, borderColor: bordergrayColor }} />
+    </Box>
+  );
+}
+
 export default function DashboardView() {
   const { user: authUser, email: authEmail } = getAuth();
   const displayName = getDisplayName(authUser, authEmail);
@@ -42,9 +70,7 @@ export default function DashboardView() {
     refresh,
   } = useDashboardData();
 
-  if (loading) {
-    return <DashboardSkeleton />;
-  }
+  if (loading) return <DashboardSkeleton />;
 
   return (
     <Box
@@ -56,76 +82,63 @@ export default function DashboardView() {
         minHeight: "100vh",
       }}
     >
+      {/* Header */}
       <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: 2, mb: 3 }}>
         <DashboardHeader displayName={displayName} />
         <Button
-          startIcon={<FiRefreshCw size={18} />}
+          startIcon={<FiRefreshCw size={15} />}
           onClick={() => refresh()}
           disabled={loading}
           variant="outlined"
           size="small"
           sx={{
             borderColor: bordergrayColor,
-            color: "#000",
+            color: "#334155",
             textTransform: "none",
             fontWeight: 600,
+            fontSize: 13,
+            borderRadius: 2,
+            px: 2,
             "&:hover": {
               borderColor: primaryColor,
               color: primaryColor,
-              bgcolor: "rgba(239,71,0,0.06)",
+              bgcolor: "rgba(251,134,30,0.05)",
             },
           }}
         >
           Refresh
         </Button>
       </Box>
+
+      {/* KPI Cards */}
       <KPICards counts={counts} />
 
-      <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", lg: "1fr" }, gap: 2, mb: 2 }}>
+      {/* Overview */}
+      <SectionLabel>Analytics overview</SectionLabel>
+      <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", xl: "3fr 2fr" }, gap: 2, mb: 2 }}>
         <OverviewComboChart data={overviewComboData} />
-      </Box>
-
-      <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", lg: "1fr" }, gap: 2, mb: 2 }}>
         <ProjectsTrendChart data={trendData} />
       </Box>
 
-      <Box
-        sx={{
-          display: "grid",
-          gridTemplateColumns: { xs: "1fr", md: "1fr 1fr" },
-          gap: 2,
-          mb: 2,
-        }}
-      >
+      {/* Projects */}
+      <SectionLabel>Project breakdown</SectionLabel>
+      <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", md: "1fr 1fr" }, gap: 2, mb: 2 }}>
         <ProjectsByStatusChart data={projectsByStatus} />
         <ProjectsByCategoryChart data={projectsByCategory} />
       </Box>
 
-      <Box
-        sx={{
-          display: "grid",
-          gridTemplateColumns: { xs: "1fr", md: "1fr 1fr" },
-          gap: 2,
-          mb: 2,
-        }}
-      >
+      {/* Engagement */}
+      <SectionLabel>Engagement trends</SectionLabel>
+      <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", md: "1fr 1fr" }, gap: 2, mb: 2 }}>
         <SubmissionsTrendChart data={submissionsTrend} />
         <SubscribersTrendChart data={subscribersTrend} />
       </Box>
 
-      <Box
-        sx={{
-          display: "grid",
-          gridTemplateColumns: { xs: "1fr", md: "1fr 1fr" },
-          gap: 2,
-          mb: 2,
-        }}
-      >
+      {/* Content */}
+      <SectionLabel>Website content</SectionLabel>
+      <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", md: "1fr 1fr", xl: "1fr 1fr 1fr" }, gap: 2, mb: 2 }}>
         <WebsiteContentChart data={websiteContent} />
         <WebsiteContentDonutChart data={websiteContent} />
-      </Box>
-
-      <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", md: "1fr" }, gap: 2, mb: 2 }}>
         <ProjectsStatusRadialChart data={projectsByStatus} />
       </Box>
     </Box>

@@ -6,7 +6,9 @@ import { Box, Button, Typography } from "@mui/material";
 import React from "react";
 
 const COMPANY_NAME = process.env.NEXT_PUBLIC_COMPANY_NAME || "S&S Associates";
-const COMPANY_ADDRESS = process.env.NEXT_PUBLIC_COMPANY_ADDRESS || "Ayub, 67 Trade Centre Block, Johar Town, Lahore, Pakistan";
+const COMPANY_ADDRESS =
+  process.env.NEXT_PUBLIC_COMPANY_ADDRESS ||
+  "Ayub, 67 Trade Centre Block, Johar Town, Lahore, Pakistan";
 
 function Map() {
   return (
@@ -107,7 +109,12 @@ function Map() {
               />
 
               <Typography
-                sx={{ color: grayColor, fontWeight: 700, fontSize: { xs: 18, md: 20 } , mb:1}}
+                sx={{
+                  color: grayColor,
+                  fontWeight: 700,
+                  fontSize: { xs: 18, md: 20 },
+                  mb: 1,
+                }}
               >
                 {COMPANY_ADDRESS}
               </Typography>

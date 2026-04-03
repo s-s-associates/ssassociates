@@ -59,6 +59,7 @@ const COMPANY_EMAIL = process.env.NEXT_PUBLIC_COMPANY_EMAIL || "info@ssassociate
 const COMPANY_PHONE = process.env.NEXT_PUBLIC_COMPANY_PHONE || "+923008414733";
 const COMPANY_ADDRESS = process.env.NEXT_PUBLIC_COMPANY_ADDRESS || "Ayub, 67 Trade Centre Block, Johar Town, Lahore, Pakistan";
 const COMPANY_HOURS = process.env.NEXT_PUBLIC_WORKING_HOURS || "Mon - Sat: 9:00 AM - 6:00 PM";
+const COMPANY_LOCATION = process.env.NEXT_PUBLIC_COMPANY_LOCATION || `https://maps.google.com/?q=${encodeURIComponent(COMPANY_ADDRESS)}`;
 
 export default function ContactForm() {
   const pathname = usePathname();
@@ -184,13 +185,18 @@ export default function ContactForm() {
 
                   <Stack gap={1.5}>
                     {[
-                      { icon: <FiPhoneCall size={16} />, title: "Call Us", value: COMPANY_PHONE },
-                      { icon: <FiMail size={16} />, title: "Email Us", value: COMPANY_EMAIL },
-                      { icon: <FiMapPin size={16} />, title: "Visit Us", value: COMPANY_ADDRESS },
+                      { icon: <FiPhoneCall size={16} />, title: "Call Us", value: COMPANY_PHONE, href: `tel:${COMPANY_PHONE}` },
+                      { icon: <FiMail size={16} />, title: "Email Us", value: COMPANY_EMAIL, href: `mailto:${COMPANY_EMAIL}` },
+                      { icon: <FiMapPin size={16} />, title: "Visit Us", value: COMPANY_ADDRESS, href: COMPANY_LOCATION, copy: COMPANY_ADDRESS },
                       { icon: <FiClock size={16} />, title: "Working Hours", value: COMPANY_HOURS },
                     ].map((item) => (
                       <Box
                         key={item.title}
+                        component={item.href ? "a" : "div"}
+                        href={item.href}
+                        target={item.copy ? "_blank" : undefined}
+                        rel={item.copy ? "noopener noreferrer" : undefined}
+                        onClick={item.copy ? () => navigator.clipboard.writeText(item.copy).catch(() => {}) : undefined}
                         sx={{
                           display: "flex",
                           alignItems: "center",
@@ -199,6 +205,10 @@ export default function ContactForm() {
                           borderRadius: 2,
                           border: `1px solid ${bordergrayColor}`,
                           bgcolor: "#f3f4f6",
+                          textDecoration: "none",
+                          cursor: item.href ? "pointer" : "default",
+                          transition: "border-color 0.2s",
+                          "&:hover": item.href ? { borderColor: primaryColor } : {},
                         }}
                       >
                         <Box
