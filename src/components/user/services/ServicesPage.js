@@ -352,6 +352,7 @@ export default function ServicesPage() {
                               component="img"
                               src={row.imageUrl}
                               alt=""
+                              loading="lazy"
                               sx={{
                                 width: 48,
                                 height: 48,
@@ -537,6 +538,7 @@ export default function ServicesPage() {
                   component="img"
                   src={viewService.imageUrl}
                   alt={viewService.title}
+                  loading="lazy"
                   sx={{
                     display: "block",
                     width: "100%",

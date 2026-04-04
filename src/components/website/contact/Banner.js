@@ -120,9 +120,7 @@ function Banner() {
             maxWidth: 800,
           }}
         >
-          Have a project in mind or need expert guidance? Contact S&amp;S Associates
-          today. Our team is ready to discuss your requirements, answer your
-          questions, and help you move from idea to execution with confidence.
+          Have a project in mind or need expert guidance? Contact {process.env.NEXT_PUBLIC_COMPANY_NAME} today. Our team is ready to discuss your requirements, answer your questions, and help you move from idea to execution with confidence.
         </Typography>
       </Box>
     </Box>

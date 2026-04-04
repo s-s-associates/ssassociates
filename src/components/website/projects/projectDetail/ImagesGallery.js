@@ -430,6 +430,7 @@ function Lightbox({ images, startIndex, onClose }) {
               component="img"
               src={url}
               alt={`Thumb ${i + 1}`}
+              loading="lazy"
               sx={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
             />
           </Box>
@@ -561,6 +562,7 @@ export default function ImagesGallery({ title, images = [] }) {
                       component="img"
                       src={url}
                       alt={`${title || "Project"} — photo ${index + 1}`}
+                      loading="lazy"
                       sx={{
                         width: "100%",
                         height: "100%",

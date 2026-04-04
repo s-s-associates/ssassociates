@@ -519,7 +519,7 @@ export default function TestimonialsPage() {
                 mb: 2,
               }}
             >
-              <Box component="img" src={imagePreview} alt="Client preview" sx={{ width: "100%", height: "100%", objectFit: "cover" }} />
+              <Box component="img" src={imagePreview} alt="Client preview" loading="lazy" sx={{ width: "100%", height: "100%", objectFit: "cover" }} />
               <IconButton
                 size="small"
                 onClick={clearSelectedImage}
@@ -596,7 +596,7 @@ export default function TestimonialsPage() {
         <DialogContent sx={{ pt: 2 }}>
           {viewingItem && (
             <Box>
-              {viewingItem.imageUrl ? <Box component="img" src={viewingItem.imageUrl} alt={viewingItem.clientName} sx={{ width: 80, height: 80, borderRadius: 2, objectFit: "cover", mb: 2, display: "block" }} /> : null}
+              {viewingItem.imageUrl ? <Box component="img" src={viewingItem.imageUrl} alt={viewingItem.clientName} loading="lazy" sx={{ width: 80, height: 80, borderRadius: 2, objectFit: "cover", mb: 2, display: "block" }} /> : null}
               <Typography sx={{ fontSize: 12, fontWeight: 600, color: "rgba(0,0,0,0.5)", textTransform: "uppercase", letterSpacing: "0.06em", mb: 0.5 }}>Client</Typography>
               <Typography sx={{ fontSize: 18, fontWeight: 700, color: "#000", mb: 1 }}>{viewingItem.clientName || "—"}</Typography>
               {viewingItem.role ? (

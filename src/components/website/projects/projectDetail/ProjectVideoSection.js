@@ -247,6 +247,7 @@ export default function ProjectVideoSection({ videoUrl, title }) {
                 component="img"
                 src={thumbnailUrl}
                 alt={`${title || "Project"} video thumbnail`}
+                loading="lazy"
                 sx={{
                   position: "absolute",
                   inset: 0,

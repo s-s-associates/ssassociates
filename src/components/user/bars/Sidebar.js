@@ -1,8 +1,8 @@
 "use client";
 
 import { FiChevronDown, FiLogOut } from "react-icons/fi";
-import { clearAuth } from "@/lib/auth-storage";
-import { Box } from "@mui/material";
+import { clearAuth, getAuth } from "@/lib/auth-storage";
+import { Avatar, Box, Menu, MenuItem } from "@mui/material";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -13,17 +13,29 @@ import { primaryColor, secondaryDark } from "@/components/utils/Colors";
 
 const COMPANY_NAME = process.env.NEXT_PUBLIC_COMPANY_NAME || "S&S Associates";
 
-const SIDEBAR_BG = "#1A1A1A";
 const MENU_ITEM_ACTIVE_BG = "#FFFFFF";
 const MENU_ITEM_ACTIVE_COLOR = "#15151D";
-const LOGOUT_BG = "rgba(255, 255, 255, 0.08)";
+const USER_CARD_BG = "rgba(255, 255, 255, 0.08)";
 
 function Sidebar() {
   const pathname = usePathname();
   const router = useRouter();
   const [projectPagesOpen, setProjectPagesOpen] = useState(false);
+  const [userMenuAnchor, setUserMenuAnchor] = useState(null);
+
+  const { user: authUser, email: authEmail } = getAuth();
+  const displayName =
+    authUser?.name?.trim() ||
+    (authUser?.firstName && authUser?.lastName
+      ? `${authUser.firstName} ${authUser.lastName}`.trim()
+      : null) ||
+    authUser?.email ||
+    authEmail ||
+    "User";
+  const displayEmail = authUser?.email || authEmail || "";
 
   const handleLogout = () => {
+    setUserMenuAnchor(null);
     Swal.fire({
       title: "Log Out?",
       text: "Are you sure you want to log out?",
@@ -245,37 +257,107 @@ function Sidebar() {
         })}
       </Box>
 
-      {/* Log Out */}
+      {/* User card */}
       <Box
         component="button"
         type="button"
-        onClick={handleLogout}
+        onClick={(e) => setUserMenuAnchor(e.currentTarget)}
         sx={{
           display: "flex",
           alignItems: "center",
           gap: 1.5,
           py: 1.25,
           px: 1.5,
-          borderRadius: "8px",
-          backgroundColor: LOGOUT_BG,
+          mt: 2,
+          borderRadius: "10px",
+          backgroundColor: USER_CARD_BG,
           border: "none",
           cursor: "pointer",
           color: "#fff",
-          fontWeight: 500,
-          fontSize: 15,
-          mt: 2,
-          width: "100%",
-          textAlign: "left",
           fontFamily: "inherit",
-          "&:hover": {
-            backgroundColor: "rgba(255, 255, 255, 0.12)",
-            color: "#fff",
-          },
+          textAlign: "left",
+          width: "100%",
+          "&:hover": { backgroundColor: "rgba(255, 255, 255, 0.12)" },
         }}
       >
-        <FiLogOut size={20} />
-        Log Out
+        <Avatar
+          sx={{
+            width: 34,
+            height: 34,
+            bgcolor: primaryColor,
+            fontSize: 14,
+            fontWeight: 700,
+            borderRadius: "8px",
+            flexShrink: 0,
+          }}
+        >
+          {displayName.charAt(0).toUpperCase()}
+        </Avatar>
+        <Box sx={{ flex: 1, minWidth: 0 }}>
+          <Box
+            sx={{
+              fontWeight: 600,
+              fontSize: 13,
+              color: "#fff",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
+              lineHeight: 1.4,
+            }}
+          >
+            {displayName}
+          </Box>
+          <Box
+            sx={{
+              fontSize: 11,
+              color: "rgba(255,255,255,0.5)",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
+              lineHeight: 1.4,
+            }}
+          >
+            {displayEmail}
+          </Box>
+        </Box>
+        <Box
+          component="span"
+          sx={{
+            display: "flex",
+            color: "rgba(255,255,255,0.5)",
+            flexShrink: 0,
+            transform: userMenuAnchor ? "rotate(180deg)" : "rotate(0deg)",
+            transition: "transform 0.2s ease",
+          }}
+        >
+          <FiChevronDown size={16} />
+        </Box>
       </Box>
+
+      <Menu
+        anchorEl={userMenuAnchor}
+        open={!!userMenuAnchor}
+        onClose={() => setUserMenuAnchor(null)}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+        transformOrigin={{ vertical: "bottom", horizontal: "left" }}
+        slotProps={{ paper: { sx: { minWidth: 160, borderRadius: 2, boxShadow: "0 8px 24px rgba(0,0,0,0.18)" } } }}
+      >
+        <MenuItem
+          onClick={handleLogout}
+          sx={{
+            gap: 1.5,
+            py: 1.25,
+            px: 2,
+            color: "#dc2626",
+            fontWeight: 600,
+            fontSize: 14,
+            "&:hover": { bgcolor: "rgba(220,38,38,0.06)" },
+          }}
+        >
+          <FiLogOut size={17} />
+          Log Out
+        </MenuItem>
+      </Menu>
     </Box>
   );
 }

@@ -25,7 +25,7 @@ function imageNeedsUnoptimized(src) {
 
 const SECTION_TITLE = "Our Services";
 const SECTION_DESCRIPTION =
-  "SS Associates: A trusted leader in office renovation and integrated design and build services, providing seamless.";
+  `${process.env.NEXT_PUBLIC_COMPANY_NAME}: A trusted leader in office renovation and integrated design and build services, providing seamless.`;
 
 
 function ServicesCards({ initialServices }) {

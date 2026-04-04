@@ -26,7 +26,7 @@ const steps = [
     step: "02",
     icon: GroupsRoundedIcon,
     title: "Coordinate delivery",
-    body: "One accountable path across trades, joinery, and site teams—fewer gaps, clearer decisions on the floor.",
+    body: "One accountable path across trades, joinery, and site teams fewer gaps, clearer decisions on the floor.",
   },
   {
     step: "03",
@@ -85,7 +85,7 @@ function ServicesEngagementGrid() {
                 color: secondaryColor,
               }}
             >
-              A steady rhythm from first conversation to move-in
+              A Steady Rhythm from First Conversation to Move-In
             </Typography>
           </Box>
           <Typography
@@ -97,7 +97,7 @@ function ServicesEngagementGrid() {
             }}
           >
             Whether you need a focused fit-out or a broader design-and-build programme, we keep stakeholders aligned and
-            documentation legible—so progress stays visible.
+            documentation legible so progress stays visible.
           </Typography>
         </Box>
 

@@ -118,7 +118,7 @@ function CoreValues() {
             mx: "auto",
           }}
         >
-          Our principles are not just words — they shape every decision we make
+          Our principles are not just words they shape every decision we make
           and every structure we create.
         </Typography>
       </Box>

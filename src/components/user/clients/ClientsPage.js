@@ -514,6 +514,7 @@ export default function ClientsPage() {
                           component="img"
                           src={row.imageUrl}
                           alt=""
+                          loading="lazy"
                           sx={{ width: 48, height: 48, borderRadius: 1, objectFit: "cover" }}
                         />
                       ) : (
@@ -604,6 +605,7 @@ export default function ClientsPage() {
                   component="img"
                   src={imagePreview}
                   alt="Preview"
+                  loading="lazy"
                   sx={{ width: 120, height: 120, borderRadius: 2, objectFit: "cover", display: "block" }}
                 />
                 <Button
@@ -704,6 +706,7 @@ export default function ClientsPage() {
                   component="img"
                   src={viewingClient.imageUrl}
                   alt={viewingClient.title}
+                  loading="lazy"
                   sx={{
                     width: "100%",
                     maxHeight: 280,

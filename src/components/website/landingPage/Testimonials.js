@@ -55,6 +55,7 @@ function ProfileAvatar({ url, name }) {
         alt={name || "Client"}
         height={50}
         width={50}
+        loading="lazy"
         unoptimized={u.startsWith("http://") || u.startsWith("https://")}
         style={{ objectFit: "cover", borderRadius: "50%" }}
       />
@@ -281,6 +282,7 @@ const Testimonials = ({ initialTestimonials = [] }) => {
                     alt="Quotation Mark"
                     height={50}
                     width={50}
+                    loading="lazy"
                   />
                   <Typography
                     maxHeight={150}

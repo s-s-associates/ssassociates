@@ -144,7 +144,7 @@ function GetInTouch() {
               mb: 3,
             }}
           >
-            We&apos;re here to answer your questions and discuss your project—whether you need a quote, a
+            We&apos;re here to answer your questions and discuss your project whether you need a quote, a
             site visit, or a quick call.
           </Typography>
           <Typography

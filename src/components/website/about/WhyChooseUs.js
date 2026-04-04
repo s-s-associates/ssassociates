@@ -161,7 +161,7 @@ function WhyChooseUs() {
               fontSize: 12,
             }}
           >
-            Why Choose S&amp;S Associates
+            Why Choose {process.env.NEXT_PUBLIC_COMPANY_NAME}
           </Box>
 
           <Box
@@ -176,7 +176,7 @@ function WhyChooseUs() {
               mb: 1.5,
             }}
           >
-            Building with precision, integrity, and care.
+            Building with Precision, Integrity, and Care.
           </Box>
 
           <Box

@@ -16,15 +16,30 @@ import {
 import { MdPeopleOutline } from "react-icons/md";
 
 const CARDS_CONFIG = [
-  { label: "Projects",            key: "projects",           icon: FiFolder,         color: primaryColor },
-  { label: "Categories",          key: "categories",         icon: FiLayers,         color: "#0EA5E9" },
-  { label: "Admins",              key: "admins",             icon: FiUsers,          color: "#10B981" },
-  { label: "Clients",             key: "clients",            icon: MdPeopleOutline,  color: "#F59E0B" },
-  { label: "Contact submissions", key: "contactSubmissions", icon: FiMail,           color: "#8B5CF6" },
-  { label: "Subscribers",         key: "subscribers",        icon: FiUserPlus,       color: "#EC4899" },
-  { label: "Services",            key: "services",           icon: FiGlobe,          color: "#06B6D4" },
-  { label: "Testimonials",        key: "testimonials",       icon: FiMessageCircle,  color: "#14B8A6" },
-  { label: "FAQs",                key: "faqs",               icon: FiHelpCircle,     color: "#6366F1" },
+  { label: "Projects", key: "projects", icon: FiFolder, color: primaryColor },
+  { label: "Categories", key: "categories", icon: FiLayers, color: "#0EA5E9" },
+  { label: "Admins", key: "admins", icon: FiUsers, color: "#10B981" },
+  { label: "Clients", key: "clients", icon: MdPeopleOutline, color: "#F59E0B" },
+  {
+    label: "Contact submissions",
+    key: "contactSubmissions",
+    icon: FiMail,
+    color: "#8B5CF6",
+  },
+  {
+    label: "Subscribers",
+    key: "subscribers",
+    icon: FiUserPlus,
+    color: "#EC4899",
+  },
+  { label: "Services", key: "services", icon: FiGlobe, color: "#06B6D4" },
+  {
+    label: "Testimonials",
+    key: "testimonials",
+    icon: FiMessageCircle,
+    color: "#14B8A6",
+  },
+  { label: "FAQs", key: "faqs", icon: FiHelpCircle, color: "#6366F1" },
 ];
 
 export default function KPICards({ counts }) {
@@ -32,7 +47,11 @@ export default function KPICards({ counts }) {
     <Box
       sx={{
         display: "grid",
-        gridTemplateColumns: { xs: "1fr", sm: "repeat(2, 1fr)", lg: "repeat(3, 1fr)" },
+        gridTemplateColumns: {
+          xs: "1fr",
+          sm: "repeat(2, 1fr)",
+          lg: "repeat(3, 1fr)",
+        },
         gap: 1.5,
         mb: 3,
       }}
@@ -43,8 +62,7 @@ export default function KPICards({ counts }) {
           sx={{
             borderRadius: 2.5,
             bgcolor: "#fff",
-            border: "1px solid rgba(0,0,0,0.06)",
-            borderLeft: `4px solid ${color}`,
+            border: `1px solid transparent`,
             p: 2.5,
             display: "flex",
             alignItems: "center",
@@ -55,6 +73,7 @@ export default function KPICards({ counts }) {
             cursor: "default",
             "&:hover": {
               transform: "translateY(-2px)",
+              border: `1px solid ${color}`,
               boxShadow: `0 8px 28px ${color}22, 0 2px 8px rgba(0,0,0,0.06)`,
             },
           }}

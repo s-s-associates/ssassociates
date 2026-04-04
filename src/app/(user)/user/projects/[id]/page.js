@@ -262,6 +262,7 @@ export default async function ProjectDetailsPage({ params }) {
               component="img"
               src={project.bannerUrl}
               alt={project.title}
+              loading="lazy"
               sx={{
                 width: "100%",
                 height: "100%",
@@ -356,6 +357,7 @@ export default async function ProjectDetailsPage({ params }) {
                         component="img"
                         src={url}
                         alt={`${project.title} ${index + 1}`}
+                        loading="lazy"
                         sx={{
                           width: "100%",
                           height: "100%",

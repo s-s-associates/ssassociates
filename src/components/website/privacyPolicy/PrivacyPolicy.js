@@ -443,7 +443,7 @@ function PrivacyPolicy() {
           >
             <ShieldOutlined sx={{ fontSize: 14, color: dark.gold }} />
             <Box component="span" sx={{ fontSize: 12, fontWeight: 600, color: dark.gold, letterSpacing: "0.08em", textTransform: "uppercase" }}>
-              S&amp;S Associates
+              {process.env.NEXT_PUBLIC_COMPANY_NAME}
             </Box>
           </Box>
 
@@ -478,7 +478,7 @@ function PrivacyPolicy() {
             component="p"
             sx={{ fontSize: 15, color: dark.textMuted, maxWidth: 520, mx: "auto", lineHeight: 1.75 }}
           >
-            We respect your privacy and are committed to protecting the information you share with S&amp;S Associates.
+            We respect your privacy and are committed to protecting the information you share with {process.env.NEXT_PUBLIC_COMPANY_NAME}.
           </Box>
 
           {/* Decorative line */}

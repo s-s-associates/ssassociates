@@ -29,7 +29,9 @@ export default function UserLayout({ children }) {
             overflow: "hidden",
           }}
         >
-          <Navbar />
+          <Box display={{ xs: "block", md: "none" }}>
+            <Navbar />
+          </Box>
           <Box component="main" sx={{ flex: 1, overflowY: "auto" }}>
             {children}
           </Box>

@@ -635,6 +635,7 @@ export default function ProjectPages() {
                   component="img"
                   src={viewingProject.bannerUrl}
                   alt={viewingProject.title}
+                  loading="lazy"
                   sx={{
                     width: "100%",
                     maxHeight: 280,
@@ -791,6 +792,7 @@ export default function ProjectPages() {
                         component="img"
                         src={url}
                         alt=""
+                        loading="lazy"
                         sx={{
                           width: "100%",
                           aspectRatio: 1,

@@ -146,7 +146,7 @@ export default function ProjectCard({ maxProjects, showCategoryFilter } = {}) {
                 },
               }}
             >
-              Inspirational interior fit-outs and specialist joinery
+              Inspirational Interior Fit-outs and Specialist Joinery
             </Typography>
             <Typography
               sx={{
@@ -311,6 +311,7 @@ export default function ProjectCard({ maxProjects, showCategoryFilter } = {}) {
                       sizes="(max-width: 600px) 100vw, (max-width: 960px) 50vw, 33vw"
                       priority={imagePriority}
                       fetchPriority={imagePriority ? "high" : "auto"}
+                      loading={imagePriority ? "eager" : "lazy"}
                       style={{ objectFit: "cover" }}
                     />
                   </Box>

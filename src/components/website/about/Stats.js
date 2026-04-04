@@ -242,7 +242,7 @@ function Stats() {
               mb: 1.5,
             }}
           >
-            Proven results you can measure.
+            Proven Results You Can Measure.
           </Typography>
           <Typography
             sx={{
@@ -252,7 +252,7 @@ function Stats() {
               color: textGrayDark,
             }}
           >
-            From first sketch to final inspection, our numbers reflect the trust clients place in S&amp;S Associates.
+            From first sketch to final inspection, our numbers reflect the trust clients place in {process.env.NEXT_PUBLIC_COMPANY_NAME}.
           </Typography>
         </Box>
 

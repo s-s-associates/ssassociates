@@ -6,14 +6,14 @@ import {
   Box,
   Drawer,
   IconButton,
-  ListItemText,
   Menu,
   MenuItem,
 } from "@mui/material";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import React, { useCallback, useEffect, useState } from "react";
-import { FiBell, FiChevronDown, FiLogOut, FiMenu } from "react-icons/fi";
+import React, { useEffect, useState } from "react";
+import { FiChevronDown, FiLogOut, FiMenu } from "react-icons/fi";
 import Swal from "sweetalert2";
 import { menuItems, projectPagesChildren } from "./sidebarMenuConfig";
 import { primaryColor } from "@/components/utils/Colors";
@@ -22,21 +22,20 @@ const DRAWER_WIDTH = 280;
 const SIDEBAR_BG = "#1A1A1A";
 const MENU_ITEM_ACTIVE_BG = "#FFFFFF";
 const MENU_ITEM_ACTIVE_COLOR = "#15151D";
-const LOGOUT_BG = "rgba(255, 255, 255, 0.08)";
+const USER_CARD_BG = "rgba(255, 255, 255, 0.08)";
 
 function Navbar() {
   const pathname = usePathname();
   const router = useRouter();
-  const [menuAnchor, setMenuAnchor] = useState(null);
-  const [me, setMe] = useState(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [projectPagesOpen, setProjectPagesOpen] = useState(false);
+  const [userMenuAnchor, setUserMenuAnchor] = useState(null);
 
   useEffect(() => {
     if (projectPagesChildren.some((c) => pathname === c.href)) setProjectPagesOpen(true);
   }, [pathname]);
 
-  const { user: authUser, email: authEmail, token } = getAuth();
+  const { user: authUser, email: authEmail } = getAuth();
   const displayName =
     authUser?.name?.trim() ||
     (authUser?.firstName && authUser?.lastName
@@ -46,20 +45,6 @@ function Navbar() {
     authEmail ||
     "User";
   const displayEmail = authUser?.email || authEmail || "";
-
-  const fetchMe = useCallback(() => {
-    if (!token) return;
-    fetch("/api/auth/me", { headers: { Authorization: `Bearer ${token}` } })
-      .then((r) => r.json())
-      .then((data) => data.success && setMe(data))
-      .catch(() => {});
-  }, [token]);
-
-  const openMenu = (e) => {
-    setMenuAnchor(e.currentTarget);
-    fetchMe();
-  };
-  const closeMenu = () => setMenuAnchor(null);
 
   const closeDrawer = () => setDrawerOpen(false);
 
@@ -104,7 +89,7 @@ function Navbar() {
         borderBottom: "1px solid rgba(0, 0, 0, 0.08)",
       }}
     >
-      {/* Left: Mobile menu */}
+      {/* Mobile menu button */}
       <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, flex: 1, minWidth: 0 }}>
         <IconButton
           aria-label="Open menu"
@@ -118,127 +103,6 @@ function Navbar() {
           <FiMenu size={24} />
         </IconButton>
       </Box>
-
-      {/* Right: Notifications + Profile */}
-      <Box sx={{ display: "flex", alignItems: "center", gap: { xs: 0.5, sm: 1.5 }, flexShrink: 0 }}>
-        {/* <IconButton
-          size="medium"
-          aria-label="Notifications"
-          sx={{
-            color: "#000",
-            position: "relative",
-            "&:hover": { backgroundColor: "rgba(0, 0, 0, 0.04)" },
-          }}
-        >
-          <FiBell size={22} />
-          <Box
-            sx={{
-              position: "absolute",
-              top: 6,
-              right: 6,
-              minWidth: 18,
-              height: 18,
-              borderRadius: "50%",
-              bgcolor: "#dc2626",
-              color: "#fff",
-              fontSize: 11,
-              fontWeight: 700,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              px: 0.5,
-            }}
-          >
-            2
-          </Box>
-        </IconButton> */}
-
-        <Box
-          onClick={openMenu}
-          role="button"
-          tabIndex={0}
-          onKeyDown={(e) => e.key === "Enter" && openMenu(e)}
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            gap: 1.5,
-            pl: { xs: 0.5, sm: 1 },
-            cursor: "pointer",
-            borderRadius: 2,
-            py: 0.75,
-            px: 1,
-            "&:hover": { backgroundColor: "rgba(0, 0, 0, 0.04)" },
-          }}
-        >
-          <Avatar
-            src="/images/avatar-placeholder.png"
-            alt={displayName}
-            sx={{
-              width: { xs: 36, sm: 40 },
-              height: { xs: 36, sm: 40 },
-              borderRadius: "10px",
-              bgcolor: "#e0e0e0",
-              fontSize: 16,
-            }}
-          >
-            {displayName.charAt(0).toUpperCase()}
-          </Avatar>
-          <Box sx={{ minWidth: 0, maxWidth: 180, display: { xs: "none", sm: "block" } }}>
-            <Box
-              sx={{
-                fontWeight: 700,
-                fontSize: 15,
-                color: "#000",
-                lineHeight: 1.3,
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-                whiteSpace: "nowrap",
-              }}
-            >
-              {displayName}
-            </Box>
-            <Box
-              sx={{
-                fontSize: 13,
-                color: "rgba(21, 21, 29, 0.65)",
-                lineHeight: 1.3,
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-                whiteSpace: "nowrap",
-              }}
-            >
-              {displayEmail}
-            </Box>
-          </Box>
-          <FiChevronDown size={20} sx={{ color: "#000", flexShrink: 0, display: { xs: "none", sm: "block" } }} />
-        </Box>
-      </Box>
-
-      <Menu
-        anchorEl={menuAnchor}
-        open={!!menuAnchor}
-        onClose={closeMenu}
-        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-        transformOrigin={{ vertical: "top", horizontal: "right" }}
-        PaperProps={{
-          sx: {
-            minWidth: 280,
-            mt: 1.5,
-            borderRadius: 2,
-            boxShadow: "0 4px 20px rgba(0,0,0,0.1)",
-          },
-        }}
-        slotProps={{ list: { dense: true, disablePadding: false } }}
-      >
-        <MenuItem disabled sx={{ py: 1.25, cursor: "default", color: "#000" }}>
-          <ListItemText
-            primary={displayName}
-            secondary={displayEmail}
-            primaryTypographyProps={{ fontWeight: 700, fontSize: 15, color: "#000" }}
-            secondaryTypographyProps={{ fontSize: 13, color: "#000" }}
-          />
-        </MenuItem>
-      </Menu>
 
       {/* Mobile sidebar drawer */}
       <Drawer
@@ -272,17 +136,28 @@ function Navbar() {
             href="/user/dashboard"
             onClick={closeDrawer}
             sx={{
-              fontFamily: "var(--font-inter), Inter, sans-serif",
-              fontWeight: 700,
-              fontSize: 18,
-              letterSpacing: "0.08em",
-              color: "#fff",
+              display: "flex",
+              alignItems: "center",
+              gap: 1.5,
               textDecoration: "none",
               mb: 4,
               px: 1.5,
             }}
           >
-            {process.env.NEXT_PUBLIC_COMPANY_NAME}
+            <Image
+              src="/logo.png"
+              alt={process.env.NEXT_PUBLIC_COMPANY_NAME}
+              width={36}
+              height={36}
+              style={{ objectFit: "contain", width: 36, height: 36, flexShrink: 0 }}
+              priority
+            />
+            <Box
+              component="span"
+              sx={{ fontWeight: 700, fontSize: 16, letterSpacing: "0.03em", color: "#fff", lineHeight: 1.2 }}
+            >
+              {process.env.NEXT_PUBLIC_COMPANY_NAME}
+            </Box>
           </Box>
           <Box
             sx={{
@@ -420,39 +295,83 @@ function Navbar() {
               );
             })}
           </Box>
+
+          {/* User card */}
           <Box
             component="button"
             type="button"
-            onClick={handleLogout}
+            onClick={(e) => setUserMenuAnchor(e.currentTarget)}
             sx={{
               display: "flex",
               alignItems: "center",
               gap: 1.5,
               py: 1.25,
               px: 1.5,
-              borderRadius: "8px",
-              backgroundColor: LOGOUT_BG,
+              mt: 2,
+              borderRadius: "10px",
+              backgroundColor: USER_CARD_BG,
               border: "none",
               cursor: "pointer",
               color: "#fff",
-              fontWeight: 500,
-              fontSize: 15,
-              mt: 2,
-              width: "100%",
-              textAlign: "left",
               fontFamily: "inherit",
-              "&:hover": {
-                backgroundColor: "rgba(255, 255, 255, 0.12)",
-                color: "#fff",
-              },
+              textAlign: "left",
+              width: "100%",
+              "&:hover": { backgroundColor: "rgba(255, 255, 255, 0.12)" },
             }}
           >
-            <FiLogOut size={20} />
-            Log Out
+            <Avatar
+              sx={{
+                width: 34,
+                height: 34,
+                bgcolor: primaryColor,
+                fontSize: 14,
+                fontWeight: 700,
+                borderRadius: "8px",
+                flexShrink: 0,
+              }}
+            >
+              {displayName.charAt(0).toUpperCase()}
+            </Avatar>
+            <Box sx={{ flex: 1, minWidth: 0 }}>
+              <Box sx={{ fontWeight: 600, fontSize: 13, color: "#fff", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", lineHeight: 1.4 }}>
+                {displayName}
+              </Box>
+              <Box sx={{ fontSize: 11, color: "rgba(255,255,255,0.5)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", lineHeight: 1.4 }}>
+                {displayEmail}
+              </Box>
+            </Box>
+            <Box
+              component="span"
+              sx={{
+                display: "flex",
+                color: "rgba(255,255,255,0.5)",
+                flexShrink: 0,
+                transform: userMenuAnchor ? "rotate(180deg)" : "rotate(0deg)",
+                transition: "transform 0.2s ease",
+              }}
+            >
+              <FiChevronDown size={16} />
+            </Box>
           </Box>
+
+          <Menu
+            anchorEl={userMenuAnchor}
+            open={!!userMenuAnchor}
+            onClose={() => setUserMenuAnchor(null)}
+            anchorOrigin={{ vertical: "top", horizontal: "right" }}
+            transformOrigin={{ vertical: "bottom", horizontal: "left" }}
+            slotProps={{ paper: { sx: { minWidth: 160, borderRadius: 2, boxShadow: "0 8px 24px rgba(0,0,0,0.18)" } } }}
+          >
+            <MenuItem
+              onClick={() => { setUserMenuAnchor(null); handleLogout(); }}
+              sx={{ gap: 1.5, py: 1.25, px: 2, color: "#dc2626", fontWeight: 600, fontSize: 14, "&:hover": { bgcolor: "rgba(220,38,38,0.06)" } }}
+            >
+              <FiLogOut size={17} />
+              Log Out
+            </MenuItem>
+          </Menu>
         </Box>
       </Drawer>
-
     </Box>
   );
 }

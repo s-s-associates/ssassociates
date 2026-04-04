@@ -106,7 +106,7 @@ function Banner() {
             maxWidth: 800
           }}
         >
-          Projects that shape spaces and standards.
+          Projects that Shape Spaces and Standards.
         </Typography>
 
         {/* Description */}
@@ -122,7 +122,7 @@ function Banner() {
         >
           Explore a selection of our commercial fit-outs, design-and-build
           delivery, and engineering-led projects across Belfast, Dublin, and
-          beyond—each delivered with precision, safety, and long-term value in
+          beyond each delivered with precision, safety, and long-term value in
           mind.
         </Typography>
       </Box>

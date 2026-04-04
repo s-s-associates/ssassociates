@@ -79,7 +79,7 @@ function ServicesPageCTA() {
               mb: 2,
             }}
           >
-            Tell us what you&apos;re planning next
+            Tell Us What You&apos;re Planning Next
           </Typography>
           <Typography
             sx={{
@@ -91,7 +91,7 @@ function ServicesPageCTA() {
               mb: 3.5,
             }}
           >
-            Share timelines, headcount, and any constraints—we&apos;ll suggest a sensible route through surveys, design,
+            Share timelines, headcount, and any constraints we&apos;ll suggest a sensible route through surveys, design,
             and delivery that matches your risk profile.
           </Typography>
           <Button
@@ -116,7 +116,7 @@ function ServicesPageCTA() {
               },
             }}
           >
-            Start the discussion
+            Start discussion
           </Button>
         </Box>
       </Container>

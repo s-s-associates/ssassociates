@@ -130,8 +130,8 @@ function Banner() {
             maxWidth: 800,
           }}
         >
-          From workplace planning and bespoke joinery to full design-and-build
-          delivery—we help you scope, refine, and execute spaces that work for
+          From workplace planning and bespoke joinery to full design and build
+          delivery we help you scope, refine, and execute spaces that work for
           your teams today and scale with you tomorrow.
         </Typography>
       </Box>

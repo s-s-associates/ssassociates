@@ -458,7 +458,7 @@ function TermsConditions() {
           >
             <VerifiedOutlined sx={{ fontSize: 14, color: dark.gold }} />
             <Box component="span" sx={{ fontSize: 12, fontWeight: 600, color: dark.gold, letterSpacing: "0.08em", textTransform: "uppercase" }}>
-              S&amp;S Associates
+              {process.env.NEXT_PUBLIC_COMPANY_NAME}
             </Box>
           </Box>
 
@@ -493,7 +493,7 @@ function TermsConditions() {
             component="p"
             sx={{ fontSize: 15, color: dark.textMuted, maxWidth: 540, mx: "auto", lineHeight: 1.75 }}
           >
-            These terms outline how we work with you on your construction and renovation projects at S&amp;S Associates.
+            These terms outline how we work with you on your construction and renovation projects at {process.env.NEXT_PUBLIC_COMPANY_NAME}.
           </Box>
 
           {/* Decorative divider */}

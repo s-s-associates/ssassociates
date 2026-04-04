@@ -23,7 +23,14 @@
     <loc>https://www.ss-associates.pk/</loc>
     <lastmod>2026-03-29</lastmod>
     <changefreq>daily</changefreq>
-    <priority>1.0</priority>
+    <priority>1</priority>
+  </url>
+
+  <url>
+    <loc>https://www.ss-associates.pk/logo.png</loc>
+    <lastmod>2026-03-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1</priority>
   </url>
 
   <url>
@@ -67,6 +74,8 @@
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
+
+
 
   <!--
     Dynamic entries (/services/{id}, /projects/{id}) are omitted here.

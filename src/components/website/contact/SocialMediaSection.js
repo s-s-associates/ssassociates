@@ -136,7 +136,7 @@ function SocialMediaSection() {
             mb: { xs: 4, md: 5.5 },
           }}
         >
-          Stay connected with S&amp;S Associates across our social channels
+          Stay connected with {process.env.NEXT_PUBLIC_COMPANY_NAME} across our social channels
         </Typography>
 
         <Box

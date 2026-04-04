@@ -102,22 +102,22 @@ function Footer() {
       {/* Main content - 4 columns */}
       <Box
         sx={{
-          maxWidth: 1200,
+          maxWidth: 1300,
           margin: "0 auto",
           px: { xs: 2, sm: 3, md: 4 },
           display: "grid",
           gridTemplateColumns: {
             xs: "1fr",
             sm: "repeat(2, minmax(0, 1fr))",
-            lg: "repeat(4, minmax(0, 1fr))",
+            md: "repeat(4, minmax(0, 1fr))",
           },
-          columnGap: { xs: 4, md: 4 },
+          columnGap: { xs: 3, sm: 4, md: 5, lg: 2 },
           rowGap: { xs: 4, md: 3 },
           pb: 4,
         }}
       >
         {/* Column 1: Company info + logo + social */}
-        <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+        <Box    sx={{ display: "flex", flexDirection: "column", gap: 2 }} minWidth={["auto", "auto", "auto", "350px"]}>
           <Box
             sx={{
               display: "flex",
@@ -149,7 +149,7 @@ function Footer() {
             <Box sx={{ display: "flex", flexDirection: "column", gap: 0.25 }}>
               <Box
                 component={Link}
-                href="/"
+                href="/user/dashboard"
                 sx={{
                   ...underlineFromLeft,
                   fontFamily: "var(--font-app)",
@@ -186,7 +186,7 @@ function Footer() {
               fontSize: 14,
               lineHeight: 1.6,
               color: textGrayLight,
-              maxWidth: 320,
+              maxWidth: 360,
             }}
           >
             We are a leading construction company committed to delivering
@@ -196,7 +196,7 @@ function Footer() {
           <Box sx={{ display: "flex", gap: 1.5, alignItems: "center" }}>
             {socialLinks.map(({ Icon, href, label }, idx) => (
               <Tooltip key={idx} title={label} arrow placement="top">
-                <Box
+                <Box 
                   component="a"
                   href={href}
                   target="_blank"
@@ -228,7 +228,7 @@ function Footer() {
         </Box>
 
         {/* Column 2: Quick Links */}
-        <Box>
+        <Box  ml={["auto", "auto", "auto", 12]}>
           <Box
             sx={{
               fontFamily: "var(--font-app)",
@@ -283,7 +283,7 @@ function Footer() {
         </Box>
 
         {/* Column 3: Our Services */}
-        <Box>
+        <Box  >
           <Box
             sx={{
               fontFamily: "var(--font-app)",
@@ -309,7 +309,7 @@ function Footer() {
                     }}
                   />
                 ))
-              : services.map((service) => (
+              : services.slice(0, 6).map((service) => (
                   <Box
                     key={service._id}
                     sx={{
@@ -351,7 +351,7 @@ function Footer() {
         </Box>
 
         {/* Column 4: Contact Us */}
-        <Box>
+        <Box  >
           <Box
             sx={{
               fontFamily: "var(--font-app)",

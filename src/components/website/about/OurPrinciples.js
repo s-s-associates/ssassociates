@@ -45,7 +45,7 @@ const principleCards = [
     label: "Our Values",
     title: "Built on trust, safety, and respect.",
     description:
-      "Every decision we make is guided by safety, accountability, and respect—for our clients, our teams, and the communities we build in.",
+      "Every decision we make is guided by safety, accountability, and respect for our clients, our teams, and the communities we build in.",
   },
 ];
 
@@ -156,7 +156,7 @@ function OurPrinciples() {
               mb: 1,
             }}
           >
-            The foundation behind every project.
+            The Foundation Behind Every Project.
           </Box>
           <Box
             component="p"
@@ -171,7 +171,7 @@ function OurPrinciples() {
               mx: "auto",
             }}
           >
-            Our core principles guide how we plan, communicate, and build—so you
+            Our core principles guide how we plan, communicate, and build so you
             experience a smooth process and a dependable result.
           </Box>
         </Box>

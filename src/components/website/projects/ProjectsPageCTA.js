@@ -66,9 +66,9 @@ function ProjectsPageCTA() {
               textTransform: "uppercase",
               color: primaryLight,
               mb: 2,
-            }}
+            }}  
           >
-            Next step
+            Next Step
           </Typography>
           <Typography
             component="h2"
@@ -82,7 +82,7 @@ function ProjectsPageCTA() {
               mb: 2,
             }}
           >
-            Planning a fit-out or specialist build?
+            Planning a Fit-out or Specialist Build?
           </Typography>
           <Typography
             sx={{
@@ -94,7 +94,7 @@ function ProjectsPageCTA() {
               mb: 3.5,
             }}
           >
-            Share your brief and timeline—we&apos;ll help you shape scope, programme, and the right level of detail before
+            Share your brief and timeline we&apos;ll help you shape scope, programme, and the right level of detail before
             work begins on site.
           </Typography>
           <Button
@@ -119,7 +119,7 @@ function ProjectsPageCTA() {
               },
             }}
           >
-            Talk to our team
+            Talk to Our Team
           </Button>
         </Box>
       </Container>

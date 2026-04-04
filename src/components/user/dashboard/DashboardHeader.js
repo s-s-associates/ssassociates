@@ -18,7 +18,7 @@ export default function DashboardHeader({ displayName }) {
           lineHeight: 1.2,
         }}
       >
-        Welcome back,{" "}
+        Welcome,{" "}
         <Box
           component="span"
           sx={{
@@ -31,7 +31,9 @@ export default function DashboardHeader({ displayName }) {
           {displayName}
         </Box>
       </Typography>
-      <Typography sx={{ color: "rgba(15,23,42,0.5)", fontSize: 14, fontWeight: 500 }}>
+      <Typography
+        sx={{ color: "rgba(15,23,42,0.5)", fontSize: 14, fontWeight: 500 }}
+      >
         Here's what's happening across your workspace.
       </Typography>
     </Box>

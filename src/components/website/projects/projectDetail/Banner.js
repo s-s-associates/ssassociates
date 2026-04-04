@@ -4,7 +4,10 @@ import { FiHome } from "react-icons/fi";
 import { FiCalendar, FiMapPin } from "react-icons/fi";
 import { getStatusColor } from "./projectDetailHelpers";
 import { primaryBg, primaryColor } from "@/components/utils/Colors";
-import { bannerHeadingSize, bannerSubHeadingSize } from "@/components/utils/Sizes";
+import {
+  bannerHeadingSize,
+  bannerSubHeadingSize,
+} from "@/components/utils/Sizes";
 
 /** Top padding so breadcrumbs sit below the fixed navbar (see Navbar ~minHeight 56 + py). */
 const NAV_OFFSET = { xs: 9, sm: 10 };
@@ -33,7 +36,7 @@ export default function Banner({ project }) {
       sx={{
         position: "relative",
         width: "100%",
-        minHeight: "80vh" ,
+        minHeight: "80vh",
         maxHeight: "80vh",
         overflow: "hidden",
         mt: 0,
@@ -44,11 +47,12 @@ export default function Banner({ project }) {
           component="img"
           src={bgUrl}
           alt={project.title || "Project"}
+          loading="eager"
           sx={{
             width: "100%",
             height: "100%",
             objectFit: "cover",
-            objectPosition: "center",
+            objectPosition: "top",
             transition: "transform 0.7s ease",
             "&:hover": { transform: "scale(1.03)" },
           }}
@@ -62,7 +66,7 @@ export default function Banner({ project }) {
           pointerEvents: "none",
           zIndex: 1,
           background:
-          "linear-gradient(135deg, rgba(8,12,20,0.82) 0%, rgba(8,12,20,0.55) 60%, rgba(8, 12, 20, 0.55) 100%)",
+            "linear-gradient(135deg, rgba(8,12,20,0.82) 0%, rgba(8,12,20,0.55) 60%, rgba(8, 12, 20, 0.55) 100%)",
         }}
       />
 
@@ -73,9 +77,9 @@ export default function Banner({ project }) {
           pointerEvents: "none",
           zIndex: 1,
           background:
-          "linear-gradient(to top, rgba(0,0,0,0.78) 0%, rgba(0,0,0,0.42) 46%, rgba(0,0,0,0.18) 72%, transparent 100%)",
+            "linear-gradient(to top, rgba(0,0,0,0.78) 0%, rgba(0,0,0,0.42) 46%, rgba(0,0,0,0.18) 72%, transparent 100%)",
         }}
-        />
+      />
 
       <Box
         sx={{
@@ -103,7 +107,9 @@ export default function Banner({ project }) {
             aria-label="breadcrumb"
             sx={{
               color: "rgba(255,255,255,0.82)",
-              "& .MuiBreadcrumbs-separator": { color: "rgba(255,255,255,0.45)" },
+              "& .MuiBreadcrumbs-separator": {
+                color: "rgba(255,255,255,0.45)",
+              },
               maxWidth: "100%",
             }}
           >
@@ -122,7 +128,15 @@ export default function Banner({ project }) {
               <FiHome size={14} />
               Home
             </Link>
-            <Link href="/projects" style={{ color: "inherit", textDecoration: "none", fontSize: 13, fontWeight: 600 }}>
+            <Link
+              href="/projects"
+              style={{
+                color: "inherit",
+                textDecoration: "none",
+                fontSize: 13,
+                fontWeight: 600,
+              }}
+            >
               Projects
             </Link>
             <Typography
@@ -145,9 +159,20 @@ export default function Banner({ project }) {
           </Breadcrumbs>
         </Stack>
 
-        <Box sx={{ flex: 1, display: "flex", alignItems: "flex-end", pb: { xs: 5, md: 7 } }}>
+        <Box
+          sx={{
+            flex: 1,
+            display: "flex",
+            alignItems: "flex-end",
+            pb: { xs: 5, md: 7 },
+          }}
+        >
           <Box sx={{ color: "#fff" }}>
-            <Stack direction="row" spacing={1} sx={{ mb: 2, flexWrap: "wrap", gap: 1 }}>
+            <Stack
+              direction="row"
+              spacing={1}
+              sx={{ mb: 2, flexWrap: "wrap", gap: 1 }}
+            >
               <Chip
                 label={project.category || "Uncategorized"}
                 size="small"
@@ -197,14 +222,26 @@ export default function Banner({ project }) {
                 {subtitle}
               </Typography>
             ) : null}
-            <Stack direction="row" spacing={2.8} sx={{ mt: 2.5, flexWrap: "wrap", gap: 1.5 }}>
+            <Stack
+              direction="row"
+              spacing={2.8}
+              sx={{ mt: 2.5, flexWrap: "wrap", gap: 1.5 }}
+            >
               <Stack direction="row" spacing={0.8} alignItems="center">
                 <FiMapPin size={14} color="#fb8a1e" />
-                <Typography sx={{ fontSize: 17, color: "rgba(255,255,255,0.82)" }}>{locationText}</Typography>
+                <Typography
+                  sx={{ fontSize: 17, color: "rgba(255,255,255,0.82)" }}
+                >
+                  {locationText}
+                </Typography>
               </Stack>
               <Stack direction="row" spacing={0.8} alignItems="center">
                 <FiCalendar size={14} color="#fb8a1e" />
-                <Typography sx={{ fontSize: 17, color: "rgba(255,255,255,0.82)" }}>{yearText}</Typography>
+                <Typography
+                  sx={{ fontSize: 17, color: "rgba(255,255,255,0.82)" }}
+                >
+                  {yearText}
+                </Typography>
               </Stack>
             </Stack>
           </Box>

@@ -29,7 +29,7 @@ const items = [
   {
     icon: HandshakeRoundedIcon,
     title: "Partnership mindset",
-    body: "We align with your stakeholders—clear communication, proactive problem-solving, and accountability at every stage.",
+    body: "We align with your stakeholders clear communication, proactive problem-solving, and accountability at every stage.",
   },
 ];
 
@@ -70,7 +70,7 @@ function ProjectsExpertiseGrid() {
                 mb: 1.5,
               }}
             >
-              Our approach
+              Our Approach
             </Typography>
             <Typography
               component="h2"
@@ -82,7 +82,7 @@ function ProjectsExpertiseGrid() {
                 color: secondaryColor,
               }}
             >
-              What you&apos;ll see across every project file
+              What You&apos;ll See Across Every Project File
             </Typography>
           </Box>
           <Typography
@@ -93,7 +93,7 @@ function ProjectsExpertiseGrid() {
               maxWidth: 420,
             }}
           >
-            From concept imagery to practical completion, we combine craft, compliance, and commercial sense—so the result
+            From concept imagery to practical completion, we combine craft, compliance, and commercial sense so the result
             feels considered, not rushed.
           </Typography>
         </Box>

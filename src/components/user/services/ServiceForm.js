@@ -385,6 +385,7 @@ export default function ServiceForm({ serviceId = null, initialData = null, isEd
                     component="img"
                     src={displayPreviewUrl}
                     alt="Preview"
+                    loading="lazy"
                     sx={{
                       display: "block",
                       width: "100%",

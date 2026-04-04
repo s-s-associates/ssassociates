@@ -88,7 +88,7 @@ function Banner() {
             mb: 2,
           }}
         >
-          About S&S Associates
+          About {process.env.NEXT_PUBLIC_COMPANY_NAME}
         </Typography>
 
         {/* Heading */}
@@ -120,7 +120,7 @@ function Banner() {
             maxWidth: 800,
           }}
         >
-          For over a decade, S&S Associates has been delivering high-performance
+          For over a decade, {process.env.NEXT_PUBLIC_COMPANY_NAME} has been delivering high-performance
           construction and engineering projects across the region. We combine
           deep technical expertise with a genuine commitment to quality,
           sustainability, and client satisfaction.

@@ -103,6 +103,7 @@ function ClientCard({ client, onHoverChange }) {
                 sizes="(max-width: 600px) 220px, 260px"
                 width={120}
                 height={120}
+                loading="lazy"
                 style={{
                   objectFit: "contain",
                   width: "100%",
@@ -475,7 +476,7 @@ function OurClients() {
               mb: 1.5,
             }}
           >
-            Our partners
+            Our Partners
           </Typography>
           <Box
             sx={{
@@ -499,7 +500,7 @@ function OurClients() {
               mb: 2,
             }}
           >
-            Trusted by industry leaders
+            Trusted by Industry Leaders
           </Box>
           <Typography
             component="p"
@@ -513,7 +514,7 @@ function OurClients() {
               mx: "auto",
             }}
           >
-            A curated network of clients who rely on us for quality, clarity, and delivery—project after project.
+            A curated network of clients who rely on us for quality, clarity, and delivery project after project.
           </Typography>
         </Box>
       </Box>

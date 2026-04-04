@@ -345,7 +345,7 @@ function HomeBanner() {
           flexDirection: "column",
           alignItems: "flex-end",
           textAlign: "right",
-          maxWidth: { xs: "100%", sm: 400 },
+          maxWidth: { xs: "100%", sm: 420 },
           opacity: 0,
           transform: "translateX(80px)",
           animation: "statsSlideIn 1s ease-out 0.3s forwards",
@@ -375,9 +375,7 @@ function HomeBanner() {
             margin: 0,
           }}
         >
-          WE ARE THE BEST IN
-          <br />
-          OUR FIELDS
+          BUILDING FINEST SPACES
         </Typography>
 
         <Typography
@@ -394,8 +392,8 @@ function HomeBanner() {
             maxWidth: 400,
           }}
         >
-          High-performance buildings that respect the planet. We specialize in
-          sustainable materials and energy-efficient.
+          Premium fit-outs, grey structures, and specialist joinery
+          crafted with precision for every project.
         </Typography>
 
         <Box sx={{ display: "flex", alignItems: "center", gap: { xs: 1.5, sm: 2 } }}>
