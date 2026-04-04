@@ -1,6 +1,7 @@
 import Footer from "@/components/website/bars/Footer";
 import Navbar from "@/components/website/bars/Navbar";
 import { WebsiteNavigationLoaderProvider } from "@/components/website/bars/WebsiteNavigationLoaderProvider";
+import FloatingButtons from "@/components/website/WhatsAppButton";
 import {
   getDefaultOgImagePath,
   getSearchVerificationMetadata,
@@ -101,6 +102,7 @@ export default function WebsiteLayout({ children }) {
       <Navbar />
       {children}
       <Footer />
+      <FloatingButtons />
     </WebsiteNavigationLoaderProvider>
   );
 }
