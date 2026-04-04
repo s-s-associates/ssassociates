@@ -4,7 +4,10 @@ import { primaryColor, whiteColor } from "@/components/utils/Colors";
 import { mainHeadingSize, mainSubHeadingSize } from "@/components/utils/Sizes";
 import { Box, Typography } from "@mui/material";
 import { motion } from "framer-motion";
+import Image from "next/image";
 import React from "react";
+
+const BANNER_SRC = "/images/services/services-banner.jpg";
 
 function Banner() {
   return (
@@ -21,18 +24,25 @@ function Banner() {
         justifyContent: "center",
       }}
     >
-      {/* Background image — CSS sizing matches original (cover + center) */}
+      {/* LCP: priority + fetchPriority so the hero paints without waiting on lazy images below */}
       <Box
         sx={{
           position: "absolute",
           inset: 0,
           zIndex: 0,
-          backgroundImage: "url(/images/services/services-banner.jpg)",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          backgroundRepeat: "no-repeat",
         }}
-      />
+      >
+        <Image
+          src={BANNER_SRC}
+          alt=""
+          fill
+          priority
+          fetchPriority="high"
+          sizes="100vw"
+          quality={85}
+          style={{ objectFit: "cover", objectPosition: "center" }}
+        />
+      </Box>
 
       {/* Dark gradient overlay */}
       <Box

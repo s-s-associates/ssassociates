@@ -4,11 +4,24 @@ import React, { useRef, useState, useCallback, useEffect } from "react";
 import { Box, Typography, IconButton, useTheme, useMediaQuery, Skeleton, Stack } from "@mui/material";
 import ChevronLeftRoundedIcon from "@mui/icons-material/ChevronLeftRounded";
 import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
+import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { whiteColor, primaryColor } from "@/components/utils/Colors";
 
 const GAP = 2;
+const FALLBACK_IMAGE = "/images/projects/thumbnail-min.webp";
+
+const ALLOWED_IMAGE_HOSTS = new Set(["res.cloudinary.com", "images.unsplash.com"]);
+
+function imageNeedsUnoptimized(src) {
+  if (!src || !src.startsWith("http")) return false;
+  try {
+    return !ALLOWED_IMAGE_HOSTS.has(new URL(src).hostname);
+  } catch {
+    return true;
+  }
+}
 
 const SECTION_TITLE = "Our Services";
 const SECTION_DESCRIPTION =
@@ -285,6 +298,7 @@ function ServiceCard({ service, cardWidth, priority = false }) {
   const [hovered, setHovered] = useState(false);
   const width = typeof cardWidth === "number" && cardWidth > 0 ? cardWidth : 280;
   const imageSrc = service.imageUrl?.trim() || FALLBACK_IMAGE;
+  const unoptimized = imageNeedsUnoptimized(imageSrc);
 
   return (
     <Box
@@ -307,16 +321,17 @@ function ServiceCard({ service, cardWidth, priority = false }) {
           inset: 0,
         }}
       >
-        <Box
-          component="img"
+        <Image
           src={imageSrc}
           alt={service.title || "Service"}
-          sx={{
-            width: "100%",
-            height: "100%",
-            objectFit: "cover",
-            display: "block",
-          }}
+          fill
+          sizes="(max-width: 600px) 92vw, (max-width: 900px) 46vw, (max-width: 1200px) 31vw, 24vw"
+          priority={priority}
+          fetchPriority={priority ? "high" : "auto"}
+          loading={priority ? "eager" : "lazy"}
+          decoding="async"
+          unoptimized={unoptimized}
+          style={{ objectFit: "cover" }}
         />
         <Box
           sx={{
