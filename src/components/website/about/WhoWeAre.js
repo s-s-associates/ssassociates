@@ -25,7 +25,7 @@ const FACE_BOTTOM_URL =
   "/images/about/whoweare-4.jpg";
 
 const highlights = [
-  { label: "25+", sub: "Years experience" },
+  { label: `${process.env.NEXT_PUBLIC_COMPANY_EXPERIENCE}+`, sub: "Years experience" },
   { label: "2001", sub: "Founded" },
   { label: "360°", sub: "Delivery focus" },
 ];
@@ -172,7 +172,7 @@ export default function WhoWeAre() {
                       mb: 2.5,
                     }}
                   >
-                    S&amp;S Associates is a premier construction company with over 25 years of experience in delivering
+                    S&amp;S Associates is a premier construction company with over {process.env.NEXT_PUBLIC_COMPANY_EXPERIENCE} years of experience in delivering
                     exceptional building solutions. Founded in 2001, we have grown from a small local contractor to one
                     of the most trusted names in the construction industry.
                   </Typography>

@@ -227,7 +227,7 @@ function WhyChooseUs() {
                   mb: 0.5,
                 }}
               >
-                <AnimatedNumber value={15} suffix="+ years" />
+                <AnimatedNumber value={Number(process.env.NEXT_PUBLIC_COMPANY_EXPERIENCE)} suffix="+ years" />
               </Box>
               <Box
                 component="div"

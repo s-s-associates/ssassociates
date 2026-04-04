@@ -1,108 +1,27 @@
-// "use client";
-
-// import { primaryColor, secondaryColor, whiteColor } from "@/components/utils/Colors";
-// import StarRoundedIcon from "@mui/icons-material/StarRounded";
-// import { Box, Container, Typography } from "@mui/material";
-// import { motion } from "framer-motion";
-// import { fadeUp, SectionHeading } from "./serviceDetailShared";
-
-// export default function WhyChooseUs({ extraBenefits }) {
-//   if (!extraBenefits.length) return null;
-
-//   return (
-//     <Box
-//       component="section"
-//       sx={{
-//         py: { xs: 7, md: 9 },
-//         bgcolor: secondaryColor,
-//         color: whiteColor,
-//       }}
-//     >
-//       <Container maxWidth="lg">
-//         <motion.div {...fadeUp}>
-//           <SectionHeading kicker="Why choose us" title="Extra Benefits" light />
-//         </motion.div>
-//         <Box
-//           sx={{
-//             display: "flex",
-//             flexWrap: "wrap",
-//             justifyContent: "center",
-//             columnGap: 2,
-//             rowGap: 2,
-//           }}
-//         >
-//           {extraBenefits.map((line, i) => (
-//             <Box
-//               key={i}
-//               component={motion.div}
-//               {...fadeUp}
-//               transition={{ ...fadeUp.transition, delay: i * 0.05 }}
-//               sx={{
-//                 boxSizing: "border-box",
-//                 width: {
-//                   xs: "100%",
-//                   sm: "calc((100% - 16px) / 2)",
-//                 },
-//                 flexShrink: 0,
-//               }}
-//             >
-//               <Box
-//                 sx={{
-//                   display: "flex",
-//                   alignItems: "flex-start",
-//                   gap: 2,
-//                   p: 2.5,
-//                   borderRadius: 2,
-//                   bgcolor: "rgba(255,255,255,0.06)",
-//                   border: "1px solid rgba(255,255,255,0.1)",
-//                   cursor: "default",
-//                   transition:
-//                     "transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease",
-//                   "&:hover": {
-//                     transform: "translateY(-4px)",
-//                     bgcolor: "rgba(255,255,255,0.12)",
-//                     borderColor: "rgba(251, 134, 30, 0.45)",
-//                     boxShadow: "0 14px 36px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(251, 134, 30, 0.2)",
-//                   },
-//                   "&:hover .benefit-star": {
-//                     transform: "scale(1.12) rotate(-6deg)",
-//                     color: "rgb(255, 184, 116)",
-//                     filter: "drop-shadow(0 2px 8px rgba(251, 134, 30, 0.55))",
-//                   },
-//                 }}
-//               >
-//                 <StarRoundedIcon
-//                   className="benefit-star"
-//                   sx={{
-//                     color: primaryColor,
-//                     fontSize: 26,
-//                     flexShrink: 0,
-//                     mt: 0.2,
-//                     transition: "transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), color 0.35s ease, filter 0.35s ease",
-//                   }}
-//                 />
-//                 <Typography sx={{ fontSize: 15, lineHeight: 1.55, color: "rgba(255,255,255,0.92)" }}>{line}</Typography>
-//               </Box>
-//             </Box>
-//           ))}
-//         </Box>
-//       </Container>
-//     </Box>
-//   );
-// }
 "use client";
 
-import { primaryColor, secondaryColor, secondaryDark, whiteColor } from "@/components/utils/Colors";
+import {
+  primaryColor,
+  secondaryColor,
+  secondaryDark,
+  whiteColor,
+} from "@/components/utils/Colors";
 import StarRoundedIcon from "@mui/icons-material/StarRounded";
 import { Box, Container, Typography } from "@mui/material";
 import { motion } from "framer-motion";
 import { fadeUp } from "./serviceDetailShared";
 
 const STATS = [
-  { num: "500+", label: "Projects completed" },
-  { num: "12+",  label: "Years experience" },
-  { num: "98%",  label: "On-time delivery" },
-  { num: "200+", label: "Happy clients" },
+  {
+    num: `${process.env.NEXT_PUBLIC_PROJECTS_COMPLETED}+`,
+    label: "Projects completed",
+  },
+  {
+    num: `${process.env.NEXT_PUBLIC_COMPANY_EXPERIENCE}+`,
+    label: "Years experience",
+  },
+  { num: "98%", label: "On-time delivery" },
+  { num: `${process.env.NEXT_PUBLIC_HAPPY_CLIENTS}+`, label: "Happy clients" },
 ];
 
 export default function WhyChooseUs({ extraBenefits }) {
@@ -136,7 +55,8 @@ export default function WhyChooseUs({ extraBenefits }) {
           width: "500px",
           height: "500px",
           borderRadius: "50%",
-          background: "radial-gradient(circle, rgba(251,134,30,0.08) 0%, transparent 65%)",
+          background:
+            "radial-gradient(circle, rgba(251,134,30,0.08) 0%, transparent 65%)",
           pointerEvents: "none",
         },
       }}
@@ -202,7 +122,8 @@ export default function WhyChooseUs({ extraBenefits }) {
                 mx: "auto",
               }}
             >
-              Everything you need for a seamless construction experience, from start to finish.
+              Everything you need for a seamless construction experience, from
+              start to finish.
             </Typography>
           </Box>
         </motion.div>
@@ -260,13 +181,20 @@ export default function WhyChooseUs({ extraBenefits }) {
                       alignItems: "center",
                       justifyContent: "center",
                       flexShrink: 0,
-                      transition: "background 0.35s ease, border-color 0.35s ease",
+                      transition:
+                        "background 0.35s ease, border-color 0.35s ease",
                     }}
                   >
-                    <StarRoundedIcon sx={{ color: primaryColor, fontSize: 16 }} />
+                    <StarRoundedIcon
+                      sx={{ color: primaryColor, fontSize: 16 }}
+                    />
                   </Box>
                   <Typography
-                    sx={{ fontSize: 14, color: "rgba(255,255,255,0.82)", lineHeight: 1.5 }}
+                    sx={{
+                      fontSize: 14,
+                      color: "rgba(255,255,255,0.82)",
+                      lineHeight: 1.5,
+                    }}
                   >
                     {line}
                   </Typography>
@@ -309,7 +237,9 @@ export default function WhyChooseUs({ extraBenefits }) {
                     "&::before": {
                       content: '""',
                       position: "absolute",
-                      top: 0, left: 0, right: 0,
+                      top: 0,
+                      left: 0,
+                      right: 0,
                       height: "2px",
                       borderRadius: "16px 16px 0 0",
                       background: "linear-gradient(90deg, #fb861e, #ffd08a)",
@@ -337,7 +267,11 @@ export default function WhyChooseUs({ extraBenefits }) {
                     {num}
                   </Typography>
                   <Typography
-                    sx={{ fontSize: 13, color: "rgba(255,255,255,0.5)", letterSpacing: "0.3px" }}
+                    sx={{
+                      fontSize: 13,
+                      color: "rgba(255,255,255,0.5)",
+                      letterSpacing: "0.3px",
+                    }}
                   >
                     {label}
                   </Typography>
@@ -374,10 +308,15 @@ export default function WhyChooseUs({ extraBenefits }) {
                 Built on trust, delivered with precision
               </Typography>
               <Typography
-                sx={{ fontSize: 13, color: "rgba(255,255,255,0.5)", lineHeight: 1.6 }}
+                sx={{
+                  fontSize: 13,
+                  color: "rgba(255,255,255,0.5)",
+                  lineHeight: 1.6,
+                }}
               >
-                From foundation to finishing — every project gets dedicated engineers,
-                real-time updates, and transparent pricing. No surprises.
+                From foundation to finishing — every project gets dedicated
+                engineers, real-time updates, and transparent pricing. No
+                surprises.
               </Typography>
             </Box>
           </Box>

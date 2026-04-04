@@ -1,100 +1,3 @@
-// "use client";
-
-// import { primaryColor } from "@/components/utils/Colors";
-// import CheckRoundedIcon from "@mui/icons-material/CheckRounded";
-// import { Box, Container, Typography } from "@mui/material";
-// import { motion } from "framer-motion";
-// import { fadeUp, SectionHeading } from "./serviceDetailShared";
-
-// export default function Deliverables({ whatYouGet }) {
-//   if (!whatYouGet.length) return null;
-
-//   return (
-//     <Box id="what-you-get" component="section" sx={{ py: { xs: 7, md: 9 }, bgcolor: "#fff" }}>
-//       <Container maxWidth="lg">
-//         <motion.div {...fadeUp}>
-//           <SectionHeading kicker="Deliverables" title="What You Get" />
-//         </motion.div>
-//         <Box
-//           sx={{
-//             display: "flex",
-//             flexWrap: "wrap",
-//             justifyContent: "center",
-//             columnGap: 2.5,
-//             rowGap: 2.5,
-//           }}
-//         >
-//           {whatYouGet.map((line, i) => (
-//             <Box
-//               key={i}
-//               component={motion.div}
-//               {...fadeUp}
-//               transition={{ ...fadeUp.transition, delay: i * 0.05 }}
-//               sx={{
-//                 boxSizing: "border-box",
-//                 width: {
-//                   xs: "100%",
-//                   sm: "calc((100% - 20px) / 2)",
-//                   md: "calc((100% - 40px) / 3)",
-//                 },
-//                 flexShrink: 0,
-//               }}
-//             >
-//               <Box
-//                 sx={{
-//                   height: "100%",
-//                   p: 2.5,
-//                   borderRadius: 2,
-//                   border: "1px solid rgba(15,23,42,0.08)",
-//                   bgcolor: "#fafafa",
-//                   display: "flex",
-//                   gap: 2,
-//                   alignItems: "flex-start",
-//                   cursor: "default",
-//                   transition:
-//                     "transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.35s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.35s ease, background-color 0.35s ease",
-//                   "&:hover": {
-//                     transform: "translateY(-5px)",
-//                     bgcolor: "#fff",
-//                     borderColor: "rgba(251, 134, 30, 0.32)",
-//                     boxShadow:
-//                       "0 16px 40px rgba(15, 23, 42, 0.1), 0 0 0 1px rgba(251, 134, 30, 0.12)",
-//                   },
-//                   "&:hover .wyg-check": {
-//                     transform: "scale(1.08)",
-//                     bgcolor: "rgb(231, 100, 0)",
-//                     boxShadow: "0 6px 18px rgba(251, 134, 30, 0.45)",
-//                   },
-//                 }}
-//               >
-//                 <Box
-//                   className="wyg-check"
-//                   sx={{
-//                     width: 40,
-//                     height: 40,
-//                     borderRadius: "50%",
-//                     bgcolor: primaryColor,
-//                     display: "flex",
-//                     alignItems: "center",
-//                     justifyContent: "center",
-//                     flexShrink: 0,
-//                     transition:
-//                       "transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.35s ease, box-shadow 0.35s ease",
-//                   }}
-//                 >
-//                   <CheckRoundedIcon sx={{ color: "#fff", fontSize: 22 }} />
-//                 </Box>
-//                 <Typography sx={{ fontSize: 15, lineHeight: 1.55, color: "rgb(51, 65, 85)", fontWeight: 500 }}>
-//                   {line}
-//                 </Typography>
-//               </Box>
-//             </Box>
-//           ))}
-//         </Box>
-//       </Container>
-//     </Box>
-//   );
-// }
 "use client";
 
 import { primaryColor } from "@/components/utils/Colors";
@@ -159,91 +62,90 @@ export default function Deliverables({ whatYouGet }) {
                 flexShrink: 0,
               }}
             >
-                  <Box
+              <Box
+                sx={{
+                  height: "100%",
+                  p: 3,
+                  borderRadius: "16px",
+                  border: "1px solid rgba(15,23,42,0.08)",
+                  bgcolor: "#fafafa",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 0,
+                  cursor: "default",
+                  position: "relative",
+                  overflow: "hidden",
+                  transition:
+                    "transform 0.4s cubic-bezier(0.4,0,0.2,1), box-shadow 0.4s ease, border-color 0.4s ease, background-color 0.4s ease",
+                  // animated top border
+                  "&::before": {
+                    content: '""',
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    height: "3px",
+                    background: `linear-gradient(90deg, ${primaryColor}, #ffa94d)`,
+                    transform: "scaleX(0)",
+                    transformOrigin: "left",
+                    transition: "transform 0.4s cubic-bezier(0.4,0,0.2,1)",
+                    borderRadius: "16px 16px 0 0",
+                  },
+                  "&:hover": {
+                    transform: "translateY(-6px)",
+                    bgcolor: "#fff",
+                    borderColor: "rgba(251,134,30,0.18)",
+                    boxShadow:
+                      "0 20px 60px rgba(15,23,42,0.1), 0 0 0 1px rgba(251,134,30,0.1)",
+                  },
+                  "&:hover::before": { transform: "scaleX(1)" },
+                  "&:hover .wyg-icon": {
+                    transform: "scale(1.1) rotate(-4deg)",
+                    boxShadow: "0 8px 24px rgba(251,134,30,0.45)",
+                  },
+                }}
+              >
+                {/* Icon badge */}
+                <Box
+                  className="wyg-icon"
+                  sx={{
+                    width: 44,
+                    height: 44,
+                    borderRadius: "12px",
+                    background: `linear-gradient(135deg, ${primaryColor} 0%, #ffa94d 100%)`,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    mb: 2,
+                    boxShadow: "0 4px 12px rgba(251,134,30,0.3)",
+                    transition:
+                      "transform 0.4s cubic-bezier(0.4,0,0.2,1), box-shadow 0.4s ease",
+                  }}
+                >
+                  <Typography
                     sx={{
-                      height: "100%",
-                      p: 3,
-                      borderRadius: "16px",
-                      border: "1px solid rgba(15,23,42,0.08)",
-                      bgcolor: "#fafafa",
-                      display: "flex",
-                      flexDirection: "column",
-                      gap: 0,
-                      cursor: "default",
-                      position: "relative",
-                      overflow: "hidden",
-                      transition:
-                        "transform 0.4s cubic-bezier(0.4,0,0.2,1), box-shadow 0.4s ease, border-color 0.4s ease, background-color 0.4s ease",
-                      // animated top border
-                      "&::before": {
-                        content: '""',
-                        position: "absolute",
-                        top: 0,
-                        left: 0,
-                        right: 0,
-                        height: "3px",
-                        background: `linear-gradient(90deg, ${primaryColor}, #ffa94d)`,
-                        transform: "scaleX(0)",
-                        transformOrigin: "left",
-                        transition:
-                          "transform 0.4s cubic-bezier(0.4,0,0.2,1)",
-                        borderRadius: "16px 16px 0 0",
-                      },
-                      "&:hover": {
-                        transform: "translateY(-6px)",
-                        bgcolor: "#fff",
-                        borderColor: "rgba(251,134,30,0.18)",
-                        boxShadow:
-                          "0 20px 60px rgba(15,23,42,0.1), 0 0 0 1px rgba(251,134,30,0.1)",
-                      },
-                      "&:hover::before": { transform: "scaleX(1)" },
-                      "&:hover .wyg-icon": {
-                        transform: "scale(1.1) rotate(-4deg)",
-                        boxShadow: "0 8px 24px rgba(251,134,30,0.45)",
-                      },
+                      color: "#fff",
+                      fontSize: 15,
+                      fontWeight: 800,
+                      lineHeight: 1,
+                      letterSpacing: "0.04em",
                     }}
                   >
-                    {/* Icon badge */}
-                    <Box
-                      className="wyg-icon"
-                      sx={{
-                        width: 44,
-                        height: 44,
-                        borderRadius: "12px",
-                        background: `linear-gradient(135deg, ${primaryColor} 0%, #ffa94d 100%)`,
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        mb: 2,
-                        boxShadow: "0 4px 12px rgba(251,134,30,0.3)",
-                        transition:
-                          "transform 0.4s cubic-bezier(0.4,0,0.2,1), box-shadow 0.4s ease",
-                      }}
-                    >
-                      <Typography
-                        sx={{
-                          color: "#fff",
-                          fontSize: 15,
-                          fontWeight: 800,
-                          lineHeight: 1,
-                          letterSpacing: "0.04em",
-                        }}
-                      >
-                        {String(i + 1).padStart(2, "0")}
-                      </Typography>
-                    </Box>
+                    {String(i + 1).padStart(2, "0")}
+                  </Typography>
+                </Box>
 
-                    <Typography
-                      sx={{
-                        fontSize: 14.5,
-                        lineHeight: 1.6,
-                        color: "rgb(51,65,85)",
-                        fontWeight: 500,
-                      }}
-                    >
-                      {line}
-                    </Typography>
-                  </Box>
+                <Typography
+                  sx={{
+                    fontSize: 14.5,
+                    lineHeight: 1.6,
+                    color: "rgb(51,65,85)",
+                    fontWeight: 500,
+                  }}
+                >
+                  {line}
+                </Typography>
+              </Box>
             </Box>
           ))}
         </Box>

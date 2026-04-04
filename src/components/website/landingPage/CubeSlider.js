@@ -51,7 +51,7 @@ export default function CubeSlider() {
                   mb: 3,
                 }}
               >
-                S&amp;S Associates is a premier construction company with over 25
+                S&amp;S Associates is a premier construction company with over {process.env.NEXT_PUBLIC_COMPANY_EXPERIENCE}{" "}
                 years of experience in delivering exceptional building solutions.
                 Founded in 2001, we have grown from a small local contractor to
                 one of the most trusted names in the construction industry.
