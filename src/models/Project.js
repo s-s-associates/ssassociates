@@ -16,6 +16,8 @@ const projectSchema = new mongoose.Schema(
     description: { type: String, trim: true, default: "" },
     clientName: { type: String, trim: true, default: "" },
     category: { type: String, trim: true, default: "" },
+    /** Must belong to the selected category's sub-categories when set (enforced in UI). */
+    subCategory: { type: String, trim: true, default: "" },
     projectArea: { type: String, trim: true, default: "" },
     projectAreaUnit: { type: String, enum: ["sq ft", "m²"], default: "sq ft" },
     budget: { type: String, trim: true, default: "" },

@@ -3,7 +3,9 @@
 import {
   bggrayColor,
   bordergrayColor,
+  primaryBg,
   primaryColor,
+  primaryDark,
   statusGreen,
   statusGreenBg,
   statusYellow,
@@ -113,10 +115,20 @@ export default function ProjectPages() {
     if (q) {
       const title = (row.title || "").toLowerCase();
       const category = (row.category || "").toLowerCase();
+      const subCategory = (row.subCategory || "").toLowerCase();
       const status = (row.status || "").toLowerCase();
       const year = String(row.year || "").toLowerCase();
       const desc = (row.description || "").toLowerCase();
-      if (!title.includes(q) && !category.includes(q) && !status.includes(q) && !year.includes(q) && !desc.includes(q)) return false;
+      if (
+        !title.includes(q) &&
+        !category.includes(q) &&
+        !subCategory.includes(q) &&
+        !status.includes(q) &&
+        !year.includes(q) &&
+        !desc.includes(q)
+      ) {
+        return false;
+      }
     }
     if (dateFilter !== "all" && row.createdAt) {
       const d = new Date(row.createdAt);
@@ -294,7 +306,7 @@ export default function ProjectPages() {
               "&:hover": {
                 borderColor: primaryColor,
                 color: primaryColor,
-                bgcolor: "rgba(138,56,245,0.06)",
+                bgcolor: "rgba(251, 134, 30, 0.06)",
               },
             }}
           >
@@ -459,12 +471,13 @@ export default function ProjectPages() {
         ) : (
           <>
             <Box sx={{ overflowX: "auto", width: "100%" }}>
-              <Table size="medium" sx={{ minWidth: 820 }}>
+              <Table size="medium" sx={{ minWidth: 920 }}>
               <TableHead>
                 <TableRow sx={{ bgcolor: bggrayColor }}>
                   <TableCell sx={{ fontWeight: 700, color: "#000", width: 100, whiteSpace: "nowrap" }}>Sequence</TableCell>
                   <TableCell sx={{ fontWeight: 700, color: "#000", whiteSpace: "nowrap", minWidth: 140 }}>Title</TableCell>
                   <TableCell sx={{ fontWeight: 700, color: "#000", whiteSpace: "nowrap", minWidth: 120 }}>Category</TableCell>
+                  <TableCell sx={{ fontWeight: 700, color: "#000", whiteSpace: "nowrap", minWidth: 110 }}>Sub-category</TableCell>
                   <TableCell sx={{ fontWeight: 700, color: "#000", whiteSpace: "nowrap", minWidth: 100 }}>Status</TableCell>
                   <TableCell sx={{ fontWeight: 700, color: "#000", whiteSpace: "nowrap", minWidth: 80 }}>Year</TableCell>
                   <TableCell align="right" sx={{ fontWeight: 700, color: "#000", whiteSpace: "nowrap", minWidth: 120 }}>
@@ -495,7 +508,7 @@ export default function ProjectPages() {
                           onClick={() => handleReorder(row._id, "up")}
                           sx={{
                             color: canMoveUp ? primaryColor : "rgba(0,0,0,0.26)",
-                            "&:hover": canMoveUp ? { bgcolor: "rgba(138,56,245,0.08)" } : {},
+                            "&:hover": canMoveUp ? { bgcolor: primaryBg } : {},
                           }}
                           aria-label="Move up"
                         >
@@ -507,7 +520,7 @@ export default function ProjectPages() {
                           onClick={() => handleReorder(row._id, "down")}
                           sx={{
                             color: canMoveDown ? primaryColor : "rgba(0,0,0,0.26)",
-                            "&:hover": canMoveDown ? { bgcolor: "rgba(138,56,245,0.08)" } : {},
+                            "&:hover": canMoveDown ? { bgcolor: primaryBg } : {},
                           }}
                           aria-label="Move down"
                         >
@@ -521,6 +534,9 @@ export default function ProjectPages() {
                       </Typography>
                     </TableCell>
                     <TableCell sx={{ color: "rgba(0,0,0,0.7)" }}>{row.category || "—"}</TableCell>
+                    <TableCell sx={{ color: "rgba(0,0,0,0.7)", fontSize: 14 }}>
+                      {row.subCategory?.trim() ? row.subCategory : "—"}
+                    </TableCell>
                     <TableCell>
                       <Box
                         component="span"
@@ -555,7 +571,7 @@ export default function ProjectPages() {
                         component={Link}
                         href={`/user/projects/${row._id}/edit`}
                         size="small"
-                        sx={{ color: primaryColor, "&:hover": { bgcolor: "rgba(138,56,245,0.08)" } }}
+                        sx={{ color: primaryColor, "&:hover": { bgcolor: primaryBg } }}
                         aria-label="Edit"
                       >
                         <FiEdit2 size={18} />
@@ -596,7 +612,7 @@ export default function ProjectPages() {
                 "& .MuiTablePagination-select": { fontSize: 14 },
                 "& .MuiIconButton-root": {
                   color: "rgba(0,0,0,0.7)",
-                  "&:hover": { bgcolor: "rgba(138,56,245,0.08)", color: primaryColor },
+                  "&:hover": { bgcolor: primaryBg, color: primaryColor },
                   "&.Mui-disabled": { color: "rgba(0,0,0,0.26)" },
                 },
               }}
@@ -676,6 +692,23 @@ export default function ProjectPages() {
                     {viewingProject.category}
                   </Typography>
                 ) : null}
+                {viewingProject.subCategory?.trim() ? (
+                  <Typography
+                    component="span"
+                    sx={{
+                      fontSize: 12,
+                      fontWeight: 600,
+                      color: primaryDark,
+                      bgcolor: primaryBg,
+                      px: 1,
+                      py: 0.35,
+                      borderRadius: 1,
+                      border: "1px solid rgba(251, 134, 30, 0.28)",
+                    }}
+                  >
+                    {viewingProject.subCategory.trim()}
+                  </Typography>
+                ) : null}
                 {viewingProject.year ? (
                   <Typography component="span" sx={{ fontSize: 13, color: "rgba(0,0,0,0.55)" }}>
                     Year: {viewingProject.year}
@@ -688,6 +721,7 @@ export default function ProjectPages() {
               </Typography>
               <DetailRow label="Client" value={viewingProject.clientName} />
               <DetailRow label="Location" value={viewingProject.location} />
+              <DetailRow label="Sub-category" value={viewingProject.subCategory} />
               <DetailRow label="Description" value={viewingProject.description} />
               <Divider sx={{ my: 2 }} />
 

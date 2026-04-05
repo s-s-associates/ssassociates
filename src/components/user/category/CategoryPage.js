@@ -10,7 +10,11 @@ import {
   DialogTitle,
   IconButton,
   InputAdornment,
+  List,
+  ListItem,
+  ListItemText,
   Skeleton,
+  Stack,
   Table,
   TableBody,
   TableCell,
@@ -18,15 +22,41 @@ import {
   TableRow,
   TablePagination,
   TextField,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import { getAuth } from "@/lib/auth-storage";
 import React, { useCallback, useEffect, useState } from "react";
 import { BeatLoader } from "react-spinners";
 import Swal from "sweetalert2";
-import { FiArrowLeft, FiEdit2, FiPlus, FiSearch, FiTrash2 } from "react-icons/fi";
+import { FiArrowLeft, FiEdit2, FiEye, FiPlus, FiSearch, FiTrash2, FiX } from "react-icons/fi";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+
+function newSubRow(value = "") {
+  return {
+    id: globalThis.crypto?.randomUUID?.() ?? `${Date.now()}-${Math.random().toString(36).slice(2, 11)}`,
+    value,
+  };
+}
+
+function subCategoryNamesFromDoc(cat) {
+  const raw = cat?.subCategories;
+  if (!Array.isArray(raw)) return [];
+  return raw
+    .map((s) => (typeof s === "string" ? s : s?.name))
+    .filter(Boolean)
+    .map((n) => String(n).trim())
+    .filter(Boolean);
+}
+
+/** Scrollable dialog body: keeps title/actions fixed when content is long */
+const dialogScrollContentSx = {
+  maxHeight: { xs: "calc(100dvh - 200px)", sm: "min(70vh, 520px)" },
+  overflowY: "auto",
+  overflowX: "hidden",
+  WebkitOverflowScrolling: "touch",
+};
 
 export default function CategoryPage() {
   const { token } = getAuth();
@@ -37,7 +67,9 @@ export default function CategoryPage() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingCategory, setEditingCategory] = useState(null);
   const [name, setName] = useState("");
+  const [subCategoryRows, setSubCategoryRows] = useState([]);
   const [saving, setSaving] = useState(false);
+  const [viewCategory, setViewCategory] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -51,8 +83,9 @@ export default function CategoryPage() {
   const filteredCategories = categories.filter((row) => {
     const q = (searchQuery || "").trim().toLowerCase();
     if (!q) return true;
-    const name = (row.name || "").toLowerCase();
-    return name.includes(q);
+    const n = (row.name || "").toLowerCase();
+    if (n.includes(q)) return true;
+    return subCategoryNamesFromDoc(row).some((s) => s.toLowerCase().includes(q));
   });
 
   const paginatedCategories = filteredCategories.slice(
@@ -84,12 +117,15 @@ export default function CategoryPage() {
   const openAddDialog = () => {
     setEditingCategory(null);
     setName("");
+    setSubCategoryRows([]);
     setDialogOpen(true);
   };
 
   const openEditDialog = (cat) => {
     setEditingCategory(cat);
     setName(cat.name || "");
+    const subs = subCategoryNamesFromDoc(cat);
+    setSubCategoryRows(subs.length ? subs.map((s) => newSubRow(s)) : []);
     setDialogOpen(true);
   };
 
@@ -97,6 +133,27 @@ export default function CategoryPage() {
     setDialogOpen(false);
     setEditingCategory(null);
     setName("");
+    setSubCategoryRows([]);
+  };
+
+  const addSubCategoryRow = () => {
+    setSubCategoryRows((prev) => [...prev, newSubRow()]);
+  };
+
+  const removeSubCategoryRow = (id) => {
+    setSubCategoryRows((prev) => prev.filter((r) => r.id !== id));
+  };
+
+  const updateSubCategoryRow = (id, value) => {
+    setSubCategoryRows((prev) => prev.map((r) => (r.id === id ? { ...r, value } : r)));
+  };
+
+  const openViewSubCategories = (cat) => {
+    setViewCategory(cat);
+  };
+
+  const closeViewSubCategories = () => {
+    setViewCategory(null);
   };
 
   const handleSave = async () => {
@@ -110,6 +167,11 @@ export default function CategoryPage() {
       });
       return;
     }
+    const subPayload = subCategoryRows
+      .map((r) => (r.value || "").trim())
+      .filter(Boolean)
+      .map((n) => ({ name: n }));
+
     setSaving(true);
     try {
       if (editingCategory) {
@@ -119,7 +181,7 @@ export default function CategoryPage() {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify({ name: trimmed }),
+          body: JSON.stringify({ name: trimmed, subCategories: subPayload }),
         });
         const data = await res.json();
         if (data.success) {
@@ -146,7 +208,7 @@ export default function CategoryPage() {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify({ name: trimmed }),
+          body: JSON.stringify({ name: trimmed, subCategories: subPayload }),
         });
         const data = await res.json();
         if (data.success) {
@@ -277,7 +339,7 @@ export default function CategoryPage() {
       <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 2, mb: 3 }}>
         <Box sx={{ flex: "1 1 0", minWidth: 0, maxWidth: 320 }}>
           <TextField
-            placeholder="Search by name..."
+            placeholder="Search by category or sub-category..."
             value={searchQuery}
             onChange={(e) => { setSearchQuery(e.target.value); setPage(0); }}
             size="small"
@@ -371,18 +433,24 @@ export default function CategoryPage() {
         ) : (
           <>
           <Box sx={{ overflowX: "auto", width: "100%" }}>
-            <Table size="medium" sx={{ minWidth: 440 }}>
+            <Table size="medium" sx={{ minWidth: 580 }}>
             <TableHead>
               <TableRow sx={{ bgcolor: bggrayColor }}>
                 <TableCell sx={{ fontWeight: 700, color: "#000", whiteSpace: "nowrap", minWidth: 140 }}>Name</TableCell>
+                <TableCell sx={{ fontWeight: 700, color: "#000", whiteSpace: "nowrap", minWidth: 160 }}>
+                  Sub-categories
+                </TableCell>
                 <TableCell sx={{ fontWeight: 700, color: "#000", whiteSpace: "nowrap", minWidth: 140 }}>Used in projects</TableCell>
-                <TableCell align="right" sx={{ fontWeight: 700, color: "#000", whiteSpace: "nowrap", minWidth: 120 }}>Actions</TableCell>
+                <TableCell align="right" sx={{ fontWeight: 700, color: "#000", whiteSpace: "nowrap", minWidth: 152 }}>
+                  Actions
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {paginatedCategories.map((row) => {
                 const isDeleting = deletingId === row._id;
                 const projectCount = row.projectCount ?? 0;
+                const subCount = subCategoryNamesFromDoc(row).length;
                 return (
                   <TableRow
                     key={row._id}
@@ -395,31 +463,64 @@ export default function CategoryPage() {
                         {row.name || "—"}
                       </Typography>
                     </TableCell>
+                    <TableCell sx={{ fontSize: 14, fontWeight: 600, color: "#000" }}>{subCount}</TableCell>
                     <TableCell sx={{ color: "rgba(0,0,0,0.7)", fontSize: 14 }}>
                       {projectCount} project{projectCount !== 1 ? "s" : ""}
                     </TableCell>
-                    <TableCell align="right">
-                      <IconButton
-                        size="small"
-                        onClick={() => openEditDialog(row)}
-                        sx={{ color: primaryColor, "&:hover": { bgcolor: "rgba(138,56,245,0.08)" } }}
-                        aria-label="Edit"
+                    <TableCell align="right" sx={{ whiteSpace: "nowrap" }}>
+                      <Box
+                        sx={{
+                          display: "inline-flex",
+                          alignItems: "center",
+                          justifyContent: "flex-end",
+                          gap: 0.25,
+                        }}
                       >
-                        <FiEdit2 size={18} />
-                      </IconButton>
-                      <IconButton
-                        size="small"
-                        disabled={isDeleting}
-                        onClick={() => handleDelete(row)}
-                        sx={{ color: "#dc2626", "&:hover": { bgcolor: "rgba(220,38,38,0.08)" } }}
-                        aria-label="Delete"
-                      >
-                        {isDeleting ? (
-                          <BeatLoader color="#dc2626" size={10} />
-                        ) : (
-                          <FiTrash2 size={18} />
-                        )}
-                      </IconButton>
+                        <Tooltip title={subCount ? "View sub-categories" : "View (none yet)"}>
+                          <span>
+                            <IconButton
+                              size="small"
+                              onClick={() => openViewSubCategories(row)}
+                              aria-label={`View sub-categories: ${row.name || "category"}`}
+                              sx={{
+                                color: "rgba(0,0,0,0.65)",
+                                "&:hover": { bgcolor: "rgba(138,56,245,0.1)", color: primaryColor },
+                              }}
+                            >
+                              <FiEye size={18} />
+                            </IconButton>
+                          </span>
+                        </Tooltip>
+                        <Tooltip title="Edit category">
+                          <span>
+                            <IconButton
+                              size="small"
+                              onClick={() => openEditDialog(row)}
+                              sx={{ color: primaryColor, "&:hover": { bgcolor: "rgba(138,56,245,0.08)" } }}
+                              aria-label="Edit category"
+                            >
+                              <FiEdit2 size={18} />
+                            </IconButton>
+                          </span>
+                        </Tooltip>
+                        <Tooltip title="Delete category">
+                          <span>
+                            <IconButton
+                              size="small"
+                              disabled={isDeleting}
+                              onClick={() => handleDelete(row)}
+                              sx={{ color: "#dc2626", "&:hover": { bgcolor: "rgba(220,38,38,0.08)" } }}
+                              aria-label="Delete category"
+                            >
+                              {isDeleting ? (
+                                <BeatLoader color="#dc2626" size={10} />
+                              ) : (
+                                <FiTrash2 size={18} />
+                              )}
+                            </IconButton>
+                          </span>
+                        </Tooltip>
+                      </Box>
                     </TableCell>
                   </TableRow>
                 );
@@ -452,20 +553,204 @@ export default function CategoryPage() {
         )}
       </Box>
 
-      <Dialog open={dialogOpen} onClose={closeDialog} maxWidth="sm" fullWidth>
-        <DialogTitle>
+      <Dialog
+        open={Boolean(viewCategory)}
+        onClose={closeViewSubCategories}
+        maxWidth="sm"
+        fullWidth
+        scroll="paper"
+        aria-labelledby="subcategories-view-title"
+      >
+        <DialogTitle id="subcategories-view-title" sx={{ pb: 1 }}>
+          Sub-categories
+        </DialogTitle>
+        <DialogContent dividers sx={{ pt: 0, px: 3, ...dialogScrollContentSx }}>
+          {viewCategory &&
+            (() => {
+              const details = subCategoryNamesFromDoc(viewCategory);
+              const count = details.length;
+              const totalLabel =
+                count === 0 ? "0 sub-categories" : count === 1 ? "1 sub-category" : `${count} sub-categories`;
+              return (
+                <>
+                  <Box sx={{ mb: 2, pt: 1 }}>
+                    <Typography
+                      sx={{
+                        fontSize: 12,
+                        fontWeight: 700,
+                        letterSpacing: "0.06em",
+                        color: "rgba(0,0,0,0.5)",
+                        textTransform: "uppercase",
+                        mb: 0.5,
+                      }}
+                    >
+                      Category
+                    </Typography>
+                    <Typography sx={{ fontSize: 18, fontWeight: 700, color: "#000" }}>
+                      {viewCategory.name || "—"}
+                    </Typography>
+                    <Typography sx={{ fontSize: 14, color: "rgba(0,0,0,0.65)", mt: 1 }}>
+                      Total:{" "}
+                      <Box component="span" sx={{ fontWeight: 700, color: "#000" }}>
+                        {totalLabel}
+                      </Box>
+                    </Typography>
+                  </Box>
+                  {count === 0 ? (
+                    <Box
+                      sx={{
+                        py: 4,
+                        px: 2,
+                        textAlign: "center",
+                        borderRadius: 2,
+                        bgcolor: "rgba(0,0,0,0.03)",
+                        border: `1px dashed ${bordergrayColor}`,
+                      }}
+                    >
+                      <Typography sx={{ fontSize: 14, color: "rgba(0,0,0,0.55)", mb: 1 }}>
+                        No sub-categories yet.
+                      </Typography>
+                      <Typography sx={{ fontSize: 13, color: "rgba(0,0,0,0.45)" }}>
+                        Use Edit on this row to add sub-categories.
+                      </Typography>
+                    </Box>
+                  ) : (
+                    <List
+                      disablePadding
+                      dense
+                      sx={{
+                        bgcolor: "#fafafa",
+                        borderRadius: 2,
+                        border: `1px solid ${bordergrayColor}`,
+                        overflow: "hidden",
+                        wordBreak: "break-word",
+                      }}
+                    >
+                      {details.map((name, index) => (
+                        <ListItem
+                          key={`${index}-${name}`}
+                          sx={{
+                            py: 1.5,
+                            px: 2,
+                            borderBottom: index < count - 1 ? `1px solid ${bordergrayColor}` : "none",
+                            alignItems: "flex-start",
+                          }}
+                        >
+                          <Typography
+                            component="span"
+                            sx={{
+                              minWidth: 28,
+                              fontSize: 13,
+                              fontWeight: 700,
+                              color: primaryColor,
+                              mr: 1.5,
+                              mt: 0.25,
+                            }}
+                          >
+                            {index + 1}.
+                          </Typography>
+                          <ListItemText
+                            primary={name}
+                            primaryTypographyProps={{ fontWeight: 600, fontSize: 15, color: "#000" }}
+                          />
+                        </ListItem>
+                      ))}
+                    </List>
+                  )}
+                </>
+              );
+            })()}
+        </DialogContent>
+        <DialogActions sx={{ px: 3, py: 2 }}>
+          <Button
+            variant="contained"
+            onClick={closeViewSubCategories}
+            sx={{
+              textTransform: "none",
+              fontWeight: 600,
+              bgcolor: primaryColor,
+              "&:hover": { bgcolor: primaryHover },
+            }}
+          >
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog
+        open={dialogOpen}
+        onClose={closeDialog}
+        maxWidth="sm"
+        fullWidth
+        scroll="paper"
+        aria-labelledby="category-form-title"
+      >
+        <DialogTitle id="category-form-title">
           {editingCategory ? "Edit Category" : "Add Category"}
         </DialogTitle>
-        <DialogContent>
+        <DialogContent dividers sx={{ pt: 1, ...dialogScrollContentSx }}>
           <TextField
             autoFocus
             fullWidth
-            label="Name"
+            label="Category name"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            placeholder="Category name"
-            sx={{ mt: 1 }}
+            placeholder="e.g. Commercial, Residential"
+            sx={{ mt: 0.5 }}
           />
+          <Typography sx={{ mt: 2.5, mb: 1, fontWeight: 600, fontSize: 14, color: "#000" }}>
+            Sub-categories
+          </Typography>
+          <Typography sx={{ mb: 1.5, fontSize: 13, color: "rgba(0,0,0,0.6)", lineHeight: 1.5 }}>
+            Optional. Add labels used to narrow this category (e.g. Office, Retail). Duplicates are merged when you save.
+          </Typography>
+          <Stack spacing={1.25}>
+            {subCategoryRows.map((row) => (
+              <Box key={row.id} sx={{ display: "flex", gap: 1, alignItems: "flex-start" }}>
+                <TextField
+                  fullWidth
+                  size="small"
+                  label="Sub-category name"
+                  value={row.value}
+                  onChange={(e) => updateSubCategoryRow(row.id, e.target.value)}
+                  placeholder="Name"
+                  sx={{
+                    "& .MuiOutlinedInput-root": { borderRadius: 2, bgcolor: "#fafafa" },
+                  }}
+                />
+                <IconButton
+                  size="small"
+                  onClick={() => removeSubCategoryRow(row.id)}
+                  aria-label="Remove sub-category"
+                  sx={{
+                    mt: 0.5,
+                    color: "rgba(0,0,0,0.45)",
+                    "&:hover": { color: "#dc2626", bgcolor: "rgba(220,38,38,0.06)" },
+                  }}
+                >
+                  <FiX size={20} />
+                </IconButton>
+              </Box>
+            ))}
+          </Stack>
+          <Button
+            type="button"
+            variant="outlined"
+            startIcon={<FiPlus size={18} />}
+            onClick={addSubCategoryRow}
+            sx={{
+              mt: 1.5,
+              mb: 0.5,
+              textTransform: "none",
+              borderColor: bordergrayColor,
+              color: primaryColor,
+              fontWeight: 600,
+              borderRadius: 2,
+              "&:hover": { borderColor: primaryColor, bgcolor: "rgba(138,56,245,0.04)" },
+            }}
+          >
+            Add sub-category
+          </Button>
         </DialogContent>
         <DialogActions sx={{ px: 3, pb: 2 }}>
           <Button onClick={closeDialog} color="inherit">

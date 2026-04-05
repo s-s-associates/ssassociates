@@ -35,6 +35,32 @@ import { BeatLoader } from "react-spinners";
 import Swal from "sweetalert2";
 import * as Yup from "yup";
 
+/** Names from a category document (matches /user/category shape). */
+function subCategoryNamesFromOption(cat) {
+  if (!cat?.subCategories || !Array.isArray(cat.subCategories)) return [];
+  return cat.subCategories
+    .map((s) => (typeof s === "string" ? s : s?.name))
+    .filter(Boolean)
+    .map((n) => String(n).trim())
+    .filter(Boolean);
+}
+
+/** Scrollable list after max height — used for category & sub-category selects */
+const scrollableSelectMenuProps = {
+  PaperProps: {
+    sx: {
+      maxHeight: 280,
+      mt: 0.5,
+      borderRadius: 2,
+      boxShadow: "0 8px 28px rgba(0,0,0,0.12)",
+      border: "1px solid rgba(0,0,0,0.08)",
+      "& .MuiMenu-list": { py: 0.5, maxHeight: 280, overflowY: "auto" },
+    },
+  },
+  anchorOrigin: { vertical: "bottom", horizontal: "left" },
+  transformOrigin: { vertical: "top", horizontal: "left" },
+};
+
 const STATUS_OPTIONS = ["Completed", "Ongoing", "Upcoming"];
 const CTA_OPTIONS = ["Contact Us", "Get Quote", "View Brochure"];
 const AREA_UNITS = ["sq ft", "m²", "Marla", "Kanal"];
@@ -78,6 +104,7 @@ const projectSchema = Yup.object().shape({
   description: Yup.string().trim(),
   clientName: Yup.string().trim(),
   category: Yup.string().trim().required("Category is required"),
+  subCategory: Yup.string().trim(),
   projectArea: Yup.string().trim(),
   projectAreaUnit: Yup.string().oneOf(AREA_UNITS),
   budget: Yup.string().trim(),
@@ -113,6 +140,7 @@ const defaultValues = {
   description: "",
   clientName: "",
   category: "",
+  subCategory: "",
   projectArea: "",
   projectAreaUnit: "sq ft",
   budget: "",
@@ -485,6 +513,17 @@ export default function ProjectForm({ projectId, initialData, onSuccess }) {
 
       <Formik initialValues={initialValues} validationSchema={projectSchema} onSubmit={handleSubmit} enableReinitialize>
         {({ values, errors, touched, handleChange, handleBlur, handleSubmit, isSubmitting, setFieldValue, validateForm, setTouched, submitForm }) => {
+          const selectedCategoryDoc = categoryOptions.find((c) => c.name === values.category);
+          const subCategoryOptions = subCategoryNamesFromOption(selectedCategoryDoc);
+          const subTrim = values.subCategory ? String(values.subCategory).trim() : "";
+          const orphanSub =
+            subTrim && !subCategoryOptions.includes(subTrim) ? subTrim : null;
+
+          const handleCategoryChange = (e) => {
+            setFieldValue("category", e.target.value);
+            setFieldValue("subCategory", "");
+          };
+
           const FIELD_ORDER = ["title", "status", "category", "ctaLink", "durationEnd", "videoUrl"];
           const handleSubmitClick = async () => {
             if (isSubmitting) return;
@@ -630,33 +669,115 @@ export default function ProjectForm({ projectId, initialData, onSuccess }) {
                   <TextField fullWidth multiline rows={4} label="Full Description" name="description" value={values.description} onChange={handleChange} onBlur={handleBlur} sx={inputSx} />
                   <TextField fullWidth label="Client Name" name="clientName" value={values.clientName} onChange={handleChange} onBlur={handleBlur} sx={inputSx} />
 
-                  {/* Category · Project Area · Unit — one row */}
-                  <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", sm: "1.5fr 1fr 1fr" }, gap: 2 }}>
+                  {/* Category · Sub-category · Project Area · Unit */}
+                  <Box
+                    sx={{
+                      display: "grid",
+                      gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr", lg: "1.15fr 1.15fr 1fr 0.9fr" },
+                      gap: 2,
+                    }}
+                  >
                     <Box id="field-category">
                       <FormControl fullWidth sx={inputSx} error={touched.category && !!errors.category}>
-                        <Select name="category" value={values.category} onChange={handleChange} onBlur={handleBlur} displayEmpty>
+                        <InputLabel id="project-category-label">Category</InputLabel>
+                        <Select
+                          labelId="project-category-label"
+                          label="Category"
+                          name="category"
+                          value={values.category}
+                          onChange={handleCategoryChange}
+                          onBlur={handleBlur}
+                          displayEmpty
+                          MenuProps={scrollableSelectMenuProps}
+                        >
                           <MenuItem value="" disabled>
                             {categoryOptions.length === 0 ? "No categories — add at Category page" : "Select category"}
                           </MenuItem>
                           {values.category && !categoryOptions.some((c) => c.name === values.category) && (
                             <MenuItem value={values.category}>{values.category}</MenuItem>
                           )}
-                          {categoryOptions.map((c) => <MenuItem key={c._id} value={c.name}>{c.name}</MenuItem>)}
+                          {categoryOptions.map((c) => (
+                            <MenuItem key={c._id} value={c.name}>
+                              {c.name}
+                            </MenuItem>
+                          ))}
                         </Select>
                         {touched.category && errors.category && (
-                          <FormHelperText error sx={{ color: ERROR_COLOR, fontWeight: 500, ml: 1.75 }}>{errors.category}</FormHelperText>
+                          <FormHelperText error sx={{ color: ERROR_COLOR, fontWeight: 500, ml: 1.75 }}>
+                            {errors.category}
+                          </FormHelperText>
+                        )}
+                      </FormControl>
+                    </Box>
+                    <Box id="field-subCategory">
+                      <FormControl
+                        fullWidth
+                        sx={inputSx}
+                        disabled={!values.category}
+                        error={touched.subCategory && !!errors.subCategory}
+                      >
+                        <InputLabel id="project-subcategory-label">Sub-category (optional)</InputLabel>
+                        <Select
+                          labelId="project-subcategory-label"
+                          label="Sub-category (optional)"
+                          name="subCategory"
+                          value={values.subCategory || ""}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          displayEmpty
+                          MenuProps={scrollableSelectMenuProps}
+                        >
+                          <MenuItem value="">
+                            <em>None</em>
+                          </MenuItem>
+                          {orphanSub ? (
+                            <MenuItem value={orphanSub}>{orphanSub}</MenuItem>
+                          ) : null}
+                          {subCategoryOptions.map((n) => (
+                            <MenuItem key={n} value={n}>
+                              {n}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                        {!values.category ? (
+                          <FormHelperText sx={{ ml: 1.75 }}></FormHelperText>
+                        ) : subCategoryOptions.length === 0 && !orphanSub ? (
+                          <FormHelperText sx={{ ml: 1.75 }}>
+                            No sub-categories for this category — add them under Category
+                          </FormHelperText>
+                        ) : null}
+                        {touched.subCategory && errors.subCategory && (
+                          <FormHelperText error sx={{ color: ERROR_COLOR, fontWeight: 500, ml: 1.75 }}>
+                            {errors.subCategory}
+                          </FormHelperText>
                         )}
                       </FormControl>
                     </Box>
                     <TextField
-                      label="Project Area" name="projectArea" value={values.projectArea}
-                      onChange={handleChange} onBlur={handleBlur} placeholder="e.g. 5000"
-                      sx={{ ...inputSx }} fullWidth
+                      label="Project Area"
+                      name="projectArea"
+                      value={values.projectArea}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      placeholder="e.g. 5000"
+                      sx={{ ...inputSx }}
+                      fullWidth
                     />
                     <FormControl fullWidth sx={inputSx}>
                       <InputLabel>Unit</InputLabel>
-                      <Select name="projectAreaUnit" value={values.projectAreaUnit} label="Unit" onChange={handleChange} onBlur={handleBlur}>
-                        {AREA_UNITS.map((u) => <MenuItem key={u} value={u}>{u}</MenuItem>)}
+                      <Select
+                        name="projectAreaUnit"
+                        value={values.projectAreaUnit}
+                        label="Unit"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        MenuProps={scrollableSelectMenuProps}
+                      >
+                        {AREA_UNITS.map((u) => (
+                          <MenuItem key={u} value={u}>
+                            {u}
+                          </MenuItem>
+                        ))}
                       </Select>
                     </FormControl>
                   </Box>

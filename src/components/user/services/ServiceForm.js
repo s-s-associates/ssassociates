@@ -39,6 +39,18 @@ function fileToDataUri(file) {
   });
 }
 
+/** Drop empty blocks; sub-services are optional end-to-end. */
+function normalizeSubServicesForPayload(raw) {
+  if (!Array.isArray(raw)) return [];
+  return raw
+    .map((s) => ({
+      title: (s?.title ?? "").trim(),
+      description: (s?.description ?? "").trim(),
+      items: (s?.items || []).map((i) => String(i).trim()).filter(Boolean),
+    }))
+    .filter((b) => b.title || b.description || b.items.length > 0);
+}
+
 async function uploadImageToCloudinary(token, file, folder = CLOUDINARY_FOLDER) {
   const dataUri = await fileToDataUri(file);
   const res = await fetch("/api/upload/cloudinary", {
@@ -95,7 +107,7 @@ function getInitialValues(initialData, isEdit) {
             description: s?.description ?? "",
             items: Array.isArray(s?.items) && s.items.length > 0 ? [...s.items] : [""],
           }))
-        : [{ title: "", description: "", items: [""] }],
+        : [],
   };
 }
 
@@ -121,13 +133,15 @@ export default function ServiceForm({ serviceId = null, initialData = null, isEd
     formik.setFieldValue(field, arr);
   };
 
-  const subServices = formik => formik.values.subServices || [{ title: "", description: "", items: [""] }];
+  const subServices = (formik) => formik.values.subServices || [];
   const addSubService = (formik) => {
     formik.setFieldValue("subServices", [...subServices(formik), { title: "", description: "", items: [""] }]);
   };
   const removeSubService = (formik, blockIndex) => {
-    const arr = subServices(formik).filter((_, i) => i !== blockIndex);
-    formik.setFieldValue("subServices", arr.length ? arr : [{ title: "", description: "", items: [""] }]);
+    formik.setFieldValue(
+      "subServices",
+      subServices(formik).filter((_, i) => i !== blockIndex)
+    );
   };
   const setSubServiceField = (formik, blockIndex, field, value) => {
     const arr = subServices(formik).map((b, i) =>
@@ -232,11 +246,7 @@ export default function ServiceForm({ serviceId = null, initialData = null, isEd
       whatYouGet: (values.whatYouGet || []).map((s) => String(s).trim()).filter(Boolean),
       extraBenefits: (values.extraBenefits || []).map((s) => String(s).trim()).filter(Boolean),
       conclusion: (values.conclusion || "").trim(),
-      subServices: (values.subServices || []).map((s) => ({
-        title: (s?.title ?? "").trim(),
-        description: (s?.description ?? "").trim(),
-        items: (s?.items || []).map((i) => String(i).trim()).filter(Boolean),
-      })),
+      subServices: normalizeSubServicesForPayload(values.subServices),
     };
     try {
       if (isEdit && serviceId) {
@@ -588,13 +598,44 @@ export default function ServiceForm({ serviceId = null, initialData = null, isEd
               </Button>
             </Box>
 
-            <Typography variant="subtitle2" sx={{ fontWeight: 600, color: "rgba(0,0,0,0.7)", mb: 1.5 }}>
-              Sub Services (optional)
+            <Typography variant="subtitle2" sx={{ fontWeight: 600, color: "rgba(0,0,0,0.7)", mb: 0.5 }}>
+              Sub-services <Typography component="span" variant="caption" sx={{ color: "rgba(0,0,0,0.45)", fontWeight: 500 }}>(optional)</Typography>
             </Typography>
             <Typography variant="caption" display="block" sx={{ color: "rgba(0,0,0,0.5)", mb: 1.5 }}>
-              Add multiple sub-service blocks. Each has title, description, and multiple points.
+              Skip entirely, or add blocks with title, description, and bullet points. Empty blocks are not saved.
             </Typography>
-            {(formik.values.subServices || [{ title: "", description: "", items: [""] }]).map((block, blockIndex) => (
+            {subServices(formik).length === 0 ? (
+              <Box
+                sx={{
+                  mb: 2,
+                  p: 2.5,
+                  borderRadius: 2,
+                  border: `1px dashed ${bordergrayColor}`,
+                  bgcolor: "rgba(0,0,0,0.02)",
+                  textAlign: "center",
+                }}
+              >
+                <Typography variant="body2" sx={{ color: "rgba(0,0,0,0.55)", mb: 1.5 }}>
+                  No sub-services — this is fine. Add some if you want to break this service into sections.
+                </Typography>
+                <Button
+                  type="button"
+                  size="small"
+                  startIcon={<FiPlus size={16} />}
+                  onClick={() => addSubService(formik)}
+                  sx={{
+                    textTransform: "none",
+                    color: primaryColor,
+                    fontWeight: 600,
+                    "&:hover": { bgcolor: "rgba(239,71,0,0.08)" },
+                  }}
+                >
+                  Add sub-service
+                </Button>
+              </Box>
+            ) : (
+              <>
+            {subServices(formik).map((block, blockIndex) => (
               <Box
                 key={blockIndex}
                 sx={{
@@ -607,14 +648,13 @@ export default function ServiceForm({ serviceId = null, initialData = null, isEd
               >
                 <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 1.5 }}>
                   <Typography variant="caption" fontWeight={600} color="text.secondary">
-                    Sub service {blockIndex + 1}
+                    Sub-service {blockIndex + 1}
                   </Typography>
                   <IconButton
                     size="small"
                     onClick={() => removeSubService(formik, blockIndex)}
-                    disabled={(formik.values.subServices || []).length <= 1}
                     sx={{ color: "#dc2626" }}
-                    aria-label="Remove sub service"
+                    aria-label="Remove sub-service"
                   >
                     <FiTrash2 size={18} />
                   </IconButton>
@@ -692,8 +732,10 @@ export default function ServiceForm({ serviceId = null, initialData = null, isEd
                 "&:hover": { bgcolor: "rgba(239,71,0,0.08)" },
               }}
             >
-              Add sub service
+              Add another sub-service
             </Button>
+              </>
+            )}
 
             <Typography variant="subtitle2" sx={{ fontWeight: 600, color: "rgba(0,0,0,0.7)", mb: 1.5 }}>
               Conclusion (optional)

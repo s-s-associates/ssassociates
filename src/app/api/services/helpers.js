@@ -21,13 +21,15 @@ export function normalizeServiceBody(body) {
     subServices: (() => {
       const raw = body.subServices;
       if (!Array.isArray(raw)) return [];
-      return raw.map((s) => ({
-        title: String(s?.title ?? "").trim(),
-        description: String(s?.description ?? "").trim(),
-        items: Array.isArray(s?.items)
-          ? s.items.map((i) => String(i).trim()).filter(Boolean)
-          : [],
-      }));
+      return raw
+        .map((s) => ({
+          title: String(s?.title ?? "").trim(),
+          description: String(s?.description ?? "").trim(),
+          items: Array.isArray(s?.items)
+            ? s.items.map((i) => String(i).trim()).filter(Boolean)
+            : [],
+        }))
+        .filter((b) => b.title || b.description || b.items.length > 0);
     })(),
   };
 }

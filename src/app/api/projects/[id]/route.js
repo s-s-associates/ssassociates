@@ -48,7 +48,7 @@ export async function PATCH(req, { params }) {
     const solutionsPathInstance = Project?.schema?.path("solutionsImplemented")?.instance;
     const allowed = [
       "bannerUrl", "title", "tagline", "location", "status", "year", "ctaType", "ctaLink",
-      "description", "clientName", "category", "projectArea", "projectAreaUnit", "budget", "durationStart", "durationEnd",
+      "description", "clientName", "category", "subCategory", "projectArea", "projectAreaUnit", "budget", "durationStart", "durationEnd",
       "structureType", "floors", "materialsUsed", "foundationType", "safetyStandards", "sustainabilityFeatures", "certifications",
       "imageGallery", "videoUrl",
       "challengesFaced", "solutionsImplemented", "uniqueApproach",

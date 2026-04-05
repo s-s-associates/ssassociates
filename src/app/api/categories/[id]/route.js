@@ -3,6 +3,7 @@ import { getUserFromRequest } from "@/lib/get-user-from-request";
 import Category from "@/models/Category";
 import Project from "@/models/Project";
 import { NextResponse } from "next/server";
+import { normalizeSubCategories } from "../helpers";
 
 export async function GET(req, { params }) {
   try {
@@ -50,8 +51,12 @@ export async function PATCH(req, { params }) {
       return NextResponse.json({ success: false, message: "Name is required" }, { status: 400 });
     }
     category.name = name;
+    if (body.subCategories !== undefined) {
+      category.subCategories = normalizeSubCategories(body.subCategories);
+    }
     await category.save();
-    return NextResponse.json({ success: true, category });
+    const updated = category.toObject();
+    return NextResponse.json({ success: true, category: updated });
   } catch (err) {
     console.error("Category PATCH error:", err);
     return NextResponse.json(
