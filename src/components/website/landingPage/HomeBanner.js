@@ -160,10 +160,10 @@ function HomeBanner() {
           inset: 0,
           zIndex: 1,
           pointerEvents: "none",
-          backgroundImage: "url(/images/home/home-banner-person.png)",
+          backgroundImage: "url(/images/home/home-banner-person2.png)",
           backgroundSize: "auto 120%",
           backgroundRepeat: "no-repeat",
-          backgroundPosition: "center center",
+          backgroundPosition: "top center",
           opacity: 0,
           transform: "translateY(80px)",
           animation: "personSlideIn 1s ease-out 0.3s forwards",
@@ -177,7 +177,7 @@ function HomeBanner() {
             display: { xs: "block", sm: "none" },
             position: "absolute",
             inset: 0,
-            background: "linear-gradient(to bottom, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.25) 50%, rgba(0,0,0,0.6) 100%)",
+            background: "linear-gradient(to bottom, rgba(0, 0, 0, 0.72) 0%, rgba(0, 0, 0, 0.49) 50%, rgba(0,0,0,0.6) 100%)",
           },
         }}
       />
