@@ -12,6 +12,38 @@ import React, { useEffect, useState } from "react";
 const FALLBACK_IMAGE = "/images/projects/thumbnail-min.webp";
 const SKELETON_COUNT = 6;
 
+const selectSx = {
+  color: whiteColor,
+  fontFamily: "var(--font-app)",
+  fontSize: 14,
+  fontWeight: 500,
+  borderRadius: 2,
+  "@keyframes borderPulse": {
+    "0%, 100%": { borderColor: primaryColor },
+    "50%":       { borderColor: "rgba(255,255,255,0.15)" },
+  },
+  "& .MuiOutlinedInput-notchedOutline": {
+    borderColor: primaryColor,
+    animation: "borderPulse 2s ease-in-out infinite",
+  },
+  "&:hover .MuiOutlinedInput-notchedOutline": { borderColor: primaryColor, animation: "none" },
+  "&.Mui-focused .MuiOutlinedInput-notchedOutline": { borderColor: primaryColor, animation: "none" },
+  "& .MuiSvgIcon-root": { color: whiteColor },
+};
+
+const menuProps = {
+  PaperProps: {
+    sx: {
+      bgcolor: "#1a1a2e",
+      color: whiteColor,
+      "& .MuiMenuItem-root:hover": { bgcolor: "rgba(255,255,255,0.08)" },
+      "& .Mui-selected": { bgcolor: `${primaryColor}22 !important` },
+    },
+  },
+};
+
+const menuItemSx = { fontFamily: "var(--font-app)", fontSize: 14, textTransform: "capitalize" };
+
 function mapProjectToCard(p) {
   const id = p?._id != null ? String(p._id) : "";
   return {
@@ -22,6 +54,7 @@ function mapProjectToCard(p) {
     companyName: (p?.clientName || "").trim(),
     address: (p?.location || p?.category || "").trim(),
     category: (p?.category || "").trim(),
+    subCategory: (p?.subCategory || "").trim(),
   };
 }
 
@@ -66,6 +99,7 @@ export default function ProjectCard({ maxProjects, showCategoryFilter } = {}) {
   const [fetchError, setFetchError] = useState(null);
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("all");
+  const [selectedSubCategory, setSelectedSubCategory] = useState("all");
 
   useEffect(() => {
     let cancelled = false;
@@ -109,12 +143,29 @@ export default function ProjectCard({ maxProjects, showCategoryFilter } = {}) {
     return () => { cancelled = true; };
   }, [showCategoryFilter]);
 
-  const projects =
-    showCategoryFilter && selectedCategory !== "all"
-      ? allProjects.filter(
-          (p) => p.category?.toLowerCase() === selectedCategory.toLowerCase()
-        )
-      : allProjects;
+  // Sub-categories of the currently selected main category
+  const activeSubCategories =
+    selectedCategory === "all"
+      ? []
+      : (categories.find(
+          (c) => c.name.toLowerCase() === selectedCategory.toLowerCase()
+        )?.subCategories || []);
+
+  const projects = (() => {
+    if (!showCategoryFilter) return allProjects;
+    let result = allProjects;
+    if (selectedCategory !== "all") {
+      result = result.filter(
+        (p) => p.category?.toLowerCase() === selectedCategory.toLowerCase()
+      );
+    }
+    if (selectedSubCategory !== "all") {
+      result = result.filter(
+        (p) => p.subCategory?.toLowerCase() === selectedSubCategory.toLowerCase()
+      );
+    }
+    return result;
+  })();
 
   return (
     <Box
@@ -184,58 +235,46 @@ export default function ProjectCard({ maxProjects, showCategoryFilter } = {}) {
               </Button>
             )}
             {showCategoryFilter && categories.length > 0 && (
-              <Select
-                value={selectedCategory}
-                onChange={(e) => setSelectedCategory(e.target.value)}
-                size="small"
-                sx={{
-                  color: whiteColor,
-                  fontFamily: "var(--font-app)",
-                  fontSize: 14,
-                  fontWeight: 500,
-                  borderRadius: 2,
-                  "@keyframes borderPulse": {
-                    "0%, 100%": { borderColor: primaryColor },
-                    "50%": { borderColor: "rgba(255,255,255,0.15)" },
-                  },
-                  "& .MuiOutlinedInput-notchedOutline": {
-                    borderColor: primaryColor,
-                    animation: "borderPulse 2s ease-in-out infinite",
-                  },
-                  "&:hover .MuiOutlinedInput-notchedOutline": {
-                    borderColor: primaryColor,
-                    animation: "none",
-                  },
-                  "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                    borderColor: primaryColor,
-                    animation: "none",
-                  },
-                  "& .MuiSvgIcon-root": { color: whiteColor },
-                }}
-                MenuProps={{
-                  PaperProps: {
-                    sx: {
-                      bgcolor: "#1a1a2e",
-                      color: whiteColor,
-                      "& .MuiMenuItem-root:hover": { bgcolor: "rgba(255,255,255,0.08)" },
-                      "& .Mui-selected": { bgcolor: `${primaryColor}22 !important` },
-                    },
-                  },
-                }}
-              >
-                <MenuItem value="all" sx={{ fontFamily: "var(--font-app)", fontSize: 14 }}>
-                  All Categories
-                </MenuItem>
-                {categories.map((cat) => (
-                  <MenuItem
-                    key={cat._id}
-                    value={cat.name}
-                    sx={{ fontFamily: "var(--font-app)", fontSize: 14, textTransform: "capitalize" }}
+              <Box sx={{ display: "flex", flexDirection: "column", gap: 1.5 }}>
+                {/* Main category dropdown */}
+                <Select
+                  value={selectedCategory}
+                  onChange={(e) => {
+                    setSelectedCategory(e.target.value);
+                    setSelectedSubCategory("all");
+                  }}
+                  size="small"
+                  sx={selectSx}
+                  MenuProps={menuProps}
+                >
+                  <MenuItem value="all" sx={menuItemSx}>All Categories</MenuItem>
+                  {categories.map((cat) => (
+                    <MenuItem key={cat._id} value={cat.name} sx={menuItemSx}>
+                      {cat.name}
+                    </MenuItem>
+                  ))}
+                </Select>
+
+                {/* Sub-category dropdown — only when the selected category has sub-categories */}
+                {selectedCategory !== "all" && activeSubCategories.length > 0 && (
+                  <Select
+                    value={selectedSubCategory}
+                    onChange={(e) => setSelectedSubCategory(e.target.value)}
+                    size="small"
+                    sx={selectSx}
+                    MenuProps={menuProps}
                   >
-                    {cat.name}
-                  </MenuItem>
-                ))}
-              </Select>
+                    <MenuItem value="all" sx={menuItemSx}>
+                      All {selectedCategory}
+                    </MenuItem>
+                    {activeSubCategories.map((sub) => (
+                      <MenuItem key={sub._id} value={sub.name} sx={menuItemSx}>
+                        {sub.name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                )}
+              </Box>
             )}
           </Box>
         </Grid>

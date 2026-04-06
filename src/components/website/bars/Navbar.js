@@ -152,7 +152,7 @@ function Navbar() {
             // maxWidth: 1200,
             margin: "0 auto",
             px: { xs: 2, sm: 3 },
-            py: 1.6,
+            py: 0.5,
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
@@ -177,8 +177,8 @@ function Navbar() {
             >
               <Box
                 sx={{
-                  width: 50,
-                  height: 50,
+                  width: 60,
+                  height: 60,
                   borderRadius: 1,
                   overflow: "hidden",
                   // bgcolor: secondaryColor,
@@ -190,10 +190,11 @@ function Navbar() {
               >
                 <Link href="/" style={{ display: "inline-flex" }}>
                   <Image
-                    src={process.env.NEXT_PUBLIC_COMPANY_LOGO_URL || "/logo.png"}
+                    src={"/transparent-white.png"}
                     alt={COMPANY_NAME}
-                    width={50}
-                    height={50}
+                    width={60}
+                    height={60}
+                    quality={100}
                     priority
                     fetchPriority="high"
                     style={{ objectFit: "contain" }}
@@ -234,7 +235,7 @@ function Navbar() {
                     mt: 0.25,
                   }}
                 >
-                  Building Excellence
+                  Building With Excellence
                 </Box>
               </Box>
             </Box>

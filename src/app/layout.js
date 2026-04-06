@@ -66,8 +66,8 @@ export const metadata = {
     },
   },
   icons: {
-    icon: "/logo.png",
-    apple: "/logo.png",
+    icon: process.env.NEXT_PUBLIC_COMPANY_LOGO_URL || "/logo.png",
+    apple: process.env.NEXT_PUBLIC_COMPANY_LOGO_URL || "/logo.png",
   },
   openGraph: {
     type: "website",

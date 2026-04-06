@@ -95,7 +95,7 @@ function Footer() {
       sx={{
         bgcolor: secondaryDark,
         color: textGrayLight,
-        pt: 6,
+        pt: 3,
         pb: 0,
       }}
     >
@@ -128,10 +128,10 @@ function Footer() {
           >
             <Box
               sx={{
-                width: 70,
-                height: 70,
+                width: 180,
+                height: 180,
                 flexShrink: 0,
-                borderRadius: 100,
+                borderRadius: 2,
                 overflow: "hidden",
                 display: "flex",
                 alignItems: "center",
@@ -139,14 +139,15 @@ function Footer() {
               }}
             >
               <Image
-                src={process.env.NEXT_PUBLIC_COMPANY_LOGO_URL || "/logo.png"}
+                src="/transparent-full-logo.png"
                 alt={COMPANY_NAME}
-                width={70}
-                height={70}
+                quality={100}
+                width={180}
+                height={180}
                 style={{ objectFit: "contain", backgroundColor: "transparent" }}
               />
             </Box>
-            <Box sx={{ display: "flex", flexDirection: "column", gap: 0.25 }}>
+            {/* <Box sx={{ display: "flex", flexDirection: "column", gap: 0.25 }}>
               <Box
                 component={Link}
                 href="/user/dashboard"
@@ -175,9 +176,9 @@ function Footer() {
                   color: textGrayLight,
                 }}
               >
-                Building Excellence
+                Building With Excellence
               </Box>
-            </Box>
+            </Box> */}
           </Box>
           <Box
             sx={{
@@ -228,7 +229,7 @@ function Footer() {
         </Box>
 
         {/* Column 2: Quick Links */}
-        <Box  ml={["auto", "auto", "auto", 12]}>
+        <Box  ml={["none", "none", "none", 12]}>
           <Box
             sx={{
               fontFamily: "var(--font-app)",

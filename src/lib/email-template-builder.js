@@ -16,7 +16,7 @@ export function buildBrandedEmail({ body, heading, ctaText, ctaUrl, appUrl, comp
   const BRAND_DARK = "#c96c10";
   const DARK_BG    = "#111111";
   const company    = companyName || "S&S Associates";
-  const logoUrl    = appUrl ? `${appUrl}/logo.png` : "/logo.png";
+  const logoUrl    = `${process.env.NEXT_PUBLIC_COMPANY_LOGO_URL}` || `${appUrl}/logo.png`;
   const year       = new Date().getFullYear();
 
   const headingBlock = heading

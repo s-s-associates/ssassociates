@@ -145,7 +145,7 @@ function Navbar() {
             }}
           >
             <Image
-              src="/logo.png"
+              src={process.env.NEXT_PUBLIC_COMPANY_LOGO_URL || "/logo.png"}
               alt={process.env.NEXT_PUBLIC_COMPANY_NAME}
               width={36}
               height={36}

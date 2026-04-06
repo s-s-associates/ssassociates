@@ -95,7 +95,7 @@ function Sidebar() {
         }}
       >
         <Image
-          src="/logo.png"
+          src={process.env.NEXT_PUBLIC_COMPANY_LOGO_URL || "/logo.png"}
           alt={COMPANY_NAME}
           width={36}
           height={36}

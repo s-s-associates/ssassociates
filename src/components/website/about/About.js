@@ -6,6 +6,7 @@ import OurProcess from "./OurProcess";
 import WhoWeAre from "./WhoWeAre";
 import Stats from "./Stats";
 import WhyChooseUs from "./WhyChooseUs";
+import MessageFromCEO from "./MessageFromCEO";
 
 function About() {
   return (
@@ -13,6 +14,7 @@ function About() {
       <Banner />
       <OurPrinciples />
       <Stats />
+      <MessageFromCEO />
       <WhyChooseUs />
       <WhoWeAre />
       <OurProcess />

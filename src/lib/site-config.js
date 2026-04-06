@@ -23,7 +23,7 @@ export const SITE_NAME = process.env.NEXT_PUBLIC_COMPANY_NAME || "S&S Associates
 
 /** Default social preview image when a page has no specific image. */
 export function getDefaultOgImagePath() {
-  return "/logo.png";
+  return process.env.NEXT_PUBLIC_COMPANY_LOGO_URL || "/logo.png";
 }
 
 /**

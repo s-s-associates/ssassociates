@@ -185,7 +185,7 @@ function Login() {
                     flexShrink: 0,
                     boxShadow: "0 4px 20px rgba(0,0,0,0.3)",
                   }}>
-                    <Image src="/logo.png" alt="S&S Associates" width={30} height={30}
+                    <Image src={process.env.NEXT_PUBLIC_COMPANY_LOGO_URL || "/logo.png"} alt="S&S Associates" width={30} height={30}
                       style={{ objectFit: "contain", width: "75%", height: "75%" }} />
                   </Box>
                   {/* Brand text */}
