@@ -190,7 +190,7 @@ function Navbar() {
               >
                 <Link href="/" style={{ display: "inline-flex" }}>
                   <Image
-                    src="/logo.png"
+                    src={process.env.NEXT_PUBLIC_COMPANY_LOGO_URL || "/logo.png"}
                     alt={COMPANY_NAME}
                     width={50}
                     height={50}
