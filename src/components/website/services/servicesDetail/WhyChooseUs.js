@@ -13,15 +13,15 @@ import { fadeUp } from "./serviceDetailShared";
 
 const STATS = [
   {
-    num: `${process.env.NEXT_PUBLIC_PROJECTS_COMPLETED}+`,
+    num: `${process.env.NEXT_PUBLIC_PROJECTS_COMPLETED}`,
     label: "Projects completed",
   },
   {
-    num: `${process.env.NEXT_PUBLIC_COMPANY_EXPERIENCE}+`,
+    num: `${process.env.NEXT_PUBLIC_COMPANY_EXPERIENCE}`,
     label: "Years experience",
   },
   { num: "98%", label: "On-time delivery" },
-  { num: `${process.env.NEXT_PUBLIC_HAPPY_CLIENTS}+`, label: "Happy clients" },
+  { num: `${process.env.NEXT_PUBLIC_HAPPY_CLIENTS}`, label: "Happy clients" },
 ];
 
 export default function WhyChooseUs({ extraBenefits }) {

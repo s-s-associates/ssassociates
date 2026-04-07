@@ -12,8 +12,8 @@ const COMPANY_PHONE = process.env.NEXT_PUBLIC_COMPANY_PHONE || "+923008414733";
 const COMPANY_EMAIL = process.env.NEXT_PUBLIC_COMPANY_EMAIL || "info@ssassociates.com";
 
 const whyChooseUsItems = [
-  `${process.env.NEXT_PUBLIC_COMPANY_EXPERIENCE}+ years of industry experience`,
-  `${process.env.NEXT_PUBLIC_PROJECTS_COMPLETED}+ successful projects completed`,
+  `${process.env.NEXT_PUBLIC_COMPANY_EXPERIENCE} years of industry experience`,
+  `${process.env.NEXT_PUBLIC_PROJECTS_COMPLETED} successful projects completed`,
   "Award-winning construction team",
   "Licensed and fully insured",
   "Competitive pricing and financing options",

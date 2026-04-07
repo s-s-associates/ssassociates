@@ -43,7 +43,7 @@ const stats = [
   {
     icon: Engineering,
     label: "Projects Delivered",
-    value: Number(process.env.NEXT_PUBLIC_PROJECTS_COMPLETED),
+    value: parseInt(process.env.NEXT_PUBLIC_PROJECTS_COMPLETED) || 120,
     suffix: "+",
     hint: "Residential & commercial builds",
   },
@@ -57,7 +57,7 @@ const stats = [
   {
     icon: EmojiPeople,
     label: "Happy Clients",
-    value: Number(process.env.NEXT_PUBLIC_HAPPY_CLIENTS),
+    value: parseInt(process.env.NEXT_PUBLIC_HAPPY_CLIENTS) || 100,
     suffix: "+",
     hint: "Client satisfaction rating",
   },

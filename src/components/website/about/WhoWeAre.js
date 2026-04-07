@@ -25,7 +25,7 @@ const FACE_BOTTOM_URL =
   "/images/about/whoweare-4.jpg";
 
 const highlights = [
-  { label: `${process.env.NEXT_PUBLIC_COMPANY_EXPERIENCE}+`, sub: "Years experience" },
+  { label: `${process.env.NEXT_PUBLIC_COMPANY_EXPERIENCE}`, sub: "Years experience" },
   { label: "2001", sub: "Founded" },
   { label: "360°", sub: "Delivery focus" },
 ];

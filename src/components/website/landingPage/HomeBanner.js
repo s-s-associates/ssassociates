@@ -245,7 +245,7 @@ function HomeBanner() {
           sx={{
             color: "#fff",
             fontFamily: `${monoton.style.fontFamily}, var(--font-app) !important`,
-            fontSize: { xs: 34, sm: 46, md: 54, lg: 62 },
+            fontSize: { xs: 34, sm: 46, md: 50, lg: 58 },
             letterSpacing: 2,
             textTransform: "uppercase",
             margin: 0,
