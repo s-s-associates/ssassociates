@@ -1,4 +1,5 @@
 import LandingPage from "@/components/website/landingPage/LandingPage";
+import UnderMaintenance from "@/components/website/UnserMaintenance";
 import { getPublicFaqs, getPublicProjects, getPublicServices, getPublicTestimonials } from "@/lib/public-content";
 import { SITE_NAME, truncateMetaDescription } from "@/lib/site-config";
 
@@ -22,11 +23,14 @@ export default async function Home() {
   ]);
 
   return (
+    <>
     <LandingPage
       initialServices={initialServices}
       initialProjects={initialProjects}
       initialTestimonials={initialTestimonials}
       initialFaqs={initialFaqs}
     />
+    <UnderMaintenance />
+    </>
   );
 }

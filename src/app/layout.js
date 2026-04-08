@@ -112,7 +112,9 @@ export default function RootLayout({ children }) {
       </head>
       <body style={{ backgroundColor: bggrayColor, maxWidth: "1700px", margin: "0 auto" }}>
         <GlobalWebsiteJsonLd baseUrl={siteUrl} contact={{}} />
-        <ThemeRegistry>{children}</ThemeRegistry>
+        <ThemeRegistry>
+          {children}
+          </ThemeRegistry>
       </body>
     </html>
   );
