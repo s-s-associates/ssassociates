@@ -8,12 +8,13 @@ import {
   FiUserPlus,
   FiUsers,
 } from "react-icons/fi";
-import { MdPeopleOutline } from "react-icons/md";
+import { MdHandshake, MdPeopleOutline } from "react-icons/md";
 
 export const menuItems = [
   { label: "Dashboard", href: "/user/dashboard", Icon: FiGrid },
   { label: "Admins", href: "/user/admins", Icon: FiUsers },
   { label: "Clients", href: "/user/clients", Icon: MdPeopleOutline },
+  { label: "Our Partners", href: "/user/partners", Icon: MdHandshake },
   { label: "Contact submission", href: "/user/contact-submissions", Icon: FiMail },
   { label: "Subscribers", href: "/user/subscribers", Icon: FiUserPlus },
   { label: "Project pages", href: "/user/category", Icon: FiFolder, hasSubmenu: true },

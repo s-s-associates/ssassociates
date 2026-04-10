@@ -13,13 +13,14 @@ import {
   FiUserPlus,
   FiUsers,
 } from "react-icons/fi";
-import { MdPeopleOutline } from "react-icons/md";
+import { MdHandshake, MdPeopleOutline } from "react-icons/md";
 
 const CARDS_CONFIG = [
   { label: "Projects", key: "projects", icon: FiFolder, color: primaryColor },
   { label: "Categories", key: "categories", icon: FiLayers, color: "#0EA5E9" },
   { label: "Admins", key: "admins", icon: FiUsers, color: "#10B981" },
   { label: "Clients", key: "clients", icon: MdPeopleOutline, color: "#F59E0B" },
+  { label: "Our Partners", key: "partners", icon: MdHandshake, color: "#D97706" },
   {
     label: "Contact submissions",
     key: "contactSubmissions",

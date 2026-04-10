@@ -20,6 +20,7 @@ const DEFAULT_COUNTS = {
   categories: 0,
   admins: 0,
   clients: 0,
+  partners: 0,
   contactSubmissions: 0,
   subscribers: 0,
   services: 0,
@@ -60,6 +61,7 @@ export function useDashboardData() {
         catRes,
         admRes,
         clientsRes,
+        partnersRes,
         submissionsRes,
         subscribersRes,
         servicesRes,
@@ -70,6 +72,7 @@ export function useDashboardData() {
         fetch("/api/categories", { headers }),
         fetch("/api/admins", { headers }),
         fetch("/api/clients", { headers }),
+        fetch("/api/partners", { headers }),
         fetch("/api/contact-submissions", { headers }),
         fetch("/api/subscribers", { headers }),
         fetch("/api/services", { headers }),
@@ -81,6 +84,7 @@ export function useDashboardData() {
       const categories = catRes.ok ? (await catRes.json()).categories || [] : [];
       const admins = admRes.ok ? (await admRes.json()).admins || [] : [];
       const clients = clientsRes.ok ? (await clientsRes.json()).clients || [] : [];
+      const partners = partnersRes.ok ? (await partnersRes.json()).partners || [] : [];
       const submissions = submissionsRes.ok ? (await submissionsRes.json()).submissions || [] : [];
       const subscribers = subscribersRes.ok ? (await subscribersRes.json()).subscribers || [] : [];
       const services = servicesRes.ok ? (await servicesRes.json()).services || [] : [];
@@ -92,6 +96,7 @@ export function useDashboardData() {
         categories: categories.length,
         admins: admins.length,
         clients: clients.length,
+        partners: partners.length,
         contactSubmissions: submissions.length,
         subscribers: subscribers.length,
         services: services.length,
