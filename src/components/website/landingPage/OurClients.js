@@ -6,7 +6,7 @@ import {
   secondaryDark,
   whiteColor,
 } from "@/components/utils/Colors";
-import { Box, CircularProgress, Typography } from "@mui/material";
+import { Box, CircularProgress, Tooltip, Typography } from "@mui/material";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
@@ -26,6 +26,14 @@ function initialsFromTitle(title) {
     return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
   }
   return t.slice(0, 2).toUpperCase();
+}
+
+function normalizeExternalUrl(url) {
+  const raw = String(url || "").trim();
+  if (!raw) return null;
+  if (/^(https?:|mailto:|tel:)/i.test(raw)) return raw;
+  if (raw.startsWith("//")) return `https:${raw}`;
+  return `https://${raw}`;
 }
 
 const cardSx = {
@@ -68,7 +76,7 @@ const logoWellSx = {
 };
 
 function ClientCard({ client, onHoverChange }) {
-  const href = client.url && String(client.url).trim() ? String(client.url).trim() : null;
+  const href = normalizeExternalUrl(client?.url);
   const hasImage = client.imageUrl && String(client.imageUrl).trim();
 
   return (
@@ -143,33 +151,42 @@ function ClientCard({ client, onHoverChange }) {
               href={href}
               target="_blank"
               rel="noopener noreferrer"
+              onPointerDown={(e) => {
+                // Prevent slider drag from stealing icon click.
+                e.stopPropagation();
+              }}
+              onClick={(e) => {
+                e.stopPropagation();
+              }}
               style={{ textDecoration: "none" }}
             >
-              <Box
-                sx={{
-                  position: "absolute",
-                  top: 2,
-                  right: 2,
-                  zIndex: 2,
-                  width: 30,
-                  height: 30,
-                  borderRadius: 1.5,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  bgcolor: "rgba(8, 12, 20, 0.62)",
-                  border: "1px solid rgba(255, 255, 255, 0.22)",
-                  backdropFilter: "blur(8px)",
-                  boxShadow: "0 4px 14px rgba(0,0,0,0.35)",
-                  transition: "background-color 0.2s ease, border-color 0.2s ease",
-                  "&:hover": {
-                    bgcolor: primaryColor,
-                    borderColor: primaryColor,
-                  },
-                }}
-              >
-                <OpenInNewRoundedIcon sx={{ fontSize: 18, color: primaryLight }} />
-              </Box>
+              <Tooltip title="Visit Website" placement="top" arrow>
+                <Box
+                  sx={{
+                    position: "absolute",
+                    top: 2,
+                    right: 2,
+                    zIndex: 2,
+                    width: 30,
+                    height: 30,
+                    borderRadius: 1.5,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    bgcolor: "rgba(8, 12, 20, 0.62)",
+                    border: "1px solid rgba(255, 255, 255, 0.22)",
+                    backdropFilter: "blur(8px)",
+                    boxShadow: "0 4px 14px rgba(0,0,0,0.35)",
+                    transition: "background-color 0.2s ease, border-color 0.2s ease",
+                    "&:hover": {
+                      bgcolor: primaryColor,
+                      borderColor: primaryColor,
+                    },
+                  }}
+                >
+                  <OpenInNewRoundedIcon sx={{ fontSize: 18, color: primaryLight }} />
+                </Box>
+              </Tooltip>
             </Link>
           ) : null}
         </Box>
@@ -476,7 +493,7 @@ function OurClients() {
               mb: 1.5,
             }}
           >
-            Our Partners
+            Our Clients
           </Typography>
           <Box
             sx={{

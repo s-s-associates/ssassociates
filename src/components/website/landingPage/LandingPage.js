@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
 import OurClients from "./OurClients";
+import OurPartners from "./OurPartners";
 import Stats from "../about/Stats";
 import Faqs from "./Faqs";
 import ContactForm from "../contact/ContactForm";
@@ -28,6 +29,7 @@ function LandingPage({
       <ServicesCards initialServices={initialServices} />
       <ProjectCard maxProjects={5} initialProjects={initialProjects} />
       <OurClients />
+      <OurPartners />
       <WhoWeAre />
       <OurProcess />
       <ContactForm />

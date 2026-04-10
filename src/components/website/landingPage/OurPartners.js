@@ -1,0 +1,572 @@
+"use client";
+
+import { useState, useRef, useEffect } from "react";
+import {
+  Box,
+  Typography,
+  Button,
+  IconButton,
+  Container,
+  Chip,
+  CircularProgress,
+} from "@mui/material";
+import ArrowBackIosNewRoundedIcon from "@mui/icons-material/ArrowBackIosNewRounded";
+import ArrowForwardIosRoundedIcon from "@mui/icons-material/ArrowForwardIosRounded";
+import OpenInNewRoundedIcon from "@mui/icons-material/OpenInNewRounded";
+
+function normalizeExternalUrl(url) {
+  const raw = String(url || "").trim();
+  if (!raw) return null;
+  if (/^(https?:|mailto:|tel:)/i.test(raw)) return raw;
+  if (raw.startsWith("//")) return `https:${raw}`;
+  return `https://${raw}`;
+}
+
+function PartnerLogo({ src, alt }) {
+  return (
+    <Box
+      component="img"
+      src={src}
+      alt={alt || "Partner"}
+      sx={{
+        width: "100%",
+        height: "100%",
+        objectFit: "contain",
+        borderRadius: "8px",
+        filter: "brightness(1.05) contrast(1.05)",
+        transition: "transform 0.3s ease",
+      }}
+    />
+  );
+}
+
+export default function OurPartners() {
+  const [partners, setPartners] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [fetchError, setFetchError] = useState(null);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [contentVisible, setContentVisible] = useState(true);
+  const [slideDirection, setSlideDirection] = useState("right");
+  const trackRef = useRef(null);
+  const nextRef = useRef(() => {});
+  const activeIndexRef = useRef(0);
+  /** Card width in horizontal slider; smaller below `md` (900px) for narrow screens */
+  const slideCardWidth = { xs: 300, sm: 340, md: 400 };
+  /** Inline padding so first/last slides can snap to viewport center */
+  const slideTrackPaddingX = {
+    xs: "max(16px, calc((100% - 300px) / 2))",
+    sm: "max(16px, calc((100% - 340px) / 2))",
+    md: "max(16px, calc((100% - 400px) / 2))",
+  };
+  const AUTO_SLIDE_MS = 3000;
+
+  useEffect(() => {
+    activeIndexRef.current = activeIndex;
+  }, [activeIndex]);
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      setFetchError(null);
+      try {
+        const res = await fetch("/api/partners", { cache: "no-store" });
+        const data = await res.json();
+        if (cancelled) return;
+        if (data.success && Array.isArray(data.partners)) {
+          setPartners(data.partners);
+          setActiveIndex(0);
+        } else {
+          setFetchError(data.message || "Could not load partners");
+        }
+      } catch (e) {
+        if (!cancelled) setFetchError(e.message || "Failed to load partners");
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (activeIndex >= partners.length && partners.length > 0) {
+      setActiveIndex(0);
+    }
+  }, [partners.length, activeIndex]);
+
+  const scrollToSlide = (index) => {
+    const track = trackRef.current;
+    if (!track) return;
+    const run = () => {
+      const t = trackRef.current;
+      if (!t) return;
+      const slides = t.querySelectorAll("[data-slide]");
+      const slide = slides[index];
+      if (!slide) return;
+      const tRect = t.getBoundingClientRect();
+      const sRect = slide.getBoundingClientRect();
+      const delta =
+        sRect.left + sRect.width / 2 - (tRect.left + tRect.width / 2);
+      t.scrollBy({ left: delta, behavior: "smooth" });
+    };
+    requestAnimationFrame(() => {
+      requestAnimationFrame(run);
+    });
+  };
+
+  const goTo = (index, direction = "right") => {
+    if (!partners.length) return;
+    const len = partners.length;
+    const wrapped = ((index % len) + len) % len;
+    if (wrapped === activeIndexRef.current) return;
+    setSlideDirection(direction);
+    setContentVisible(false);
+    setTimeout(() => {
+      setActiveIndex(wrapped);
+      activeIndexRef.current = wrapped;
+      setContentVisible(true);
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => scrollToSlide(wrapped));
+      });
+    }, 260);
+  };
+
+  const prev = () => {
+    if (!partners.length) return;
+    const current = activeIndexRef.current;
+    const newIndex = (current - 1 + partners.length) % partners.length;
+    goTo(newIndex, "left");
+  };
+
+  const next = () => {
+    if (!partners.length) return;
+    const current = activeIndexRef.current;
+    const newIndex = (current + 1) % partners.length;
+    goTo(newIndex, "right");
+  };
+
+  nextRef.current = next;
+
+  useEffect(() => {
+    if (partners.length <= 1) return undefined;
+    const id = setInterval(() => nextRef.current(), AUTO_SLIDE_MS);
+    return () => clearInterval(id);
+  }, [partners.length]);
+
+  /** Center the active card after data loads (padding + layout need a frame) */
+  useEffect(() => {
+    if (!partners.length) return undefined;
+    const id = window.setTimeout(() => scrollToSlide(activeIndexRef.current), 150);
+    return () => window.clearTimeout(id);
+  }, [partners.length]);
+
+  const partner = partners[activeIndex];
+  const websiteHref = partner ? normalizeExternalUrl(partner.url) : null;
+
+  return (
+    <Box
+      component="section"
+      sx={{
+        background: "#0A0A0A",
+        py: { xs: 8, md: 10 },
+        overflow: "hidden",
+        position: "relative",
+        "&::before": {
+          content: '""',
+          position: "absolute",
+          top: 0,
+          left: "50%",
+          transform: "translateX(-50%)",
+          width: "600px",
+          height: "1px",
+          background:
+            "linear-gradient(90deg, transparent, #FF6A00 50%, transparent)",
+        },
+      }}
+    >
+      <Container maxWidth="xl" sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+        {/* Section heading */}
+        <Box sx={{ mb: { xs: 6, md: 8 }, textAlign: "center", width: "100%" }}>
+          <Typography
+            variant="overline"
+            sx={{
+              color: "#FF6A00",
+              letterSpacing: 4,
+              fontSize: "0.75rem",
+              fontWeight: 600,
+              display: "block",
+              mb: 1,
+            }}
+          >
+            Trusted By
+          </Typography>
+          <Typography
+            variant="h2"
+            sx={{
+              color: "#FFFFFF",
+              fontWeight: 700,
+              fontSize: { xs: "2rem", md: "2.75rem" },
+              lineHeight: 1.2,
+              "& span": { color: "#FF6A00" },
+            }}
+          >
+            Our <span>Partners</span>
+          </Typography>
+          <Typography
+            sx={{
+              color: "rgba(255,255,255,0.45)",
+              mt: 2,
+              maxWidth: 520,
+              mx: "auto",
+              fontSize: "1rem",
+              lineHeight: 1.7,
+            }}
+          >
+            We collaborate with industry leaders who share our vision for
+            innovation and excellence.
+          </Typography>
+        </Box>
+
+        {loading ? (
+          <Box sx={{ py: 8, display: "flex", justifyContent: "center" }}>
+            <CircularProgress sx={{ color: "#FF6A00" }} />
+          </Box>
+        ) : fetchError ? (
+          <Typography sx={{ color: "rgba(255,255,255,0.55)", textAlign: "center", py: 4 }}>
+            {fetchError}
+          </Typography>
+        ) : !partners.length ? (
+          <Typography sx={{ color: "rgba(255,255,255,0.55)", textAlign: "center", py: 4 }}>
+            No partners to show yet.
+          </Typography>
+        ) : (
+        /* Main slider + content layout — centered as one block */
+        <Box mt={-5} py={2}
+          sx={{
+            display: "flex",
+            flexDirection: { xs: "column", md: "row" },
+            gap: { xs: 5, md: 8 },
+            alignItems: { xs: "center", md: "center" },
+            justifyContent: "center",
+            width: "100%",
+            maxWidth: 1100,
+            mx: "auto",
+          }}
+        >
+          {/* Logo slider — below detail when viewport is under md (900px) */}
+          <Box
+            sx={{
+              order: { xs: 2, md: 0 },
+              flex: { md: "0 0 auto" },
+              width: { xs: "100%", md: 400 },
+              minWidth: { md: 400 },
+              maxWidth: { xs: "100%", md: 400 },
+              mx: { xs: "auto", md: 0 },
+              pt: { xs: 4, md: 0 },
+              borderTop: {
+                xs: "1px solid rgba(255,255,255,0.08)",
+                md: "none",
+              },
+            }}
+          >
+            {/* Slider track */}
+            <Box
+              ref={trackRef}
+              sx={{
+                display: "flex",
+                overflowX: "auto",
+                scrollSnapType: "x mandatory",
+                scrollBehavior: "smooth",
+                scrollbarWidth: "none",
+                "&::-webkit-scrollbar": { display: "none" },
+                gap: 2,
+                pb: 0.5,
+                px: slideTrackPaddingX,
+                boxSizing: "border-box",
+                width: "100%",
+              }}
+            >
+              {partners.map((p, i) => (
+                <Box
+                  key={p._id}
+                  data-slide={i}
+                  onClick={() => {
+                    const dir = i > activeIndex ? "right" : "left";
+                    goTo(i, dir);
+                  }}
+                  sx={{
+                    scrollSnapAlign: "center",
+                    minWidth: slideCardWidth,
+                    width: slideCardWidth,
+                    height: 220,
+                    flexShrink: 0,
+                    borderRadius: "16px",
+                    border: "1.5px solid",
+                    borderColor:
+                      i === activeIndex
+                        ? "#FF6A00"
+                        : "rgba(255,255,255,0.08)",
+                    background:
+                      i === activeIndex
+                        ? "rgba(255,106,0,0.07)"
+                        : "rgba(255,255,255,0.03)",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: 2,
+                    cursor: "pointer",
+                    transition: "border-color 0.35s ease, background 0.35s ease, transform 0.25s ease",
+                    transform: i === activeIndex ? "scale(1)" : "scale(0.97)",
+                    "&:hover": {
+                      borderColor:
+                        i === activeIndex
+                          ? "#FF6A00"
+                          : "rgba(255,255,255,0.2)",
+                      transform: "scale(1)",
+                    },
+                  }}
+                >
+                  {/* Logo area */}
+                  <Box
+                    sx={{
+                      width: "auto",
+                      height: "auto",
+                      maxWidth: 300,
+                      maxHeight: 120,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <PartnerLogo src={p.imageUrl} alt={p.title} />
+                  </Box>
+
+                  <Typography
+                    sx={{
+                      color:
+                        i === activeIndex
+                          ? "#FFFFFF"
+                          : "rgba(255,255,255,0.5)",
+                      fontSize: "0.9rem",
+                      fontWeight: 600,
+                      letterSpacing: 0.5,
+                      textAlign: "center",
+                      px: 2,
+                      transition: "color 0.3s ease",
+                    }}
+                  >
+                    {p.title}
+                  </Typography>
+
+                  {/* Active indicator dot */}
+                  <Box
+                    sx={{
+                      width: 6,
+                      height: 6,
+                      borderRadius: "50%",
+                      background: i === activeIndex ? "#FF6A00" : "transparent",
+                      border: "1px solid rgba(255,106,0,0.4)",
+                      transition: "background 0.3s ease",
+                    }}
+                  />
+                </Box>
+              ))}
+            </Box>
+
+            {/* Arrow controls below slider */}
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 2,
+                mt: 3,
+              }}
+            >
+              <IconButton
+                onClick={prev}
+                sx={{
+                  width: 44,
+                  height: 44,
+                  border: "1.5px solid rgba(255,255,255,0.15)",
+                  color: "rgba(255,255,255,0.7)",
+                  borderRadius: "50%",
+                  transition: "all 0.25s ease",
+                  "&:hover": {
+                    border: "1.5px solid #FF6A00",
+                    color: "#FF6A00",
+                    background: "rgba(255,106,0,0.08)",
+                  },
+                }}
+              >
+                <ArrowBackIosNewRoundedIcon sx={{ fontSize: 16 }} />
+              </IconButton>
+
+              {/* Dots */}
+              <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
+                {partners.map((_, i) => (
+                  <Box
+                    key={i}
+                    onClick={() => goTo(i, i > activeIndex ? "right" : "left")}
+                    sx={{
+                      width: i === activeIndex ? 20 : 6,
+                      height: 6,
+                      borderRadius: "3px",
+                      background:
+                        i === activeIndex
+                          ? "#FF6A00"
+                          : "rgba(255,255,255,0.2)",
+                      cursor: "pointer",
+                      transition: "all 0.35s ease",
+                    }}
+                  />
+                ))}
+              </Box>
+
+              <IconButton
+                onClick={next}
+                sx={{
+                  width: 44,
+                  height: 44,
+                  border: "1.5px solid rgba(255,255,255,0.15)",
+                  color: "rgba(255,255,255,0.7)",
+                  borderRadius: "50%",
+                  transition: "all 0.25s ease",
+                  "&:hover": {
+                    border: "1.5px solid #FF6A00",
+                    color: "#FF6A00",
+                    background: "rgba(255,106,0,0.08)",
+                  },
+                }}
+              >
+                <ArrowForwardIosRoundedIcon sx={{ fontSize: 16 }} />
+              </IconButton>
+            </Box>
+          </Box>
+
+          {/* Partner info — first when viewport is under md (900px) */}
+          <Box
+            sx={{
+              order: { xs: 1, md: 0 },
+              flex: { md: "0 1 auto" },
+              width: { xs: "100%", md: "auto" },
+              maxWidth: { xs: "100%", md: 520 },
+              px: { xs: 2, sm: 3, md: 0 },
+              boxSizing: "border-box",
+              pl: { md: 4 },
+              pr: { md: 0 },
+              borderLeft: { md: "1px solid rgba(255,255,255,0.08)" },
+              textAlign: { xs: "center", md: "left" },
+              display: "flex",
+              flexDirection: "column",
+              alignItems: { xs: "center", md: "flex-start" },
+              opacity: contentVisible ? 1 : 0,
+              transform: contentVisible
+                ? "translateX(0)"
+                : slideDirection === "right"
+                ? "translateX(32px)"
+                : "translateX(-32px)",
+              transition: "opacity 0.35s ease, transform 0.35s ease",
+              willChange: "opacity, transform",
+            }}
+          >
+            <Chip
+              label="Partner"
+              size="small"
+              sx={{
+                background: "rgba(255,106,0,0.15)",
+                color: "#FF6A00",
+                border: "1px solid rgba(255,106,0,0.3)",
+                fontWeight: 600,
+                fontSize: "0.7rem",
+                letterSpacing: 1,
+                mb: 2.5,
+                height: 26,
+              }}
+            />
+
+            <Typography
+              variant="h3"
+              sx={{
+                color: "#FFFFFF",
+                fontWeight: 700,
+                fontSize: { xs: "1.5rem", md: "2rem" },
+                lineHeight: 1.2,
+                mb: 2,
+                textAlign: { xs: "center", md: "left" },
+                width: "100%",
+                maxWidth: "100%",
+                overflowWrap: "break-word",
+                wordBreak: "break-word",
+                hyphens: "auto",
+              }}
+            >
+              {partner.title}
+            </Typography>
+
+            {/* Orange accent line */}
+            <Box
+              sx={{
+                width: 48,
+                height: 3,
+                borderRadius: "2px",
+                background: "linear-gradient(90deg, #FF6A00, #FF9A3C)",
+                mb: 3,
+              }}
+            />
+
+            <Typography
+              sx={{
+                color: "rgba(255,255,255,0.6)",
+                fontSize: "1.05rem",
+                lineHeight: 1.8,
+                maxWidth: 520,
+                width: "100%",
+                mb: 2,
+                textAlign: { xs: "center", md: "left" },
+              }}
+            >
+              {partner.description}
+            </Typography>
+
+            {websiteHref ? (
+              <Button
+                variant="contained"
+                href={websiteHref}
+                target="_blank"
+                rel="noopener noreferrer"
+                endIcon={<OpenInNewRoundedIcon sx={{ fontSize: 16 }} />}
+                sx={{
+                  background: "#FF6A00",
+                  color: "#000000",
+                  fontWeight: 700,
+                  fontSize: "0.9rem",
+                  px: 3,
+                  py: 1,
+                  borderRadius: "10px",
+                  textTransform: "none",
+                  letterSpacing: 0.5,
+                  boxShadow: "0 4px 20px rgba(255,106,0,0.3)",
+                  transition: "all 0.25s ease",
+                  "&:hover": {
+                    background: "#FF8C00",
+                    boxShadow: "0 6px 28px rgba(255,106,0,0.45)",
+                    transform: "translateY(-2px)",
+                  },
+                  "&:active": {
+                    transform: "translateY(0)",
+                  },
+                }}
+              >
+                Visit Website
+              </Button>
+            ) : null}
+          </Box>
+        </Box>
+        )}
+      </Container>
+    </Box>
+  );
+}
