@@ -30,7 +30,7 @@ export default async function Home() {
       initialTestimonials={initialTestimonials}
       initialFaqs={initialFaqs}
     />
-    <UnderMaintenance />
+    {/* <UnderMaintenance /> */}
     </>
   );
 }

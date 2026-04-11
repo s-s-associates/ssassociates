@@ -25,12 +25,12 @@ function LandingPage({
   return (
     <div>
       <HomeBanner />
+      <OurClients />
+      <OurPartners />
       <Stats />
       <ServicesCards initialServices={initialServices} />
       <ProjectCard maxProjects={5} initialProjects={initialProjects} />
-      <OurClients />
       <WhoWeAre />
-      <OurPartners />
       <OurProcess />
       <ContactForm />
       <Testimonials initialTestimonials={initialTestimonials} />

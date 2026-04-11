@@ -112,19 +112,6 @@ function ToolsAndMachinery() {
         }}
       />
 
-      {/* Top accent line */}
-      <Box
-        aria-hidden
-        sx={{
-          position: "absolute",
-          top: 0,
-          left: 0,
-          right: 0,
-          height: 3,
-          background: `linear-gradient(90deg, transparent, ${primaryColor}, ${primaryLight}, ${primaryColor}, transparent)`,
-          opacity: 0.85,
-        }}
-      />
 
       <Container maxWidth="lg" sx={{ position: "relative", zIndex: 1 }}>
         <Box sx={{ textAlign: "center", maxWidth: 640, mx: "auto", mb: { xs: 5, md: 6.5 } }}>
@@ -203,7 +190,7 @@ function ToolsAndMachinery() {
               fontWeight: 500,
             }}
           >
-            In-house equipment and fleet capacity that keep your sites moving — from shuttering and scaffolding to
+            In-house equipment and fleet capacity that keep your sites moving from shuttering and scaffolding to
             heavy plant and precision surveying.
           </Typography>
         </Box>
@@ -285,7 +272,7 @@ function ToolsAndMachinery() {
                     <Typography
                       sx={{
                         fontWeight: 700,
-                        fontSize: { xs: 15, sm: 16 },
+                        fontSize: { xs: 16, sm: 20 },
                         lineHeight: 1.4,
                         color: whiteColor,
                         letterSpacing: "-0.02em",

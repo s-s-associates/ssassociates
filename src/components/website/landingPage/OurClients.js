@@ -6,17 +6,18 @@ import {
   secondaryDark,
   whiteColor,
 } from "@/components/utils/Colors";
-import { Box, CircularProgress, Tooltip, Typography } from "@mui/material";
+import { Box, CircularProgress, IconButton, Tooltip, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import OpenInNewRoundedIcon from "@mui/icons-material/OpenInNewRounded";
+import ChevronLeftRoundedIcon from "@mui/icons-material/ChevronLeftRounded";
+import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
 
-const CARD_W = 180;
+const CARD_W = 280;
+const MOBILE_CARD_W = 270;
 const GAP = 20;
-const STEP = CARD_W + GAP; // px per card slot
-const SPEED = 1;         // px per frame
 
 function initialsFromTitle(title) {
   const t = String(title || "").trim();
@@ -65,7 +66,7 @@ const cardSx = {
 const logoWellSx = {
   position: "relative",
   width: "100%",
-  maxWidth: 150,
+  maxWidth: 230,
   aspectRatio: "1 / 1",
   height: "auto",
   mx: "auto",
@@ -75,17 +76,16 @@ const logoWellSx = {
   overflow: "hidden",
 };
 
-function ClientCard({ client, onHoverChange }) {
+function ClientCard({ client, cardWidth }) {
   const href = normalizeExternalUrl(client?.url);
   const hasImage = client.imageUrl && String(client.imageUrl).trim();
 
   return (
     <Box
       className="client-card"
-      onMouseEnter={() => onHoverChange?.(true)}
-      onMouseLeave={() => onHoverChange?.(false)}
       sx={{
         ...cardSx,
+        width: `${cardWidth}px`,
         display: "flex",
         flexDirection: "column",
         height: "100%",
@@ -244,11 +244,27 @@ function ClientCard({ client, onHoverChange }) {
 }
 
 function OurClients() {
+  const theme = useTheme();
+  const isSmUp = useMediaQuery(theme.breakpoints.up("sm"));
+  const isMdUp = useMediaQuery(theme.breakpoints.up("md"));
+  const isLgUp = useMediaQuery(theme.breakpoints.up("lg"));
+  const isXlUp = useMediaQuery(theme.breakpoints.up("xl"));
   const [clients, setClients] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const viewportRef = useRef(null);
-  const [viewportWidth, setViewportWidth] = useState(0);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isHoverPaused, setIsHoverPaused] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragOffset, setDragOffset] = useState(0);
+  const [isTransitionEnabled, setIsTransitionEnabled] = useState(true);
+  const dragStartXRef = useRef(0);
+  const cardWidth = isSmUp ? CARD_W : MOBILE_CARD_W;
+  const step = cardWidth + GAP;
+  const visibleCount = isXlUp ? 4 : isLgUp ? 3 : isMdUp ? 2 : isSmUp ? 2 : 1;
+  const loopedClients = useMemo(() => {
+    if (!clients.length) return [];
+    return [...clients, ...clients.slice(0, visibleCount)];
+  }, [clients, visibleCount]);
 
   // ── API fetch ──────────────────────────────────────────────────────────────
   useEffect(() => {
@@ -273,143 +289,81 @@ function OurClients() {
     return () => { cancelled = true; };
   }, []);
 
-  const copyMeta = useMemo(() => {
-    const loopLength = clients.length * STEP;
-    if (!clients.length || !loopLength) {
-      return { copiesPerSide: 1, totalCopies: 3, centerCopyIndex: 1 };
-    }
-    // Keep enough copies on each side so viewport never reaches track end.
-    const copiesPerSide = Math.max(2, Math.ceil(viewportWidth / loopLength) + 1);
-    return {
-      copiesPerSide,
-      totalCopies: copiesPerSide * 2 + 1,
-      centerCopyIndex: copiesPerSide,
-    };
-  }, [clients.length, viewportWidth]);
-
-  const looped = useMemo(() => {
-    if (!clients.length) return [];
-    return Array.from({ length: copyMeta.totalCopies }, () => clients).flat();
-  }, [clients, copyMeta.totalCopies]);
-
-  // ── Infinite-scroll RAF refs ───────────────────────────────────────────────
-  const trackRef        = useRef(null);
-  const xRef            = useRef(0);
-  const rafRef          = useRef(null);
-  const loopLengthRef   = useRef(0);
-  const copiesPerSideRef = useRef(copyMeta.copiesPerSide);
-  const isDragging      = useRef(false);
-  const isHoverPaused   = useRef(false);
-  const dragStartX      = useRef(0);
-  const dragStartClientX = useRef(0);
-  const velSamples      = useRef([]);
-
-  // Keep loopLength in sync with clients
   useEffect(() => {
-    loopLengthRef.current = clients.length * STEP;
-  }, [clients.length]);
+    setCurrentIndex(0);
+    setIsTransitionEnabled(true);
+  }, [visibleCount, clients.length]);
 
   useEffect(() => {
-    copiesPerSideRef.current = copyMeta.copiesPerSide;
-  }, [copyMeta.copiesPerSide]);
+    if (loading || isHoverPaused || isDragging || clients.length <= 1) return undefined;
+    const timer = setInterval(() => {
+      setCurrentIndex((prev) => prev + 1);
+    }, 2800);
+    return () => clearInterval(timer);
+  }, [loading, isHoverPaused, isDragging, clients.length]);
 
   useEffect(() => {
-    if (!viewportRef.current) return undefined;
-    const node = viewportRef.current;
-    const ro = new ResizeObserver((entries) => {
-      const width = entries?.[0]?.contentRect?.width ?? 0;
-      setViewportWidth(width);
+    if (isTransitionEnabled) return undefined;
+    const raf = requestAnimationFrame(() => {
+      setIsTransitionEnabled(true);
     });
-    ro.observe(node);
-    return () => ro.disconnect();
-  }, []);
+    return () => cancelAnimationFrame(raf);
+  }, [isTransitionEnabled]);
 
-  const applyTransform = (x) => {
-    if (trackRef.current) trackRef.current.style.transform = `translateX(${x}px)`;
-  };
-
-  // Clamp x so it always addresses the middle copy → seamless in both directions
-  const normalise = (x) => {
-    const ll = loopLengthRef.current;
-    if (!ll) return x;
-    const cps = copiesPerSideRef.current;
-    const min = -(cps + 1) * ll;
-    const max = -cps * ll;
-    let v = x;
-    while (v < min) v += ll;
-    while (v >= max) v -= ll;
-    return v;
-  };
-
-  // Start RAF loop once clients are available
-  useEffect(() => {
-    if (!clients.length) return;
-    xRef.current = -copyMeta.centerCopyIndex * loopLengthRef.current;
-    applyTransform(xRef.current);
-
-    const tick = () => {
-      if (!isDragging.current && !isHoverPaused.current) {
-        xRef.current = normalise(xRef.current - SPEED);
-        applyTransform(xRef.current);
-      }
-      rafRef.current = requestAnimationFrame(tick);
-    };
-    rafRef.current = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(rafRef.current);
-  }, [clients.length, copyMeta.centerCopyIndex]); // eslint-disable-line react-hooks/exhaustive-deps
-
-  // ── Pointer / drag handlers ────────────────────────────────────────────────
-  const onPointerDown = (e) => {
-    isDragging.current = true;
-    dragStartClientX.current = e.clientX;
-    dragStartX.current = xRef.current;
-    velSamples.current = [{ t: performance.now(), x: e.clientX }];
-    trackRef.current.setPointerCapture(e.pointerId);
-    trackRef.current.style.cursor = "grabbing";
-  };
-
-  const onPointerMove = (e) => {
-    if (!isDragging.current) return;
-    const delta = e.clientX - dragStartClientX.current;
-    const next  = normalise(dragStartX.current + delta);
-    xRef.current = next;
-    applyTransform(next);
-
-    const now = performance.now();
-    velSamples.current.push({ t: now, x: e.clientX });
-    velSamples.current = velSamples.current.filter((s) => now - s.t < 80);
-  };
-
-  const onPointerUp = () => {
-    if (!isDragging.current) return;
-    isDragging.current = false;
-    trackRef.current.style.cursor = "grab";
-
-    // Momentum coast after drag
-    const samples = velSamples.current;
-    if (samples.length >= 2) {
-      const first = samples[0];
-      const last  = samples[samples.length - 1];
-      const dt    = last.t - first.t;
-      if (dt > 0) {
-        const vx       = (last.x - first.x) / dt;
-        const momentum = vx * 120;
-        const startX   = xRef.current;
-        const startT   = performance.now();
-        const dur      = 400;
-
-        const coast = (now) => {
-          if (isDragging.current) return;
-          const p    = Math.min((now - startT) / dur, 1);
-          const ease = 1 - Math.pow(1 - p, 3);
-          xRef.current = normalise(startX + momentum * ease);
-          applyTransform(xRef.current);
-          if (p < 1) requestAnimationFrame(coast);
-        };
-        requestAnimationFrame(coast);
-      }
+  const handlePrev = () => {
+    if (clients.length <= 1) return;
+    if (currentIndex === 0) {
+      setIsTransitionEnabled(false);
+      setCurrentIndex(clients.length);
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          setIsTransitionEnabled(true);
+          setCurrentIndex(clients.length - 1);
+        });
+      });
+      return;
     }
-    velSamples.current = [];
+    setCurrentIndex((prev) => prev - 1);
+  };
+
+  const handleNext = () => {
+    if (clients.length <= 1) return;
+    setCurrentIndex((prev) => prev + 1);
+  };
+
+  const handleTrackTransitionEnd = () => {
+    if (currentIndex >= clients.length) {
+      setIsTransitionEnabled(false);
+      setCurrentIndex(0);
+    }
+  };
+
+  const handlePointerDown = (e) => {
+    if (clients.length <= 1) return;
+    setIsDragging(true);
+    setIsTransitionEnabled(false);
+    setDragOffset(0);
+    dragStartXRef.current = e.clientX;
+    e.currentTarget.setPointerCapture?.(e.pointerId);
+  };
+
+  const handlePointerMove = (e) => {
+    if (!isDragging) return;
+    setDragOffset(e.clientX - dragStartXRef.current);
+  };
+
+  const handlePointerUp = () => {
+    if (!isDragging) return;
+    const threshold = step * 0.18;
+    const delta = dragOffset;
+    setIsDragging(false);
+    setDragOffset(0);
+    setIsTransitionEnabled(true);
+    if (delta > threshold) {
+      handlePrev();
+    } else if (delta < -threshold) {
+      handleNext();
+    }
   };
 
   return (
@@ -550,7 +504,11 @@ function OurClients() {
           No clients to show yet.
         </Typography>
       ) : (
-        <Box ref={viewportRef} sx={{ position: "relative", zIndex: 1 }}>
+        <Box
+          sx={{ position: "relative", zIndex: 1 }}
+          onMouseEnter={() => setIsHoverPaused(true)}
+          onMouseLeave={() => setIsHoverPaused(false)}
+        >
           {/* Edge fade-out masks */}
           <Box
             sx={{
@@ -569,33 +527,75 @@ function OurClients() {
             }}
           />
 
-          {/* Scrolling track — driven by RAF, draggable */}
+          {/* Slider viewport */}
           <Box
-            ref={trackRef}
-            onPointerDown={onPointerDown}
-            onPointerMove={onPointerMove}
-            onPointerUp={onPointerUp}
-            onPointerCancel={onPointerUp}
+            onPointerDown={handlePointerDown}
+            onPointerMove={handlePointerMove}
+            onPointerUp={handlePointerUp}
+            onPointerCancel={handlePointerUp}
             sx={{
-              display: "flex",
-              gap: `${GAP}px`,
-              px: { xs: 2, sm: 3, md: 4 },
-              paddingBottom: "8px",
-              width: "max-content",
-              cursor: "grab",
-              willChange: "transform",
-              userSelect: "none",
+              width: { xs: `${cardWidth+20}px`, sm: "100%" },
+              px: { xs: 1.2, sm: 1.5, md: 2, lg: 2.5 },
+              py: { xs: 1.2, sm: 1.5, md: 1.75 },
+              mx: "auto",
+              overflow: "hidden",
+              cursor: isDragging ? "grabbing" : "grab",
+              touchAction: "pan-y",
             }}
           >
-            {looped.map((client, index) => (
-              <ClientCard
-                key={`${client._id}-${index}`}
-                client={client}
-                onHoverChange={(paused) => {
-                  isHoverPaused.current = paused;
-                }}
-              />
-            ))}
+            <Box
+              sx={{
+                display: "flex",
+                gap: `${GAP}px`,
+                py: 3,
+                transform: `translateX(${-(currentIndex * step) + dragOffset}px)`,
+                transition: isTransitionEnabled && !isDragging
+                  ? "transform 420ms cubic-bezier(0.22, 1, 0.36, 1)"
+                  : "none",
+                willChange: "transform",
+              }}
+              onTransitionEnd={handleTrackTransitionEnd}
+            >
+              {loopedClients.map((client, index) => (
+                <ClientCard key={`${client._id || "client"}-${index}`} client={client} cardWidth={cardWidth} />
+              ))}
+            </Box>
+          </Box>
+
+          {/* Arrow controls */}
+          <Box sx={{ mt: 2.5, display: "flex", justifyContent: "center", gap: 1.5 }}>
+            <IconButton
+              onClick={handlePrev}
+              disabled={clients.length <= 1}
+              aria-label="Previous clients"
+              sx={{
+                width: 42,
+                height: 42,
+                border: `1px solid ${primaryColor}`,
+                color: whiteColor,
+                bgcolor: primaryColor,
+                "&:hover": { bgcolor: primaryColor, opacity: 0.9, borderColor: primaryColor },
+                "&.Mui-disabled": { opacity: 0.35, color: whiteColor, bgcolor: primaryColor },
+              }}
+            >
+              <ChevronLeftRoundedIcon />
+            </IconButton>
+            <IconButton
+              onClick={handleNext}
+              disabled={clients.length <= 1}
+              aria-label="Next clients"
+              sx={{
+                width: 42,
+                height: 42,
+                border: `1px solid ${primaryColor}`,
+                color: whiteColor,
+                bgcolor: primaryColor,
+                "&:hover": { bgcolor: primaryColor, opacity: 0.9, borderColor: primaryColor },
+                "&.Mui-disabled": { opacity: 0.35, color: whiteColor, bgcolor: primaryColor },
+              }}
+            >
+              <ChevronRightRoundedIcon />
+            </IconButton>
           </Box>
         </Box>
       )}

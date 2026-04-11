@@ -38,8 +38,10 @@ const quickLinks = [
   { label: "Home", href: "/" },
   { label: "About Us", href: "/about" },
   { label: "Services", href: "/services" },
+  { label: "Equipments", href: "/equipments" },
   { label: "Projects", href: "/projects" },
   { label: "Contact", href: "/contact" },
+  { label: "Login", href: "/login" },
 ];
 
 const socialLinks = [

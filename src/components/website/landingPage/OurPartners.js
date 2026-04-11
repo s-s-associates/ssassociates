@@ -51,13 +51,13 @@ export default function OurPartners() {
   const trackRef = useRef(null);
   const nextRef = useRef(() => {});
   const activeIndexRef = useRef(0);
-  /** Card width in horizontal slider; smaller below `md` (900px) for narrow screens */
-  const slideCardWidth = { xs: 300, sm: 340, md: 400 };
+  /** Card width in horizontal slider; `md+` uses a wider logo column */
+  const slideCardWidth = { xs: 320, sm: 380, md: 520 };
   /** Inline padding so first/last slides can snap to viewport center */
   const slideTrackPaddingX = {
-    xs: "max(16px, calc((100% - 300px) / 2))",
-    sm: "max(16px, calc((100% - 340px) / 2))",
-    md: "max(16px, calc((100% - 400px) / 2))",
+    xs: "max(16px, calc((100% - 320px) / 2))",
+    sm: "max(16px, calc((100% - 380px) / 2))",
+    md: "max(16px, calc((100% - 520px) / 2))",
   };
   const AUTO_SLIDE_MS = 3000;
 
@@ -210,7 +210,8 @@ export default function OurPartners() {
               "& span": { color: primaryColor },
             }}
           >
-            Our <span>Collaborators</span>
+            {/* Our <span>Collaborators</span> */}
+            Our Consultants & Architects
           </Typography>
           <Typography
             sx={{
@@ -249,7 +250,7 @@ export default function OurPartners() {
             alignItems: { xs: "center", md: "center" },
             justifyContent: "center",
             width: "100%",
-            maxWidth: 1100,
+            maxWidth: { xs: "100%", md: 1280 },
             mx: "auto",
           }}
         >
@@ -258,9 +259,9 @@ export default function OurPartners() {
             sx={{
               order: { xs: 2, md: 0 },
               flex: { md: "0 0 auto" },
-              width: { xs: "100%", md: 400 },
-              minWidth: { md: 400 },
-              maxWidth: { xs: "100%", md: 400 },
+              width: { xs: "100%", md: 540 },
+              minWidth: { md: 540 },
+              maxWidth: { xs: "100%", md: 540 },
               mx: { xs: "auto", md: 0 },
               pt: { xs: 4, md: 0 },
               borderTop: {
@@ -298,8 +299,8 @@ export default function OurPartners() {
                     scrollSnapAlign: "center",
                     minWidth: slideCardWidth,
                     width: slideCardWidth,
-                    height: 220,
-                    p: 1,
+                    height: { xs: 260, md: 320 },
+                    p: { xs: 1.25, md: 1.5 },
                     flexShrink: 0,
                     borderRadius: "16px",
                     border: "1.5px solid",
@@ -331,10 +332,11 @@ export default function OurPartners() {
                   {/* Logo area */}
                   <Box
                     sx={{
-                      width: "auto",
+                      width: "100%",
                       height: "auto",
-                      maxWidth: 300,
-                      maxHeight: 120,
+                      minHeight: { xs: 100, md: 160 },
+                      maxWidth: { xs: 280, md: 440 },
+                      maxHeight: { xs: 130, md: 200 },
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
