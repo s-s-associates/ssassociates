@@ -1,4 +1,4 @@
-import { primaryColor, primaryLight, secondaryDark } from "@/components/utils/Colors";
+import { primaryColor, primaryLight, secondaryDark, textGrayLight, whiteColor } from "@/components/utils/Colors";
 import { toStringArray } from "@/lib/project-challenges-solutions";
 import AutoAwesomeOutlinedIcon from "@mui/icons-material/AutoAwesomeOutlined";
 import ReportProblemOutlinedIcon from "@mui/icons-material/ReportProblemOutlined";
@@ -216,19 +216,19 @@ export default function ChallengesAndSolutions({ project }) {
         <Stack alignItems="center" spacing={1} sx={{ mb: { xs: 3, md: 4 }, textAlign: "center" }}>
           <Typography
             sx={{
-              color: primaryLight,
+              color: primaryColor,
               fontSize: 12,
               fontWeight: 700,
               letterSpacing: "0.14em",
               textTransform: "uppercase",
             }}
           >
-            How we overcame constraints
+            How We Overcame Constraints
           </Typography>
           <Typography
             component="h2"
             sx={{
-              color: "#f8fafc",
+              color: whiteColor,
               fontFamily: '"Times New Roman", Georgia, serif',
               fontSize: { xs: 28, sm: 34, md: 38 },
               fontWeight: 700,
@@ -236,11 +236,11 @@ export default function ChallengesAndSolutions({ project }) {
               maxWidth: 520,
             }}
           >
-            Challenges &amp; solutions
+            Challenges & Solutions
           </Typography>
           <Typography
             sx={{
-              color: "rgba(248,250,252,0.55)",
+              color: textGrayLight,
               fontSize: 15,
               maxWidth: 560,
               lineHeight: 1.6,
@@ -270,7 +270,7 @@ export default function ChallengesAndSolutions({ project }) {
           </Grid>
         </Grid>
 
-        <Divider sx={{ my: { xs: 2.5, md: 3 }, borderColor: borderSubtle }} />
+        <Divider sx={{ my: { xs: 2.5, md: 3 }, borderColor: primaryColor   }} />
 
         <Panel icon={<AutoAwesomeOutlinedIcon sx={{ fontSize: 26 }} />} title="Unique approach">
           <PlainBody body={approach} />

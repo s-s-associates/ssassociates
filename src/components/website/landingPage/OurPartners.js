@@ -13,6 +13,7 @@ import {
 import ArrowBackIosNewRoundedIcon from "@mui/icons-material/ArrowBackIosNewRounded";
 import ArrowForwardIosRoundedIcon from "@mui/icons-material/ArrowForwardIosRounded";
 import OpenInNewRoundedIcon from "@mui/icons-material/OpenInNewRounded";
+import { primaryBg, primaryColor, primaryHover, primaryLight, secondaryDark, textGrayDark, textGrayLight, whiteColor } from "@/components/utils/Colors";
 
 function normalizeExternalUrl(url) {
   const raw = String(url || "").trim();
@@ -168,7 +169,7 @@ export default function OurPartners() {
     <Box
       component="section"
       sx={{
-        background: "#0A0A0A",
+        background: secondaryDark,
         py: { xs: 8, md: 10 },
         overflow: "hidden",
         position: "relative",
@@ -180,8 +181,6 @@ export default function OurPartners() {
           transform: "translateX(-50%)",
           width: "600px",
           height: "1px",
-          background:
-            "linear-gradient(90deg, transparent, #FF6A00 50%, transparent)",
         },
       }}
     >
@@ -191,7 +190,7 @@ export default function OurPartners() {
           <Typography
             variant="overline"
             sx={{
-              color: "#FF6A00",
+              color: primaryColor,
               letterSpacing: 4,
               fontSize: "0.75rem",
               fontWeight: 600,
@@ -204,18 +203,18 @@ export default function OurPartners() {
           <Typography
             variant="h2"
             sx={{
-              color: "#FFFFFF",
+              color: whiteColor,
               fontWeight: 700,
               fontSize: { xs: "2rem", md: "2.75rem" },
               lineHeight: 1.2,
-              "& span": { color: "#FF6A00" },
+              "& span": { color: primaryColor },
             }}
           >
             Our <span>Partners</span>
           </Typography>
           <Typography
             sx={{
-              color: "rgba(255,255,255,0.45)",
+              color: textGrayLight,
               mt: 2,
               maxWidth: 520,
               mx: "auto",
@@ -230,7 +229,7 @@ export default function OurPartners() {
 
         {loading ? (
           <Box sx={{ py: 8, display: "flex", justifyContent: "center" }}>
-            <CircularProgress sx={{ color: "#FF6A00" }} />
+            <CircularProgress sx={{ color: primaryColor }} />
           </Box>
         ) : fetchError ? (
           <Typography sx={{ color: "rgba(255,255,255,0.55)", textAlign: "center", py: 4 }}>
@@ -300,16 +299,17 @@ export default function OurPartners() {
                     minWidth: slideCardWidth,
                     width: slideCardWidth,
                     height: 220,
+                    p: 1,
                     flexShrink: 0,
                     borderRadius: "16px",
                     border: "1.5px solid",
                     borderColor:
                       i === activeIndex
-                        ? "#FF6A00"
+                        ? primaryColor
                         : "rgba(255,255,255,0.08)",
                     background:
                       i === activeIndex
-                        ? "rgba(255,106,0,0.07)"
+                        ? primaryBg
                         : "rgba(255,255,255,0.03)",
                     display: "flex",
                     flexDirection: "column",
@@ -322,7 +322,7 @@ export default function OurPartners() {
                     "&:hover": {
                       borderColor:
                         i === activeIndex
-                          ? "#FF6A00"
+                          ? primaryColor
                           : "rgba(255,255,255,0.2)",
                       transform: "scale(1)",
                     },
@@ -367,7 +367,7 @@ export default function OurPartners() {
                       height: 6,
                       borderRadius: "50%",
                       background: i === activeIndex ? "#FF6A00" : "transparent",
-                      border: "1px solid rgba(255,106,0,0.4)",
+                      border: `1px solid ${primaryColor}`,
                       transition: "background 0.3s ease",
                     }}
                   />
@@ -395,9 +395,9 @@ export default function OurPartners() {
                   borderRadius: "50%",
                   transition: "all 0.25s ease",
                   "&:hover": {
-                    border: "1.5px solid #FF6A00",
-                    color: "#FF6A00",
-                    background: "rgba(255,106,0,0.08)",
+                    border: `1.5px solid ${primaryColor}`,
+                    color: primaryColor,
+                    background: primaryBg,
                   },
                 }}
               >
@@ -416,7 +416,7 @@ export default function OurPartners() {
                       borderRadius: "3px",
                       background:
                         i === activeIndex
-                          ? "#FF6A00"
+                          ? primaryColor
                           : "rgba(255,255,255,0.2)",
                       cursor: "pointer",
                       transition: "all 0.35s ease",
@@ -435,9 +435,9 @@ export default function OurPartners() {
                   borderRadius: "50%",
                   transition: "all 0.25s ease",
                   "&:hover": {
-                    border: "1.5px solid #FF6A00",
-                    color: "#FF6A00",
-                    background: "rgba(255,106,0,0.08)",
+                    border: `1.5px solid ${primaryColor}`,
+                    color: primaryColor,
+                    background: primaryBg,
                   },
                 }}
               >
@@ -457,7 +457,7 @@ export default function OurPartners() {
               boxSizing: "border-box",
               pl: { md: 4 },
               pr: { md: 0 },
-              borderLeft: { md: "1px solid rgba(255,255,255,0.08)" },
+              borderLeft: { md: `1px solid ${primaryColor}` },
               textAlign: { xs: "center", md: "left" },
               display: "flex",
               flexDirection: "column",
@@ -476,9 +476,9 @@ export default function OurPartners() {
               label="Partner"
               size="small"
               sx={{
-                background: "rgba(255,106,0,0.15)",
-                color: "#FF6A00",
-                border: "1px solid rgba(255,106,0,0.3)",
+                background: primaryBg,
+                color: primaryColor,
+                border: `1px solid ${primaryColor}`,
                 fontWeight: 600,
                 fontSize: "0.7rem",
                 letterSpacing: 1,
@@ -490,7 +490,7 @@ export default function OurPartners() {
             <Typography
               variant="h3"
               sx={{
-                color: "#FFFFFF",
+                color: whiteColor,
                 fontWeight: 700,
                 fontSize: { xs: "1.5rem", md: "2rem" },
                 lineHeight: 1.2,
@@ -539,25 +539,22 @@ export default function OurPartners() {
                 rel="noopener noreferrer"
                 endIcon={<OpenInNewRoundedIcon sx={{ fontSize: 16 }} />}
                 sx={{
-                  background: "#FF6A00",
-                  color: "#000000",
+                  background: primaryBg,
+                  color: primaryColor,
                   fontWeight: 700,
                   fontSize: "0.9rem",
+                  border: `1px solid ${primaryColor}`,
                   px: 3,
                   py: 1,
                   borderRadius: "10px",
                   textTransform: "none",
                   letterSpacing: 0.5,
-                  boxShadow: "0 4px 20px rgba(255,106,0,0.3)",
+                //   boxShadow: `0 2px 10px ${primaryColor}`,
                   transition: "all 0.25s ease",
                   "&:hover": {
-                    background: "#FF8C00",
-                    boxShadow: "0 6px 28px rgba(255,106,0,0.45)",
-                    transform: "translateY(-2px)",
-                  },
-                  "&:active": {
-                    transform: "translateY(0)",
-                  },
+                    background: primaryColor,
+                    color: whiteColor,
+                }
                 }}
               >
                 Visit Website

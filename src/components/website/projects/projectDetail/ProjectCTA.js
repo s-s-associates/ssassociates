@@ -27,7 +27,7 @@ export default function ProjectCTA() {
             mb: 1.2,
           }}
         >
-          Interested in a <Box component="span" sx={{ color: primaryColor }}>similar project?</Box>
+          Interested In  <Box component="span" sx={{ color: primaryColor }}>Similar Project?</Box>
         </Typography>
 
         <Typography

@@ -29,8 +29,8 @@ function LandingPage({
       <ServicesCards initialServices={initialServices} />
       <ProjectCard maxProjects={5} initialProjects={initialProjects} />
       <OurClients />
-      <OurPartners />
       <WhoWeAre />
+      <OurPartners />
       <OurProcess />
       <ContactForm />
       <Testimonials initialTestimonials={initialTestimonials} />

@@ -33,7 +33,11 @@ export default function ProjectDetail({ project }) {
             <ChallengesAndSolutions project={projectData} />
             {/* <Technologies items={technologyItems} /> */}
             <ImagesGallery title={projectData.title} images={projectData.imageGallery || []} />
-            <ProjectVideoSection videoUrl={projectData.videoUrl} title={projectData.title} />
+            <ProjectVideoSection
+              videoUrl={projectData.videoUrl}
+              title={projectData.title}
+              posterUrl={projectData.bannerUrl}
+            />
 
       <ProjectCTA />
     </>

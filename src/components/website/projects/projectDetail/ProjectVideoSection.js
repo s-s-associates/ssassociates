@@ -18,14 +18,53 @@ function getYouTubeId(url) {
   return null;
 }
 
-export default function ProjectVideoSection({ videoUrl, title }) {
+function getVimeoId(url) {
+  if (!url) return null;
+  try {
+    const u = new URL(url);
+    const host = u.hostname.replace(/^www\./, "");
+    if (!host.includes("vimeo.com")) return null;
+    const parts = u.pathname.split("/").filter(Boolean);
+    const last = parts[parts.length - 1];
+    return /^\d+$/.test(last) ? last : null;
+  } catch {
+    return null;
+  }
+}
+
+/** Direct file URLs (e.g. .mp4 on Cloudinary, fbcdn, etc.) — not embed pages */
+function isDirectVideoUrl(url) {
+  if (!url) return false;
+  try {
+    const u = new URL(url);
+    if (u.protocol !== "http:" && u.protocol !== "https:") return false;
+    return /\.(mp4|webm|ogg|mov|m4v)$/i.test(u.pathname);
+  } catch {
+    return /\.(mp4|webm|ogg|mov|m4v)(\?|#|$)/i.test(url);
+  }
+}
+
+export default function ProjectVideoSection({ videoUrl, title, posterUrl }) {
   const [playing, setPlaying] = useState(false);
 
-  const videoId = getYouTubeId(videoUrl);
-  if (!videoId) return null;
+  const trimmed = (videoUrl || "").trim();
+  const youTubeId = getYouTubeId(trimmed);
+  const vimeoId = getVimeoId(trimmed);
+  const direct = isDirectVideoUrl(trimmed);
 
-  const thumbnailUrl = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
-  const embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1`;
+  if (!trimmed || (!youTubeId && !vimeoId && !direct)) return null;
+
+  const mode = youTubeId ? "youtube" : vimeoId ? "vimeo" : "direct";
+
+  const thumbnailUrl =
+    mode === "youtube" ? `https://img.youtube.com/vi/${youTubeId}/maxresdefault.jpg` : null;
+
+  const youTubeEmbedUrl = youTubeId
+    ? `https://www.youtube.com/embed/${youTubeId}?autoplay=1&rel=0&modestbranding=1`
+    : null;
+  const vimeoEmbedUrl = vimeoId
+    ? `https://player.vimeo.com/video/${vimeoId}?autoplay=1`
+    : null;
 
   return (
     <Box
@@ -205,21 +244,42 @@ export default function ProjectVideoSection({ videoUrl, title }) {
           }}
         >
           {playing ? (
-            <Box
-              component="iframe"
-              src={embedUrl}
-              title={`${title || "Project"} video walkthrough`}
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-              sx={{
-                position: "absolute",
-                inset: 0,
-                width: "100%",
-                height: "100%",
-                border: "none",
-                display: "block",
-              }}
-            />
+            mode === "direct" ? (
+              <Box
+                component="video"
+                src={trimmed}
+                controls
+                autoPlay
+                playsInline
+                poster={posterUrl || undefined}
+                title={`${title || "Project"} video walkthrough`}
+                sx={{
+                  position: "absolute",
+                  inset: 0,
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "contain",
+                  backgroundColor: "#000",
+                  display: "block",
+                }}
+              />
+            ) : (
+              <Box
+                component="iframe"
+                src={mode === "youtube" ? youTubeEmbedUrl : vimeoEmbedUrl}
+                title={`${title || "Project"} video walkthrough`}
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
+                allowFullScreen
+                sx={{
+                  position: "absolute",
+                  inset: 0,
+                  width: "100%",
+                  height: "100%",
+                  border: "none",
+                  display: "block",
+                }}
+              />
+            )
           ) : (
             <Box
               component={motion.div}
@@ -241,23 +301,38 @@ export default function ProjectVideoSection({ videoUrl, title }) {
                 "&:hover .play-label": { opacity: 1 },
               }}
             >
-              {/* Thumbnail */}
-              <Box
-                className="thumb"
-                component="img"
-                src={thumbnailUrl}
-                alt={`${title || "Project"} video thumbnail`}
-                loading="lazy"
-                sx={{
-                  position: "absolute",
-                  inset: 0,
-                  width: "100%",
-                  height: "100%",
-                  objectFit: "cover",
-                  display: "block",
-                  transition: "transform 0.6s ease",
-                }}
-              />
+              {/* Thumbnail (YouTube) or project poster / placeholder */}
+              {thumbnailUrl || posterUrl ? (
+                <Box
+                  className="thumb"
+                  component="img"
+                  src={thumbnailUrl || posterUrl}
+                  alt={`${title || "Project"} video thumbnail`}
+                  loading="lazy"
+                  sx={{
+                    position: "absolute",
+                    inset: 0,
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "cover",
+                    display: "block",
+                    transition: "transform 0.6s ease",
+                  }}
+                />
+              ) : (
+                <Box
+                  className="thumb"
+                  sx={{
+                    position: "absolute",
+                    inset: 0,
+                    width: "100%",
+                    height: "100%",
+                    background:
+                      "linear-gradient(145deg, rgba(30,24,16,0.95) 0%, rgba(12,10,8,0.98) 50%, rgba(24,18,12,0.95) 100%)",
+                    transition: "transform 0.6s ease",
+                  }}
+                />
+              )}
 
               {/* Gradient vignette */}
               <Box

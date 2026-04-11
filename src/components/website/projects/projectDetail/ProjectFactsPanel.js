@@ -45,6 +45,9 @@ function FactCard({ icon: Icon, label, value }) {
         border: `1px solid ${bordergrayColor}`,
         boxShadow: "0 1px 12px rgba(0,0,0,0.04)",
         height: "100%",
+        display: "flex",
+        flexDirection: "column",
+        minHeight: 0,
         "&:hover": {
           borderColor: primaryColor,
           transform: "translateY(-2px)",
@@ -52,7 +55,12 @@ function FactCard({ icon: Icon, label, value }) {
         transition: "all 0.25s ease",
       }}
     >
-      <Stack alignItems="center" spacing={1.25} textAlign="center">
+      <Stack
+        alignItems="center"
+        spacing={1.25}
+        textAlign="center"
+        sx={{ flex: 1, justifyContent: "center", minHeight: 0 }}
+      >
         <Box sx={{ color: primaryColor, display: "flex", alignItems: "center", justifyContent: "center" }}>
           <Icon sx={{ fontSize: 28 }} />
         </Box>
@@ -77,9 +85,8 @@ function FactCard({ icon: Icon, label, value }) {
             fontWeight: 700,
             color: grayColor,
             lineHeight: 1.35,
-            whiteSpace: "nowrap",
-            overflow: "hidden",
-            textOverflow: "ellipsis",
+            overflowWrap: "break-word",
+            wordBreak: "break-word",
           }}
         >
           {display}
@@ -145,15 +152,19 @@ export default function ProjectFactsPanel({ project }) {
         direction="row"
         flexWrap="wrap"
         justifyContent="center"
-        alignItems="center"
-        gap={[1,2,3]}
+        alignItems="stretch"
+        gap={[1, 2, 3]}
       >
         {facts.map(({ key, icon, label, value }) => (
           <Box
-
             key={key}
-            maxWidth={[180, 220, 240]}
-            minWidth={[180, 220, 240]}
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              width: { xs: 180, sm: 220, md: 240 },
+              minWidth: { xs: 180, sm: 220, md: 240 },
+              maxWidth: { xs: 180, sm: 220, md: 240 },
+            }}
           >
             <FactCard icon={icon} label={label} value={value} />
           </Box>

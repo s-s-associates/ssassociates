@@ -26,7 +26,7 @@ const FACE_BOTTOM_URL =
 
 const highlights = [
   { label: `${process.env.NEXT_PUBLIC_COMPANY_EXPERIENCE}`, sub: "Years experience" },
-  { label: "2001", sub: "Founded" },
+  { label: `${process.env.NEXT_PUBLIC_COMPANY_FOUNDED_YEAR}`, sub: "Founded" },
   { label: "360°", sub: "Delivery focus" },
 ];
 
@@ -173,7 +173,7 @@ export default function WhoWeAre() {
                     }}
                   >
                     {process.env.NEXT_PUBLIC_COMPANY_NAME} is a premier construction company with over {process.env.NEXT_PUBLIC_COMPANY_EXPERIENCE} years of experience in delivering
-                    exceptional building solutions. Founded in 2001, we have grown from a small local contractor to one
+                    exceptional building solutions. Founded in {process.env.NEXT_PUBLIC_COMPANY_FOUNDED_YEAR}, we have grown from a small local contractor to one
                     of the most trusted names in the construction industry.
                   </Typography>
 

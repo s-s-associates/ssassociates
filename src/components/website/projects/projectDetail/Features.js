@@ -124,7 +124,7 @@ export default function Features({ items }) {
               }}
             >
               <Typography sx={{ fontSize: 11, fontWeight: 500, letterSpacing: "3px", textTransform: "uppercase", color: primaryColor }}>
-                Project specs
+                Project Specs
               </Typography>
             </Box>
 
@@ -140,7 +140,7 @@ export default function Features({ items }) {
                 mb: 1.5,
               }}
             >
-              Signature delivery<br />highlights
+              Signature Delivery<br />Highlights
             </Typography>
 
             <Typography
@@ -152,7 +152,7 @@ export default function Features({ items }) {
                 maxWidth: 480,
               }}
             >
-              Sustainability, safety, certifications, and materials — drawn directly
+              Sustainability, safety, certifications, and materials, drawn directly
               from how this project was specified and built.
             </Typography>
           </Box>

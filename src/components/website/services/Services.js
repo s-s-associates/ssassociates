@@ -4,6 +4,7 @@ import ServicesCards from "./ServicesCards";
 import ServicesEngagementGrid from "./ServicesEngagementGrid";
 import ServicesIntroStats from "./ServicesIntroStats";
 import ServicesPageCTA from "./ServicesPageCTA";
+import ToolsAndMachinery from "./ToolsAndMachinery";
 
 function Services() {
   return (
@@ -11,7 +12,9 @@ function Services() {
       <Banner />
       <ServicesCards />
       {/* <ServicesIntroStats /> */}
+      <ToolsAndMachinery />
       <ServicesEngagementGrid />
+
       <ServicesPageCTA />
     </>
   );
