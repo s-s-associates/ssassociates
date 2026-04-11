@@ -235,7 +235,7 @@ function Navbar() {
                     mt: 0.25,
                   }}
                 >
-                  Building With Excellence
+                  Building With Confidence
                 </Box>
               </Box>
             </Box>

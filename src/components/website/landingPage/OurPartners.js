@@ -210,7 +210,7 @@ export default function OurPartners() {
               "& span": { color: primaryColor },
             }}
           >
-            Our <span>Partners</span>
+            Our <span>Collaborators</span>
           </Typography>
           <Typography
             sx={{

@@ -176,7 +176,7 @@ function Footer() {
                   color: textGrayLight,
                 }}
               >
-                Building With Excellence
+                Building With Confidence
               </Box>
             </Box> */}
           </Box>
