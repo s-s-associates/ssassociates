@@ -164,7 +164,8 @@ function HomeBanner() {
           backgroundSize: "auto 120%",
           backgroundRepeat: "no-repeat",
           backgroundPosition: "top center",
-          opacity: 0,
+          opacity: 0, 
+          
           transform: "translateY(80px)",
           animation: "personSlideIn 1s ease-out 0.3s forwards",
           "@keyframes personSlideIn": {
@@ -174,7 +175,7 @@ function HomeBanner() {
           // dark overlay on mobile so text stays readable over the image
           "&::after": {
             content: '""',
-            display: { xs: "block", sm: "none" },
+            display: { sm: "block", md: "none" },
             position: "absolute",
             inset: 0,
             background: "linear-gradient(to bottom, rgba(0, 0, 0, 0.72) 0%, rgba(0, 0, 0, 0.49) 50%, rgba(0,0,0,0.6) 100%)",

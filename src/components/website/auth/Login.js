@@ -128,7 +128,7 @@ function Login() {
             sx={{
               position: "relative",
               width: { xs: "100%", md: "50%" },
-              minHeight: { xs: "clamp(320px, 58vh, 540px)", sm: 380, md: "100vh" },
+              minHeight: { xs: 300, sm: 380, md: "100vh" },
               flexShrink: 0,
               overflow: "hidden",
             }}
@@ -281,7 +281,14 @@ function Login() {
               {/* ── BOTTOM: Feature cards + footer tag ── */}
               <Box sx={{ width: "100%", maxWidth: 500 }}>
                 {/* Feature list */}
-                <Box sx={{ display: "flex", flexDirection: "column", gap: { xs: 1, sm: 1.25 }, mb: { xs: 2, sm: 2.5 } }}>
+                <Box
+                  sx={{
+                    display: { xs: "none", md: "flex" },
+                    flexDirection: "column",
+                    gap: { md: 1.25 },
+                    mb: { md: 2.5 },
+                  }}
+                >
                   {[
                     { Icon: FiLayers, label: "Portfolio & project lifecycle", sub: "Grey structure to delivery" },
                     { Icon: FiTrendingUp, label: "Services, FAQs & testimonials", sub: "Aligned with your live site" },
@@ -320,9 +327,9 @@ function Login() {
 
                 {/* Footer badge */}
                 <Box sx={{
-                  display: "inline-flex", alignItems: "center", gap: 1,
+                  display: { xs: "none", md: "inline-flex" }, alignItems: "center", gap: 1,
                   borderTop: "1px solid rgba(255,255,255,0.1)",
-                  pt: { xs: 1.5, sm: 2 }, width: "100%",
+                  pt: { md: 2 }, width: "100%",
                 }}>
                   <FiCheck size={14} color={primaryColor} style={{ flexShrink: 0 }} />
                   <Typography sx={{
