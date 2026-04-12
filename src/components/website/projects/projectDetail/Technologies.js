@@ -9,6 +9,12 @@ import {
 import { Box, Stack, Typography } from "@mui/material";
 
 export default function Technologies({ items }) {
+  const safeItems = Array.isArray(items)
+    ? items.map((item) => String(item || "").trim()).filter(Boolean)
+    : [];
+
+  if (safeItems.length === 0) return null;
+
   return (
     <Box
       component="section"
@@ -58,7 +64,7 @@ export default function Technologies({ items }) {
             </Typography>
           </Stack>
 
-          {items.length ? (
+          {safeItems.length ? (
             <Box sx={{ position: "relative", pl: { xs: 2.5, sm: 3 } }}>
               <Box
                 aria-hidden
@@ -73,13 +79,13 @@ export default function Technologies({ items }) {
                 }}
               />
               <Stack spacing={0}>
-                {items.map((item, i) => (
+                {safeItems.map((item, i) => (
                   <Box
                     key={`${item}-${i}`}
                     sx={{
                       position: "relative",
                       pl: { xs: 3.5, sm: 4 },
-                      pb: i < items.length - 1 ? 2.75 : 0,
+                      pb: i < safeItems.length - 1 ? 2.75 : 0,
                     }}
                   >
                     <Box
@@ -111,11 +117,7 @@ export default function Technologies({ items }) {
                 ))}
               </Stack>
             </Box>
-          ) : (
-            <Typography sx={{ color: textGrayDark, fontSize: 15, fontStyle: "italic" }}>
-              No material details listed for this project.
-            </Typography>
-          )}
+          ) : null}
         </Box>
       </Box>
     </Box>

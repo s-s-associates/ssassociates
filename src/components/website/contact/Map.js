@@ -9,6 +9,12 @@ const COMPANY_NAME = process.env.NEXT_PUBLIC_COMPANY_NAME || "S&S Associates";
 const COMPANY_ADDRESS =
   process.env.NEXT_PUBLIC_COMPANY_ADDRESS ||
   "Ayub, 67 Trade Centre Block, Johar Town, Lahore, Pakistan";
+const COMPANY_LOCATION =
+  process.env.NEXT_PUBLIC_COMPANY_LOCATION ||
+  `https://maps.google.com/?q=${encodeURIComponent(COMPANY_ADDRESS)}`;
+const COMPANY_WAREHOUSE_LOCATION = process.env.NEXT_PUBLIC_COMPANY_WAREHOUSE_LOCATION || "";
+const COMPANY_WAREHOUSE_ADDRESS =
+  process.env.NEXT_PUBLIC_COMPANY_WAREHOUSE_ADDRESS || "F6G9+CH3 Lahore, Pakistan";
 
 function Map() {
   return (
@@ -112,35 +118,73 @@ function Map() {
                 sx={{
                   color: grayColor,
                   fontWeight: 700,
-                  fontSize: { xs: 18, md: 20 },
-                  mb: 1,
+                  fontSize: { xs: 16, md: 18 },
+                  mb: 0.6,
                 }}
               >
-                {COMPANY_ADDRESS}
+                Office: {COMPANY_ADDRESS}
               </Typography>
+              {COMPANY_WAREHOUSE_LOCATION ? (
+                <Typography
+                  sx={{
+                    color: grayColor,
+                    fontWeight: 700,
+                    fontSize: { xs: 16, md: 18 },
+                    mb: 1.4,
+                  }}
+                >
+                  Warehouse: {COMPANY_WAREHOUSE_ADDRESS}
+                </Typography>
+              ) : null}
 
-              <Button
-                component="a"
-                href="https://maps.google.com/?q=S%26S+Associates+Lahore"
-                target="_blank"
-                rel="noopener noreferrer"
-                sx={{
-                  px: 3,
-                  py: 1.2,
-                  borderRadius: 2,
-                  bgcolor: primaryColor,
-                  color: "#fff",
-                  fontWeight: 700,
-                  fontSize: 14,
-                  textTransform: "none",
-                  "&:hover": {
+              <Box sx={{ display: "flex", flexDirection: "column", gap: 1.1, alignItems: "center" }}>
+                <Button
+                  component="a"
+                  href={COMPANY_LOCATION}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  sx={{
+                    px: 3,
+                    py: 1.2,
+                    borderRadius: 2,
                     bgcolor: primaryColor,
-                    opacity: 0.92,
-                  },
-                }}
-              >
-                Open in Google Maps
-              </Button>
+                    color: "#fff",
+                    fontWeight: 700,
+                    fontSize: 14,
+                    textTransform: "none",
+                    "&:hover": {
+                      bgcolor: primaryColor,
+                      opacity: 0.92,
+                    },
+                  }}
+                >
+                  Open Office on Map
+                </Button>
+                {COMPANY_WAREHOUSE_LOCATION ? (
+                  <Button
+                    component="a"
+                    href={COMPANY_WAREHOUSE_LOCATION}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    sx={{
+                      px: 3,
+                      py: 1.1,
+                      borderRadius: 2,
+                      bgcolor: "rgba(251,134,30,0.12)",
+                      border: `1px solid ${primaryColor}`,
+                      color: primaryColor,
+                      fontWeight: 700,
+                      fontSize: 13,
+                      textTransform: "none",
+                      "&:hover": {
+                        bgcolor: "rgba(251,134,30,0.18)",
+                      },
+                    }}
+                  >
+                    Open Warehouse on Map
+                  </Button>
+                ) : null}
+              </Box>
             </Box>
           </Box>
         </Box>

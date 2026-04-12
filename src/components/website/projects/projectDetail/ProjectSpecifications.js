@@ -47,6 +47,18 @@ const cardsConfig = [
 ];
 
 export default function ProjectSpecifications({ project }) {
+  const availableCards = cardsConfig
+    .map((item) => {
+      const rawValue = project?.[item.key];
+      const value = Array.isArray(rawValue)
+        ? rawValue.map((v) => String(v ?? "").trim()).filter(Boolean).join("\n")
+        : String(rawValue ?? "").trim();
+      return value ? { ...item, value } : null;
+    })
+    .filter(Boolean);
+
+  if (availableCards.length === 0) return null;
+
   return (
     <Box
       sx={{
@@ -83,13 +95,8 @@ export default function ProjectSpecifications({ project }) {
       </Stack>
 
       <Grid container spacing={1.8}>
-        {cardsConfig.map((item) => {
+        {availableCards.map((item) => {
           const Icon = item.icon;
-          const rawValue = project?.[item.key];
-          const value = Array.isArray(rawValue)
-            ? rawValue.map((v) => String(v ?? "").trim()).filter(Boolean).join("\n")
-            : String(rawValue ?? "").trim();
-          const displayValue = value || item.fallback;
           return (
             <Grid key={item.key} size={{ xs: 12, md: 6, lg: 4 }}>
               <Box
@@ -144,14 +151,14 @@ export default function ProjectSpecifications({ project }) {
                 </Typography>
                 <Typography
                   sx={{
-                    color: displayValue === item.fallback ? "rgba(226,232,240,0.62)" : "rgba(226,232,240,0.9)",
+                    color: "rgba(226,232,240,0.9)",
                     fontSize: 14,
                     lineHeight: 1.6,
                     whiteSpace: "pre-line",
-                    fontStyle: displayValue === item.fallback ? "italic" : "normal",
+                    fontStyle: "normal",
                   }}
                 >
-                  {displayValue}
+                  {item.value}
                 </Typography>
               </Box>
             </Grid>

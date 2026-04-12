@@ -139,6 +139,16 @@ export default function ChallengesAndSolutions({ project }) {
   const challenges = project?.challengesFaced;
   const solutions = project?.solutionsImplemented;
   const approach = project?.uniqueApproach;
+  const challengeItems = toStringArray(challenges);
+  const solutionItems = toStringArray(solutions);
+  const approachItems = toStringArray(typeof approach === "string" ? approach : String(approach ?? ""));
+
+  const hasChallenges = challengeItems.length > 0;
+  const hasSolutions = solutionItems.length > 0;
+  const hasApproach = approachItems.length > 0;
+  const hasAnyData = hasChallenges || hasSolutions || hasApproach;
+
+  if (!hasAnyData) return null;
 
   return (
     <Box
@@ -251,30 +261,41 @@ export default function ChallengesAndSolutions({ project }) {
           </Typography>
         </Stack>
 
-        <Grid container spacing={2.25}>
-          <Grid size={{ xs: 12, md: 6 }}>
-            <Panel
-              icon={<ReportProblemOutlinedIcon sx={{ fontSize: 26 }} />}
-              title="Challenges faced"
-            >
-              <ListBody body={challenges} />
-            </Panel>
+        {(hasChallenges || hasSolutions) ? (
+          <Grid container spacing={2.25}>
+            {hasChallenges ? (
+              <Grid size={{ xs: 12, md: hasSolutions ? 6 : 12 }}>
+                <Panel
+                  icon={<ReportProblemOutlinedIcon sx={{ fontSize: 26 }} />}
+                  title="Challenges faced"
+                >
+                  <ListBody body={challenges} />
+                </Panel>
+              </Grid>
+            ) : null}
+            {hasSolutions ? (
+              <Grid size={{ xs: 12, md: hasChallenges ? 6 : 12 }}>
+                <Panel
+                  icon={<TaskAltOutlinedIcon sx={{ fontSize: 26 }} />}
+                  title="Solutions implemented"
+                >
+                  <ListBody body={solutions} />
+                </Panel>
+              </Grid>
+            ) : null}
           </Grid>
-          <Grid size={{ xs: 12, md: 6 }}>
-            <Panel
-              icon={<TaskAltOutlinedIcon sx={{ fontSize: 26 }} />}
-              title="Solutions implemented"
-            >
-              <ListBody body={solutions} />
+        ) : null}
+
+        {hasApproach ? (
+          <>
+            {(hasChallenges || hasSolutions) ? (
+              <Divider sx={{ my: { xs: 2.5, md: 3 }, borderColor: primaryColor }} />
+            ) : null}
+            <Panel icon={<AutoAwesomeOutlinedIcon sx={{ fontSize: 26 }} />} title="Unique approach">
+              <PlainBody body={approach} />
             </Panel>
-          </Grid>
-        </Grid>
-
-        <Divider sx={{ my: { xs: 2.5, md: 3 }, borderColor: primaryColor   }} />
-
-        <Panel icon={<AutoAwesomeOutlinedIcon sx={{ fontSize: 26 }} />} title="Unique approach">
-          <PlainBody body={approach} />
-        </Panel>
+          </>
+        ) : null}
       </Box>
     </Box>
   );

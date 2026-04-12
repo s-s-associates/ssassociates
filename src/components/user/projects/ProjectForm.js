@@ -679,15 +679,21 @@ export default function ProjectForm({ projectId, initialData, onSuccess }) {
                   >
                     <Box id="field-category">
                       <FormControl fullWidth sx={inputSx} error={touched.category && !!errors.category}>
-                        <InputLabel id="project-category-label">Category</InputLabel>
                         <Select
-                          labelId="project-category-label"
-                          label="Category"
                           name="category"
                           value={values.category}
                           onChange={handleCategoryChange}
                           onBlur={handleBlur}
                           displayEmpty
+                          renderValue={(selected) =>
+                            selected ? (
+                              selected
+                            ) : (
+                              <Box component="span" sx={{ color: "rgba(0,0,0,0.42)" }}>
+                                Select category
+                              </Box>
+                            )
+                          }
                           MenuProps={scrollableSelectMenuProps}
                         >
                           <MenuItem value="" disabled>
@@ -716,15 +722,21 @@ export default function ProjectForm({ projectId, initialData, onSuccess }) {
                         disabled={!values.category}
                         error={touched.subCategory && !!errors.subCategory}
                       >
-                        <InputLabel id="project-subcategory-label">Sub-category (optional)</InputLabel>
                         <Select
-                          labelId="project-subcategory-label"
-                          label="Sub-category (optional)"
                           name="subCategory"
                           value={values.subCategory || ""}
                           onChange={handleChange}
                           onBlur={handleBlur}
                           displayEmpty
+                          renderValue={(selected) =>
+                            selected ? (
+                              selected
+                            ) : (
+                              <Box component="span" sx={{ color: "rgba(0,0,0,0.42)" }}>
+                                Subcategory (optional)
+                              </Box>
+                            )
+                          }
                           MenuProps={scrollableSelectMenuProps}
                         >
                           <MenuItem value="">

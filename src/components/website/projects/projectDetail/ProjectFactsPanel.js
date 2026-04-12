@@ -35,7 +35,7 @@ function areaDisplay(project) {
 }
 
 function FactCard({ icon: Icon, label, value }) {
-  const display = (value || "").trim() || "N/A";
+  const display = (value || "").trim();
   return (
     <Box
       sx={{
@@ -107,9 +107,10 @@ export default function ProjectFactsPanel({ project }) {
     // { key: "budget", icon: AttachMoney, label: "Budget", value: p.budget },
     { key: "duration", icon: AccessTime, label: "Duration", value: durationValue },
     { key: "floors", icon: Layers, label: "Floors", value: p.floors },
-  ];
+  ].filter((fact) => String(fact.value || "").trim());
 
   const tagline = (p.tagline || "").trim();
+  if (facts.length === 0 && !tagline) return null;
 
   return (
     <Box mb={10} mx={{ xs: 1, sm: 3, md: 4, lg: 5, xl: 10 }}>
@@ -148,28 +149,30 @@ export default function ProjectFactsPanel({ project }) {
           </Typography>
         ) : null}
       </Stack>
-      <Stack
-        direction="row"
-        flexWrap="wrap"
-        justifyContent="center"
-        alignItems="stretch"
-        gap={[1, 2, 3]}
-      >
-        {facts.map(({ key, icon, label, value }) => (
-          <Box
-            key={key}
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              width: { xs: 180, sm: 220, md: 240 },
-              minWidth: { xs: 180, sm: 220, md: 240 },
-              maxWidth: { xs: 180, sm: 220, md: 240 },
-            }}
-          >
-            <FactCard icon={icon} label={label} value={value} />
-          </Box>
-        ))}
-      </Stack>
+      {facts.length > 0 ? (
+        <Stack
+          direction="row"
+          flexWrap="wrap"
+          justifyContent="center"
+          alignItems="stretch"
+          gap={[1, 2, 3]}
+        >
+          {facts.map(({ key, icon, label, value }) => (
+            <Box
+              key={key}
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                width: { xs: 180, sm: 220, md: 240 },
+                minWidth: { xs: 180, sm: 220, md: 240 },
+                maxWidth: { xs: 180, sm: 220, md: 240 },
+              }}
+            >
+              <FactCard icon={icon} label={label} value={value} />
+            </Box>
+          ))}
+        </Stack>
+      ) : null}
     </Box>
   );
 }

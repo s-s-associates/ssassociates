@@ -60,6 +60,9 @@ const COMPANY_PHONE = process.env.NEXT_PUBLIC_COMPANY_PHONE || "+923008414733";
 const COMPANY_ADDRESS = process.env.NEXT_PUBLIC_COMPANY_ADDRESS || "Ayub, 67 Trade Centre Block, Johar Town, Lahore, Pakistan";
 const COMPANY_HOURS = process.env.NEXT_PUBLIC_WORKING_HOURS || "Mon - Sat: 9:00 AM - 6:00 PM";
 const COMPANY_LOCATION = process.env.NEXT_PUBLIC_COMPANY_LOCATION || `https://maps.google.com/?q=${encodeURIComponent(COMPANY_ADDRESS)}`;
+const COMPANY_WAREHOUSE_LOCATION = process.env.NEXT_PUBLIC_COMPANY_WAREHOUSE_LOCATION || "";
+const COMPANY_WAREHOUSE_ADDRESS =
+  process.env.NEXT_PUBLIC_COMPANY_WAREHOUSE_ADDRESS || "F6G9+CH3 Lahore, Pakistan";
 
 export default function ContactForm() {
   const pathname = usePathname();
@@ -187,7 +190,10 @@ export default function ContactForm() {
                     {[
                       { icon: <FiPhoneCall size={16} />, title: "Call Us", value: COMPANY_PHONE, href: `tel:${COMPANY_PHONE}` },
                       { icon: <FiMail size={16} />, title: "Email Us", value: COMPANY_EMAIL, href: `mailto:${COMPANY_EMAIL}` },
-                      { icon: <FiMapPin size={16} />, title: "Visit Us", value: COMPANY_ADDRESS, href: COMPANY_LOCATION, copy: COMPANY_ADDRESS },
+                      { icon: <FiMapPin size={16} />, title: "Visit Us (Office)", value: COMPANY_ADDRESS, href: COMPANY_LOCATION, copy: COMPANY_ADDRESS },
+                      ...(COMPANY_WAREHOUSE_LOCATION
+                        ? [{ icon: <FiMapPin size={16} />, title: "Warehouse", value: COMPANY_WAREHOUSE_ADDRESS, href: COMPANY_WAREHOUSE_LOCATION, copy: COMPANY_WAREHOUSE_ADDRESS }]
+                        : []),
                       { icon: <FiClock size={16} />, title: "Working Hours", value: COMPANY_HOURS },
                     ].map((item) => (
                       <Box

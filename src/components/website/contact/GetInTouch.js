@@ -14,6 +14,9 @@ const COMPANY_EMAIL = process.env.NEXT_PUBLIC_COMPANY_EMAIL || "info@ssassociate
 const COMPANY_ADDRESS = process.env.NEXT_PUBLIC_COMPANY_ADDRESS || "Ayub, 67 Trade Centre Block, Johar Town, Lahore, Pakistan";
 const COMPANY_HOURS = process.env.NEXT_PUBLIC_WORKING_HOURS || "Mon - Sat: 9:00 AM - 6:00 PM";
 const COMPANY_LOCATION = process.env.NEXT_PUBLIC_COMPANY_LOCATION || `https://maps.google.com/?q=${encodeURIComponent(COMPANY_ADDRESS)}`;
+const COMPANY_WAREHOUSE_LOCATION = process.env.NEXT_PUBLIC_COMPANY_WAREHOUSE_LOCATION || "";
+const COMPANY_WAREHOUSE_ADDRESS =
+  process.env.NEXT_PUBLIC_COMPANY_WAREHOUSE_ADDRESS || "F6G9+CH3 Lahore, Pakistan";
 
 const contactItems = [
   {
@@ -29,7 +32,12 @@ const contactItems = [
   {
     title: "Address",
     icon: LocationOnOutlinedIcon,
-    lines: [{ text: COMPANY_ADDRESS, href: COMPANY_LOCATION, copy: COMPANY_ADDRESS }],
+    lines: [
+      { text: `Office: ${COMPANY_ADDRESS}`, href: COMPANY_LOCATION, copy: COMPANY_ADDRESS },
+      ...(COMPANY_WAREHOUSE_LOCATION
+        ? [{ text: `Warehouse: ${COMPANY_WAREHOUSE_ADDRESS}`, href: COMPANY_WAREHOUSE_LOCATION, copy: COMPANY_WAREHOUSE_ADDRESS }]
+        : []),
+    ],
   },
   {
     title: "Working Hours",

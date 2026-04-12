@@ -33,6 +33,9 @@ const COMPANY_ADDRESS =
   "Ayub, 67 Trade Centre Block, Johar Town, Lahore, Pakistan";
 const COMPANY_HOURS =
   process.env.NEXT_PUBLIC_WORKING_HOURS || "Mon - Sat: 9:00 AM - 6:00 PM";
+const COMPANY_WAREHOUSE_LOCATION = process.env.NEXT_PUBLIC_COMPANY_WAREHOUSE_LOCATION || "";
+const COMPANY_WAREHOUSE_ADDRESS =
+  process.env.NEXT_PUBLIC_COMPANY_WAREHOUSE_ADDRESS || "F6G9+CH3 Lahore, Pakistan";
 
 const quickLinks = [
   { label: "Home", href: "/" },
@@ -130,8 +133,8 @@ function Footer() {
           >
             <Box
               sx={{
-                width: 180,
-                height: 180,
+                width: 200,
+                height: 200,
                 flexShrink: 0,
                 borderRadius: 2,
                 overflow: "hidden",
@@ -141,11 +144,11 @@ function Footer() {
               }}
             >
               <Image
-                src="/transparent-full-logo.png"
+                src="/white-transparent-full-logo.png"
                 alt={COMPANY_NAME}
                 quality={100}
-                width={180}
-                height={180}
+                width={200}
+                height={200}
                 style={{ objectFit: "contain", backgroundColor: "transparent" }}
               />
             </Box>
@@ -405,9 +408,51 @@ function Footer() {
                   transition: "color 0.2s",
                 }}
               >
-                {COMPANY_ADDRESS}
+                Office: {COMPANY_ADDRESS}
               </Box>
             </Box>
+            {COMPANY_WAREHOUSE_LOCATION ? (
+              <Box
+                component="a"
+                href={COMPANY_WAREHOUSE_LOCATION}
+                target="_blank"
+                rel="noopener noreferrer"
+                sx={{
+                  display: "flex",
+                  alignItems: "flex-start",
+                  gap: 1.5,
+                  textDecoration: "none",
+                  cursor: "pointer",
+                  "&:hover .contact-text": {
+                    color: primaryColor,
+                    ...underlineFromLeftHover,
+                  },
+                }}
+              >
+                <LocationOn
+                  sx={{
+                    color: primaryColor,
+                    fontSize: 20,
+                    mt: 0.25,
+                    flexShrink: 0,
+                  }}
+                />
+                <Box
+                  className="contact-text"
+                  sx={{
+                    ...underlineFromLeft,
+                    fontFamily: "var(--font-app)",
+                    fontWeight: 400,
+                    fontSize: 14,
+                    color: textGrayLight,
+                    lineHeight: 1.5,
+                    transition: "color 0.2s",
+                  }}
+                >
+                  Warehouse: {COMPANY_WAREHOUSE_ADDRESS}
+                </Box>
+              </Box>
+            ) : null}
             <Box
               component="a"
               href={`tel:${COMPANY_PHONE}`}
