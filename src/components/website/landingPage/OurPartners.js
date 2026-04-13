@@ -8,7 +8,7 @@ import {
   IconButton,
   Container,
   Chip,
-  CircularProgress,
+  Skeleton,
 } from "@mui/material";
 import ArrowBackIosNewRoundedIcon from "@mui/icons-material/ArrowBackIosNewRounded";
 import ArrowForwardIosRoundedIcon from "@mui/icons-material/ArrowForwardIosRounded";
@@ -229,8 +229,210 @@ export default function OurPartners() {
         </Box>
 
         {loading ? (
-          <Box sx={{ py: 8, display: "flex", justifyContent: "center" }}>
-            <CircularProgress sx={{ color: primaryColor }} />
+          <Box
+            mt={-5}
+            py={2}
+            sx={{
+              display: "flex",
+              flexDirection: { xs: "column", md: "row" },
+              gap: { xs: 5, md: 8 },
+              alignItems: { xs: "center", md: "center" },
+              justifyContent: "center",
+              width: "100%",
+              maxWidth: { xs: "100%", md: 1280 },
+              mx: "auto",
+            }}
+          >
+            <Box
+              sx={{
+                order: { xs: 2, md: 0 },
+                flex: { md: "0 0 auto" },
+                width: { xs: "100%", md: 540 },
+                minWidth: { md: 540 },
+                maxWidth: { xs: "100%", md: 540 },
+                mx: { xs: "auto", md: 0 },
+                pt: { xs: 4, md: 0 },
+                borderTop: {
+                  xs: "1px solid rgba(255,255,255,0.08)",
+                  md: "none",
+                },
+              }}
+            >
+              <Box
+                sx={{
+                  display: "flex",
+                  overflowX: "hidden",
+                  gap: 2,
+                  pb: 0.5,
+                  px: slideTrackPaddingX,
+                  boxSizing: "border-box",
+                  width: "100%",
+                  justifyContent: { xs: "center", md: "flex-start" },
+                }}
+              >
+                {[0, 1, 2].map((i) => (
+                  <Box
+                    key={i}
+                    sx={{
+                      minWidth: slideCardWidth,
+                      width: slideCardWidth,
+                      height: { xs: 260, md: 320 },
+                      p: { xs: 1.25, md: 1.5 },
+                      flexShrink: 0,
+                      borderRadius: "16px",
+                      border: "1.5px solid rgba(255,255,255,0.08)",
+                      background: "rgba(255,255,255,0.03)",
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      gap: 2,
+                    }}
+                  >
+                    <Skeleton
+                      variant="rounded"
+                      animation="wave"
+                      sx={{
+                        width: "90%",
+                        minHeight: { xs: 100, md: 140 },
+                        maxHeight: { xs: 130, md: 180 },
+                        bgcolor: "rgba(255,255,255,0.08)",
+                      }}
+                    />
+                    <Skeleton
+                      animation="wave"
+                      width="72%"
+                      height={20}
+                      sx={{ bgcolor: "rgba(255,255,255,0.1)" }}
+                    />
+                    <Skeleton
+                      variant="circular"
+                      animation="wave"
+                      width={6}
+                      height={6}
+                      sx={{ bgcolor: "rgba(255,255,255,0.12)" }}
+                    />
+                  </Box>
+                ))}
+              </Box>
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: 2,
+                  mt: 3,
+                }}
+              >
+                <Skeleton
+                  variant="circular"
+                  animation="wave"
+                  width={44}
+                  height={44}
+                  sx={{ bgcolor: "rgba(255,255,255,0.08)" }}
+                />
+                <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
+                  {[0, 1, 2, 3].map((i) => (
+                    <Skeleton
+                      key={i}
+                      animation="wave"
+                      width={i === 0 ? 20 : 6}
+                      height={6}
+                      sx={{ borderRadius: "3px", bgcolor: "rgba(255,255,255,0.12)" }}
+                    />
+                  ))}
+                </Box>
+                <Skeleton
+                  variant="circular"
+                  animation="wave"
+                  width={44}
+                  height={44}
+                  sx={{ bgcolor: "rgba(255,255,255,0.08)" }}
+                />
+              </Box>
+            </Box>
+
+            <Box
+              sx={{
+                order: { xs: 1, md: 0 },
+                flex: { md: "0 1 auto" },
+                width: { xs: "100%", md: "auto" },
+                maxWidth: { xs: "100%", md: 520 },
+                px: { xs: 2, sm: 3, md: 0 },
+                boxSizing: "border-box",
+                pl: { md: 4 },
+                pr: { md: 0 },
+                borderLeft: { md: `1px solid rgba(255,255,255,0.12)` },
+                display: "flex",
+                flexDirection: "column",
+                alignItems: { xs: "center", md: "flex-start" },
+              }}
+            >
+              <Skeleton
+                animation="wave"
+                variant="rounded"
+                width={88}
+                height={26}
+                sx={{
+                  mb: 2.5,
+                  borderRadius: "13px",
+                  bgcolor: "rgba(255,255,255,0.1)",
+                }}
+              />
+              <Skeleton
+                animation="wave"
+                height={36}
+                sx={{
+                  mb: 2,
+                  bgcolor: "rgba(255,255,255,0.12)",
+                  maxWidth: 400,
+                  width: { xs: "85%", md: "92%" },
+                }}
+              />
+              <Skeleton
+                animation="wave"
+                width={48}
+                height={3}
+                sx={{ mb: 3, borderRadius: "2px", bgcolor: "rgba(255,255,255,0.15)" }}
+              />
+              <Skeleton
+                animation="wave"
+                height={20}
+                sx={{
+                  mb: 1,
+                  bgcolor: "rgba(255,255,255,0.08)",
+                  maxWidth: 520,
+                  width: "100%",
+                }}
+              />
+              <Skeleton
+                animation="wave"
+                height={20}
+                sx={{
+                  mb: 1,
+                  bgcolor: "rgba(255,255,255,0.08)",
+                  maxWidth: 520,
+                  width: "100%",
+                }}
+              />
+              <Skeleton
+                animation="wave"
+                height={20}
+                sx={{
+                  mb: 2,
+                  bgcolor: "rgba(255,255,255,0.08)",
+                  maxWidth: 400,
+                  width: { xs: "70%", md: "78%" },
+                }}
+              />
+              <Skeleton
+                animation="wave"
+                variant="rounded"
+                width={152}
+                height={40}
+                sx={{ borderRadius: "10px", bgcolor: "rgba(255,255,255,0.1)" }}
+              />
+            </Box>
           </Box>
         ) : fetchError ? (
           <Typography sx={{ color: "rgba(255,255,255,0.55)", textAlign: "center", py: 4 }}>

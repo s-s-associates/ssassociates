@@ -27,6 +27,10 @@ import { useWebsiteNavigationLoading } from "./WebsiteNavigationLoaderProvider";
 
 const COMPANY_NAME = process.env.NEXT_PUBLIC_COMPANY_NAME || "S&S Associates";
 
+/** Viewport width at which centered links + desktop actions show; below this, menu icon only. */
+const NAV_DESKTOP_MIN_PX = 1150;
+const navDesktopUp = `@media (min-width: ${NAV_DESKTOP_MIN_PX}px)`;
+
 const navLinks = [
   { label: "Home", href: "/" },
   { label: "About", href: "/about" },
@@ -249,7 +253,10 @@ function Navbar() {
             initial="hidden"
             animate="show"
             sx={{
-              display: { xs: "none", md: "flex" },
+              display: "none",
+              [navDesktopUp]: {
+                display: "flex",
+              },
               alignItems: "center",
               gap: 4,
               position: "absolute",
@@ -313,7 +320,10 @@ function Navbar() {
             initial="hidden"
             animate="show"
             sx={{
-              display: { xs: "none", md: "flex" },
+              display: "none",
+              [navDesktopUp]: {
+                display: "flex",
+              },
               alignItems: "center",
               gap: 1.5,
             }}
@@ -373,7 +383,14 @@ function Navbar() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.25 }}
-            sx={{ display: { md: "none" }, alignItems: "center", gap: 1 }}
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: 1,
+              [navDesktopUp]: {
+                display: "none",
+              },
+            }}
           >
             <Box
               component="span"

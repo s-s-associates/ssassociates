@@ -175,7 +175,7 @@ function HomeBanner() {
           // dark overlay on mobile so text stays readable over the image
           "&::after": {
             content: '""',
-            display: { sm: "block", md: "none" },
+            display: { sm: "block", lg: "none" },
             position: "absolute",
             inset: 0,
             background: "linear-gradient(to bottom, rgba(0, 0, 0, 0.72) 0%, rgba(0, 0, 0, 0.49) 50%, rgba(0,0,0,0.6) 100%)",

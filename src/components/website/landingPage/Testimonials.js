@@ -143,11 +143,12 @@ const Testimonials = ({ initialTestimonials = [] }) => {
   return (
     <Box
     py={[5,10,20]}
+    px={[2,5]}
       component="section"
       sx={{
         position: "relative",
         overflow: "hidden",
-        px: { xs: 3, sm: 3, md: 40 },
+        // px: { xs: 3, sm: 3, md: 20,lg:30,xl:40 },
         backgroundColor: secondaryDark,
         backgroundImage:
           "linear-gradient(165deg, rgba(0, 0, 0, 0.56) 0%, rgba(0, 0, 0, 0.56) 45%, rgba(0, 0, 0, 0.61) 100%), url('/images/home/interior.jpg')",
@@ -256,7 +257,7 @@ const Testimonials = ({ initialTestimonials = [] }) => {
         </Stack>
       </Stack>
 
-      <Stack maxWidth={[320,350,400,500]} minWidth={[220,250,300,400]} maxHeight={[400, 400, "auto"]} overflow={"hidden"}>
+      <Stack maxWidth={[350,550,400,500]} minWidth={[220,250,300,400]} maxHeight={[400, 400, "auto"]} overflow={"hidden"}>
         {loading ? (
           <Stack minHeight={280} alignItems="center" justifyContent="center" p={3}>
             <CircularProgress sx={{ color: primaryColor }} />
@@ -276,7 +277,7 @@ const Testimonials = ({ initialTestimonials = [] }) => {
               const stars = clampRating(t.rating);
 
               return (
-                <Stack key={id} spacing={3} p={3}>
+                <Stack key={id} spacing={1} p={3}>
                   <Image
                     src={"/images/home/Testimonials-Quotation.png"}
                     alt="Quotation Mark"
@@ -285,7 +286,7 @@ const Testimonials = ({ initialTestimonials = [] }) => {
                     loading="lazy"
                   />
                   <Typography
-                    maxHeight={150}
+                    maxHeight={[200,180,170]}
                     sx={{
                       overflowY: "auto",
                       backgroundColor: "transparent",

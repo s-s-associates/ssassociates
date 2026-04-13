@@ -6,7 +6,7 @@ import {
   secondaryDark,
   whiteColor,
 } from "@/components/utils/Colors";
-import { Box, CircularProgress, IconButton, Tooltip, Typography, useMediaQuery, useTheme } from "@mui/material";
+import { Box, IconButton, Skeleton, Tooltip, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
@@ -238,6 +238,56 @@ function ClientCard({ client, cardWidth }) {
         ) : (
           <Box sx={{ minHeight: 8 }} />
         )}
+      </Box>
+    </Box>
+  );
+}
+
+function ClientCardSkeleton({ cardWidth }) {
+  const sk = { bgcolor: "rgba(255,255,255,0.08)" };
+  return (
+    <Box
+      sx={{
+        ...cardSx,
+        width: `${cardWidth}px`,
+        display: "flex",
+        flexDirection: "column",
+        height: "100%",
+      }}
+    >
+      <Box sx={{ p: 1.6, pb: 1.15 }}>
+        <Box sx={{ ...logoWellSx, bgcolor: "rgba(255,255,255,0.04)" }}>
+          <Skeleton
+            variant="rounded"
+            animation="wave"
+            sx={{
+              position: "absolute",
+              inset: 10,
+              transform: "none",
+              ...sk,
+              borderRadius: 2,
+            }}
+          />
+        </Box>
+      </Box>
+      <Box
+        sx={{
+          pb: 2.25,
+          pt: 0,
+          flex: 1,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "stretch",
+          px: 1.25,
+        }}
+      >
+        <Skeleton
+          animation="wave"
+          width="82%"
+          height={20}
+          sx={{ ...sk, mx: "auto", mb: 0.75, bgcolor: "rgba(255,255,255,0.1)" }}
+        />
+        <Skeleton animation="wave" width="58%" height={16} sx={{ ...sk, mx: "auto" }} />
       </Box>
     </Box>
   );
@@ -492,8 +542,45 @@ function OurClients() {
 
       {/* Slider / states */}
       {loading ? (
-        <Box sx={{ display: "flex", justifyContent: "center", py: 8 }}>
-          <CircularProgress sx={{ color: primaryColor }} size={44} thickness={4} />
+        <Box sx={{ position: "relative", zIndex: 1 }}>
+          <Box
+            sx={{
+              width: { xs: `${cardWidth + 20}px`, sm: "100%" },
+              px: { xs: 1.2, sm: 1.5, md: 2, lg: 2.5 },
+              py: { xs: 1.2, sm: 1.5, md: 1.75 },
+              mx: "auto",
+              overflow: "hidden",
+            }}
+          >
+            <Box
+              sx={{
+                display: "flex",
+                gap: `${GAP}px`,
+                py: 3,
+                justifyContent: { xs: "center", sm: "flex-start" },
+              }}
+            >
+              {Array.from({ length: visibleCount }).map((_, i) => (
+                <ClientCardSkeleton key={i} cardWidth={cardWidth} />
+              ))}
+            </Box>
+          </Box>
+          <Box sx={{ mt: 2.5, display: "flex", justifyContent: "center", gap: 1.5 }}>
+            <Skeleton
+              variant="rounded"
+              animation="wave"
+              width={42}
+              height={42}
+              sx={{ bgcolor: "rgba(255,255,255,0.08)" }}
+            />
+            <Skeleton
+              variant="rounded"
+              animation="wave"
+              width={42}
+              height={42}
+              sx={{ bgcolor: "rgba(255,255,255,0.08)" }}
+            />
+          </Box>
         </Box>
       ) : error ? (
         <Typography sx={{ textAlign: "center", color: "rgba(255,255,255,0.55)", px: 2, position: "relative", zIndex: 1 }}>

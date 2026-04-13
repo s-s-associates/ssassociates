@@ -63,6 +63,43 @@ const COMPANY_LOCATION = process.env.NEXT_PUBLIC_COMPANY_LOCATION || `https://ma
 const COMPANY_WAREHOUSE_LOCATION = process.env.NEXT_PUBLIC_COMPANY_WAREHOUSE_LOCATION || "";
 const COMPANY_WAREHOUSE_ADDRESS =
   process.env.NEXT_PUBLIC_COMPANY_WAREHOUSE_ADDRESS || "F6G9+CH3 Lahore, Pakistan";
+const COMPANY_WAREHOUSE_MAP_HREF =
+  COMPANY_WAREHOUSE_LOCATION ||
+  `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(COMPANY_WAREHOUSE_ADDRESS)}`;
+
+const contactInfoCardSx = {
+  display: "flex",
+  alignItems: "flex-start",
+  gap: 1.4,
+  p: 1.4,
+  borderRadius: 2,
+  border: `1px solid ${bordergrayColor}`,
+  bgcolor: "#f3f4f6",
+  textDecoration: "none",
+  transition: "border-color 0.2s",
+};
+
+const contactInfoIconWrapSx = {
+  width: 36,
+  height: 36,
+  borderRadius: 1.4,
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  color: primaryColor,
+  bgcolor: "#fff4e7",
+  flexShrink: 0,
+};
+
+const locationLinkSx = {
+  fontSize: 15,
+  fontWeight: 700,
+  color: "#111827",
+  lineHeight: 1.45,
+  textDecoration: "none",
+  display: "block",
+  "&:hover": { color: primaryColor },
+};
 
 export default function ContactForm() {
   const pathname = usePathname();
@@ -190,48 +227,19 @@ export default function ContactForm() {
                     {[
                       { icon: <FiPhoneCall size={16} />, title: "Call Us", value: COMPANY_PHONE, href: `tel:${COMPANY_PHONE}` },
                       { icon: <FiMail size={16} />, title: "Email Us", value: COMPANY_EMAIL, href: `mailto:${COMPANY_EMAIL}` },
-                      { icon: <FiMapPin size={16} />, title: "Visit Us (Office)", value: COMPANY_ADDRESS, href: COMPANY_LOCATION, copy: COMPANY_ADDRESS },
-                      ...(COMPANY_WAREHOUSE_LOCATION
-                        ? [{ icon: <FiMapPin size={16} />, title: "Warehouse", value: COMPANY_WAREHOUSE_ADDRESS, href: COMPANY_WAREHOUSE_LOCATION, copy: COMPANY_WAREHOUSE_ADDRESS }]
-                        : []),
-                      { icon: <FiClock size={16} />, title: "Working Hours", value: COMPANY_HOURS },
                     ].map((item) => (
                       <Box
                         key={item.title}
                         component={item.href ? "a" : "div"}
                         href={item.href}
-                        target={item.copy ? "_blank" : undefined}
-                        rel={item.copy ? "noopener noreferrer" : undefined}
-                        onClick={item.copy ? () => navigator.clipboard.writeText(item.copy).catch(() => {}) : undefined}
                         sx={{
-                          display: "flex",
+                          ...contactInfoCardSx,
                           alignItems: "center",
-                          gap: 1.4,
-                          p: 1.4,
-                          borderRadius: 2,
-                          border: `1px solid ${bordergrayColor}`,
-                          bgcolor: "#f3f4f6",
-                          textDecoration: "none",
                           cursor: item.href ? "pointer" : "default",
-                          transition: "border-color 0.2s",
                           "&:hover": item.href ? { borderColor: primaryColor } : {},
                         }}
                       >
-                        <Box
-                          sx={{
-                            width: 36,
-                            height: 36,
-                            borderRadius: 1.4,
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            color: primaryColor,
-                            bgcolor: "#fff4e7",
-                            flexShrink: 0,
-                          }}
-                        >
-                          {item.icon}
-                        </Box>
+                        <Box sx={contactInfoIconWrapSx}>{item.icon}</Box>
                         <Box>
                           <Typography sx={{ fontSize: 11, color: grayColor, opacity: 0.8, lineHeight: 1.1 }}>
                             {item.title}
@@ -242,6 +250,71 @@ export default function ContactForm() {
                         </Box>
                       </Box>
                     ))}
+
+                    <Box
+                      sx={{
+                        ...contactInfoCardSx,
+                        "&:hover": { borderColor: primaryColor },
+                      }}
+                    >
+                      <Box sx={contactInfoIconWrapSx}>
+                        <FiMapPin size={16} />
+                      </Box>
+                      <Box sx={{ flex: 1, minWidth: 0 }}>
+                        {/* <Typography sx={{ fontSize: 11, color: grayColor, opacity: 0.8, lineHeight: 1.1, mb: 0.75 }}>
+                          Office &amp; warehouse
+                        </Typography> */}
+                        <Box>
+                          <Typography sx={{ fontSize: 11, color: grayColor, opacity: 0.85, lineHeight: 1.2, mb: 0.25 }}>
+                            Office
+                          </Typography>
+                          <Box
+                            component="a"
+                            href={COMPANY_LOCATION}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={() => navigator.clipboard.writeText(COMPANY_ADDRESS).catch(() => {})}
+                            sx={locationLinkSx}
+                          >
+                            {COMPANY_ADDRESS}
+                          </Box>
+                        </Box>
+                        <Box sx={{ mt: 1.15 }}>
+                          <Typography sx={{ fontSize: 11, color: grayColor, opacity: 0.85, lineHeight: 1.2, mb: 0.25 }}>
+                            Warehouse
+                          </Typography>
+                          <Box
+                            component="a"
+                            href={COMPANY_WAREHOUSE_MAP_HREF}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={() => navigator.clipboard.writeText(COMPANY_WAREHOUSE_ADDRESS).catch(() => {})}
+                            sx={locationLinkSx}
+                          >
+                            {COMPANY_WAREHOUSE_ADDRESS}
+                          </Box>
+                        </Box>
+                      </Box>
+                    </Box>
+
+                    <Box
+                      sx={{
+                        ...contactInfoCardSx,
+                        alignItems: "center",
+                      }}
+                    >
+                      <Box sx={contactInfoIconWrapSx}>
+                        <FiClock size={16} />
+                      </Box>
+                      <Box>
+                        <Typography sx={{ fontSize: 11, color: grayColor, opacity: 0.8, lineHeight: 1.1 }}>
+                          Working Hours
+                        </Typography>
+                        <Typography sx={{ fontSize: 15, fontWeight: 700, color: "#111827", lineHeight: 1.4 }}>
+                          {COMPANY_HOURS}
+                        </Typography>
+                      </Box>
+                    </Box>
                   </Stack>
                 </Box>
 
