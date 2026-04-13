@@ -565,7 +565,7 @@ export default function SubscribersPage() {
 
           <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 1, mb: 2 }}>
             <Typography variant="subtitle1" fontWeight={700}>Email templates</Typography>
-            <Button startIcon={<Add />} size="small" variant="outlined" onClick={() => openTemplateDialog(null)} sx={{ textTransform: "none", borderColor: bordergrayColor, color: "#000", "&:hover": { borderColor: primaryColor, color: primaryColor } }}>Add Template</Button>
+            {/* <Button startIcon={<Add />} size="small" variant="outlined" onClick={() => openTemplateDialog(null)} sx={{ textTransform: "none", borderColor: bordergrayColor, color: "#000", "&:hover": { borderColor: primaryColor, color: primaryColor } }}>Add Template</Button> */}
           </Box>
           <Grid container spacing={2} sx={{ mb: 3 }}>
             {displayTemplates.map((t) => (
