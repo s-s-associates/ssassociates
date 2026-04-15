@@ -46,7 +46,7 @@ export default function MessageFromCEO() {
           variants={fadeUp}
           initial="hidden"
           whileInView="show"
-          viewport={{ once: true, amount: 0.3 }}
+          // viewport={{ once: true, amount: 0.3 }}
           sx={{ textAlign: "center", mb: { xs: 6, md: 8 } }}
         >
           <Typography sx={{
@@ -87,51 +87,23 @@ export default function MessageFromCEO() {
             backdropFilter: "blur(8px)",
             boxShadow: "0 24px 80px rgba(0,0,0,0.4)",
           }}
-        >
+          >
           {/* Left — CEO image */}
-          <Box sx={{
-            position: "relative",
+          <Box
+          maxHeight={["auto"]}
+          maxWidth={[400]}
+          sx={{
             flexShrink: 0,
-            width: { xs: "100%", md: 320, lg: 380 },
-            minHeight: { xs: 320, sm: 400, md: "auto" },
-          }}>
+            alignSelf: { xs: "center", md: "stretch" },
+          }}
+          >
             <Image
-              src="/images/about/ceo.jpg"
+              src="/images/about/ceo.png"
               alt="Muhammad Safdar – CEO, S&S Associates"
-              fill
-              sizes="(max-width: 900px) 100vw, 380px"
-              style={{ objectFit: "cover", objectPosition: "top center" }}
+              height={450}
+              width={400}
+              style={{ display: "block",borderRadius: "24px", width: "100%", height: "100%", objectFit: "cover", objectPosition: "top center" }}
             />
-            {/* Bottom gradient on image */}
-            <Box sx={{
-              position: "absolute", inset: 0,
-              background: {
-                xs: "linear-gradient(to top, rgba(8,12,20,0.85) 0%, transparent 50%)",
-                md: "linear-gradient(to right, transparent 60%, rgba(8,12,20,0.6) 100%)",
-              },
-              pointerEvents: "none",
-            }} />
-
-            {/* Orange accent bar */}
-            <Box sx={{
-              position: "absolute", top: 0, left: 0,
-              width: { xs: "100%", md: 4 }, height: { xs: 4, md: "100%" },
-              background: `linear-gradient(${primaryColor}, rgba(251,134,30,0.3))`,
-            }} />
-
-            {/* Name badge over image (mobile) */}
-            <Box sx={{
-              display: { xs: "flex", md: "none" },
-              position: "absolute", bottom: 20, left: 20,
-              flexDirection: "column",
-            }}>
-              <Typography sx={{ fontWeight: 800, fontSize: 20, color: whiteColor, lineHeight: 1.2 }}>
-                Muhammad Safdar
-              </Typography>
-              <Typography sx={{ fontSize: 12, color: primaryColor, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", mt: 0.5 }}>
-                Chief Executive Officer
-              </Typography>
-            </Box>
           </Box>
 
           {/* Right — content */}
@@ -141,7 +113,7 @@ export default function MessageFromCEO() {
             flexDirection: "column",
             justifyContent: "center",
             px: { xs: 3, sm: 4, md: 5 },
-            py: { xs: 4, md: 5 },
+            py: 3,
           }}>
             {/* Big quote icon */}
             <Box sx={{
@@ -149,7 +121,7 @@ export default function MessageFromCEO() {
               bgcolor: `rgba(251,134,30,0.12)`,
               border: `1px solid rgba(251,134,30,0.25)`,
               display: "flex", alignItems: "center", justifyContent: "center",
-              mb: 3,
+              mb: 1,
             }}>
               <FormatQuoteRoundedIcon sx={{ fontSize: 28, color: primaryColor }} />
             </Box>
