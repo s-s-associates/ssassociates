@@ -2,10 +2,12 @@
 
 import {
   primaryColor,
+  primaryDark,
   secondaryDark,
   textGrayLight,
   whiteColor,
 } from "@/components/utils/Colors";
+import { alpha } from "@mui/material/styles";
 import LocationOn from "@mui/icons-material/LocationOn";
 import Phone from "@mui/icons-material/Phone";
 import Email from "@mui/icons-material/Email";
@@ -36,6 +38,7 @@ const COMPANY_HOURS =
 const COMPANY_WAREHOUSE_LOCATION = process.env.NEXT_PUBLIC_COMPANY_WAREHOUSE_LOCATION || "";
 const COMPANY_WAREHOUSE_ADDRESS =
   process.env.NEXT_PUBLIC_COMPANY_WAREHOUSE_ADDRESS || "F6G9+CH3 Lahore, Pakistan";
+const INNORA_TECH_WEBSITE = "https://innoratech.com";
 
 const quickLinks = [
   { label: "Home", href: "/" },
@@ -79,6 +82,36 @@ const underlineFromLeft = {
 const underlineFromLeftHover = {
   "&::after": {
     transform: "scaleX(1)",
+  },
+};
+
+const devCreditChipSx = {
+  display: "inline-flex",
+  alignItems: "center",
+  px: 1.5,
+  py: 0.5,
+  borderRadius: 50,
+  bgcolor: alpha(primaryColor, 0.22),
+  color: primaryDark,
+  fontWeight: 600,
+  fontSize: 13,
+  lineHeight: 1.25,
+  border: `1px solid ${alpha(primaryColor, 0.5)}`,
+  "@keyframes footerInnoraChipBorderPulse": {
+    "0%": {
+      boxShadow: `0 0 0 0 ${alpha(primaryColor, 0.5)}`,
+    },
+    "70%": {
+      boxShadow: `0 0 0 10px ${alpha(primaryColor, 0)}`,
+    },
+    "100%": {
+      boxShadow: `0 0 0 0 ${alpha(primaryColor, 0)}`,
+    },
+  },
+  animation: "footerInnoraChipBorderPulse 2s ease-out infinite",
+  "@media (prefers-reduced-motion: reduce)": {
+    animation: "none",
+    boxShadow: "none",
   },
 };
 
@@ -589,6 +622,37 @@ function Footer() {
               alignItems: "center",
             }}
           >
+            <Box
+              component="span"
+              sx={{
+                display: "inline-flex",
+                alignItems: "center",
+                flexWrap: "wrap",
+                gap: 0.75,
+                fontFamily: "var(--font-app)",
+                fontWeight: 400,
+                fontSize: 14,
+                color: textGrayLight,
+              }}
+            >
+              Developed By
+              <Tooltip title="Visit INNORA TECH" arrow placement="top">
+                <Box
+                  component="a"
+                  href={INNORA_TECH_WEBSITE}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  sx={{
+                    ...devCreditChipSx,
+                    textDecoration: "none",
+                    cursor: "pointer",
+                    
+                  }}
+                >
+                  INNORA TECH Pvt. Ltd.
+                </Box>
+              </Tooltip>
+            </Box>
             <Link href="/privacy-policy" style={{ textDecoration: "none" }}>
               <Box
                 component="span"
