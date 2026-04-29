@@ -159,7 +159,7 @@ const defaultValues = {
   uniqueApproach: "",
 };
 
-const MAX_GALLERY_IMAGES = 20;
+const MAX_GALLERY_IMAGES = 30;
 
 const cardSx = {
   bgcolor: "white",
@@ -873,7 +873,7 @@ export default function ProjectForm({ projectId, initialData, onSuccess }) {
                 >
                   <input type="file" accept="image/*" multiple onChange={handleGalleryChange} disabled={!canAddMore} style={{ display: "none" }} />
                   <Typography sx={{ fontSize: 15, color: canAddMore ? "#000" : "rgba(0,0,0,0.4)", fontWeight: 500 }}>
-                    {canAddMore ? "Drop images here or click to upload" : "Maximum 20 images"}
+                    {canAddMore ? "Drop images here or click to upload" : `Maximum ${MAX_GALLERY_IMAGES} images`}
                   </Typography>
                   {canAddMore && (
                     <Typography sx={{ fontSize: 13, color: "rgba(0,0,0,0.5)", mt: 0.5 }}>
